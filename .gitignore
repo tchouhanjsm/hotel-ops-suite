@@ -1,0 +1,21 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+dist/
+
+# Local configuration
+.clasp.json
+.env
+.env.*
+.DS_Store
+
+# GAS backup
+src/appsscript.json.bak

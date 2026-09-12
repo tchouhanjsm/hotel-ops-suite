@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:17
+    container_name: hotel-ops-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hotel_ops
+      POSTGRES_USER: hotel_admin
+      POSTGRES_PASSWORD: hotel_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
