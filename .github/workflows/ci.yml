@@ -1,4 +1,4 @@
-name: CI
+﻿name: CI
 
 on:
   pull_request:
@@ -14,6 +14,21 @@ jobs:
   backend:
     name: Backend Checks
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: hotel_ops
+          POSTGRES_USER: hotel_admin
+          POSTGRES_PASSWORD: hotel_dev_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U hotel_admin -d hotel_ops"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - name: Checkout
@@ -33,6 +48,8 @@ jobs:
 
       - name: Tests
         working-directory: backend
+        env:
+          DATABASE_URL: postgresql+psycopg://hotel_admin:hotel_dev_password@localhost:5432/hotel_ops
         run: pytest
 
       - name: Ruff
