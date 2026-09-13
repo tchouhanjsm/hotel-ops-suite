@@ -44,7 +44,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install fastapi uvicorn pytest pytest-cov ruff mypy
-          pip install sqlalchemy psycopg[binary] alembic pydantic-settings httpx
+          pip install sqlalchemy psycopg[binary] alembic pydantic-settings httpx "pwdlib[argon2]"
 
       - name: Tests
         working-directory: backend
