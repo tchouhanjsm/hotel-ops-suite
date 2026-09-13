@@ -115,3 +115,14 @@ Runs:
 - Commit related code and tracker changes together
 - Merge feature branches into `develop` through PRs
 - Keep modules isolated and maintainable
+
+### Rooms
+- Room model
+- Room database migration
+- Room schemas
+- Room repository
+- Room service
+- Room CRUD API
+- Room status / housekeeping states
+- Room validation
+- Room API tests
