@@ -1,4 +1,4 @@
-﻿from sqlalchemy import select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.guest import Guest
@@ -18,12 +18,16 @@ class GuestRepository:
     def search(self, query: str) -> list[Guest]:
         pattern = f"%{query}%"
 
-        statement = select(Guest).where(
-            (Guest.first_name.ilike(pattern))
-            | (Guest.last_name.ilike(pattern))
-            | (Guest.phone.ilike(pattern))
-            | (Guest.email.ilike(pattern))
-        ).order_by(Guest.id)
+        statement = (
+            select(Guest)
+            .where(
+                (Guest.first_name.ilike(pattern))
+                | (Guest.last_name.ilike(pattern))
+                | (Guest.phone.ilike(pattern))
+                | (Guest.email.ilike(pattern))
+            )
+            .order_by(Guest.id)
+        )
 
         return list(self.db.scalars(statement).all())
 

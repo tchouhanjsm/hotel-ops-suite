@@ -1,0 +1,24 @@
+﻿def setup_data(db: Session) -> tuple[Guest, Room]:
+    suffix = uuid4().hex[:8]
+
+    guest = Guest(
+        first_name="Test",
+        last_name=f"Guest-{suffix}",
+        phone=f"9{suffix[:9]}",
+    )
+
+    room = Room(
+        room_number=f"T{suffix}",
+        room_name="Test Room",
+        room_type="Heritage",
+        floor=2,
+        capacity=2,
+    )
+
+    db.add_all([guest, room])
+    db.commit()
+
+    db.refresh(guest)
+    db.refresh(room)
+
+    return guest, room

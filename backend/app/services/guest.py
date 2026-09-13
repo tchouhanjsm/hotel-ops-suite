@@ -1,4 +1,4 @@
-﻿from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session
 
 from app.models.guest import Guest
 from app.repositories.guest import GuestRepository

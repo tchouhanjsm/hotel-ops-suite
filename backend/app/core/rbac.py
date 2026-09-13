@@ -1,4 +1,4 @@
-﻿from collections.abc import Callable
+from collections.abc import Callable
 
 from fastapi import Depends, HTTPException, status
 
@@ -18,6 +18,12 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "guest:read",
         "guest:create",
         "guest:update",
+        "booking:read",
+        "booking:create",
+        "booking:update",
+        "booking:cancel",
+        "booking:check_in",
+        "booking:check_out",
     },
     "manager": {
         "staff:read",
@@ -29,6 +35,12 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "guest:read",
         "guest:create",
         "guest:update",
+        "booking:read",
+        "booking:create",
+        "booking:update",
+        "booking:cancel",
+        "booking:check_in",
+        "booking:check_out",
     },
     "front_desk": {
         "staff:read",
@@ -36,6 +48,12 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "guest:read",
         "guest:create",
         "guest:update",
+        "booking:read",
+        "booking:create",
+        "booking:update",
+        "booking:cancel",
+        "booking:check_in",
+        "booking:check_out",
     },
 }
 

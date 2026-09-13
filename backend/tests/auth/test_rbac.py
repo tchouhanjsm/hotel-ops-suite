@@ -1,4 +1,4 @@
-﻿from app.core.rbac import ROLE_PERMISSIONS
+from app.core.rbac import ROLE_PERMISSIONS
 
 
 def test_admin_permissions() -> None:
