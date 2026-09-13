@@ -1,10 +1,11 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+﻿from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    database_url: str = (
-        "postgresql+psycopg://hotel_admin:hotel_dev_password@localhost:5432/hotel_ops"
-    )
+    database_url: str = ""
+    jwt_secret_key: str = "dev-only-change-this"
+    jwt_algorithm: str = "HS256"
+    jwt_expire_minutes: int = 480
 
     model_config = SettingsConfigDict(
         env_file=".env",
