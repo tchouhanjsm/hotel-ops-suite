@@ -1,199 +1,93 @@
-# Hotel Ops Suite — Project Tracker
+﻿# Hotel Ops Suite Project Tracker
 
-## 1. Project Overview
-- Project: Hotel Ops Suite
-- Repository: `https://github.com/tchouhanjsm/hotel-ops-suite.git`
-- Primary development branch: `develop`
-- Architecture: Modular monolith
+## Project Status
+- Repository: hotel-ops-suite
+- Primary development branch: develop
+- Workflow: feature branch → Pull Request → CI → approval → develop
+- Direct pushes to develop: blocked by repository ruleset
+- Local pre-PR gate: `npm run check`
+
+## Architecture
 - Backend: Python + FastAPI
-- Frontend: React + TypeScript + Vite
 - Database: PostgreSQL
 - ORM: SQLAlchemy 2
 - Migrations: Alembic
-- Source of truth: GitHub
+- Frontend: React + TypeScript + Vite
+- UI foundation: Tailwind / Lucide
+- Backend testing: pytest
+- Backend linting: Ruff
+- Backend type checking: mypy
+- CI: GitHub Actions
+- Architecture style: modular monolith
+- Authentication: JWT
+- Password hashing: pwdlib + Argon2
+- Authorization: role-based permissions
 
-## 2. Architecture
-```text
-React + TypeScript + Vite
-          ↓
-       FastAPI
-          ↓
-     Service Layer
-          ↓
-  Repository / Data Layer
-          ↓
-     PostgreSQL
-```
-
-Planned backend modules:
-- Auth / Staff / RBAC
-- Rooms
-- Guests
-- Bookings
-- Folio
-- Payments
-- Vouchers
-- Invoices
-- Cash
-- Reports
-- Assistant
-- Audit
-- Settings
-
-Frontend principle:
-- Independent routes/pages
-- Route-level error isolation
-- Shared layout/components
-
-## 3. Repository Structure
-```text
-hotel-ops-suite/
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── routes/
-│   │   │   └── __init__.py
-│   │   ├── core/
-│   │   │   ├── config.py
-│   │   │   └── __init__.py
-│   │   ├── db/
-│   │   │   ├── base.py
-│   │   │   ├── session.py
-│   │   │   └── __init__.py
-│   │   ├── models/
-│   │   │   ├── staff.py
-│   │   │   └── __init__.py
-│   │   ├── repositories/
-│   │   ├── schemas/
-│   │   ├── services/
-│   │   ├── main.py
-│   │   └── __init__.py
-│   ├── alembic/
-│   │   └── versions/
-│   ├── alembic.ini
-│   └── tests/
-├── frontend/
-├── docs/
-├── tests/
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-├── .gitignore
-├── docker-compose.yml
-├── package.json
-└── project-tracker.md
-```
-
-## 4. Development History
+## Completed
 
 ### Foundation
-- [x] Git repository initialized
-- [x] `develop` branch created
-- [x] GitHub remote configured
-- [x] Root `.gitignore` added
-- [x] Root package check scripts added
-- [x] Python virtual environment created
-- [x] FastAPI health endpoint created
-- [x] React + TypeScript + Vite frontend created
-- [x] React Router added
-- [x] Tailwind packages added
-- [x] Lucide icons added
-- [x] Frontend route structure created
-- [x] Frontend ErrorBoundary created
+- Project repository initialized
+- Git/GitHub workflow established
+- Backend FastAPI foundation
+- Frontend React/Vite foundation
+- PostgreSQL local development setup
+- SQLAlchemy database session
+- Environment configuration
+- Alembic initialized and connected
+- GitHub Actions CI
+- PostgreSQL CI test service
+- Local pre-PR quality gate
 
-### Database
-- [x] PostgreSQL installed locally on Windows
-- [x] PostgreSQL service running
-- [x] `hotel_ops` database created
-- [x] `hotel_admin` database user created
-- [x] SQLAlchemy installed
-- [x] Psycopg installed
-- [x] Pydantic Settings installed
-- [x] `.env` configuration added
-- [x] SQLAlchemy engine/session created
-- [x] Database connection test added
-- [x] SQLAlchemy declarative `Base` created
-- [x] Staff model created
-- [x] Alembic initialized
-- [x] Alembic connected to application database configuration
-- [ ] First Staff migration generated
-- [ ] First migration applied
+### Staff / Authentication / RBAC
+- Staff SQLAlchemy model
+- Staff database migration
+- Staff schemas
+- Password hashing and verification
+- Staff repository
+- Staff service
+- Authentication service
+- JWT token creation and decoding
+- Login API
+- Current authenticated staff dependency
+- RBAC permission definitions
+- Protected API routes
+- Staff list API
+- Staff creation API
+- Staff detail API
 
-### Quality Gates
-- [x] pytest
-- [x] pytest-cov installed
-- [x] Ruff
-- [x] Mypy
-- [x] Frontend production build check
-- [x] GitHub Actions CI
-- [x] PostgreSQL CI service
-- [x] PR-only workflow enforced on `develop`
-- [x] Required CI checks enforced
-- [x] Solo-development ruleset adjusted
+## Automated Checks
+`npm run check`
 
-## 5. Current Checks
+Runs:
+1. Backend tests
+2. Ruff
+3. Mypy
+4. Frontend production build
 
-Local root command:
-```powershell
-npm run check
-```
+## Current Test Coverage
+- 20 backend tests passing
+- Ruff passing
+- Mypy passing
+- Frontend build passing
 
-Checks included:
-- Backend tests
-- Backend Ruff
-- Backend Mypy
-- Frontend build
+## Current Database Migrations
+- `5f6d94f8ceb8` - create staff table
 
-GitHub Actions:
-- Backend Checks
-- Frontend Build
-- PostgreSQL service for backend integration tests
+## Current Backend Structure
+- `app/api`
+- `app/core`
+- `app/db`
+- `app/models`
+- `app/repositories`
+- `app/schemas`
+- `app/services`
+- `alembic`
 
-## 6. Current Git / PR Workflow
-```text
-feature branch
-      ↓
-commit
-      ↓
-push
-      ↓
-Pull Request → develop
-      ↓
-CI checks
-      ↓
-Approval / ruleset requirements
-      ↓
-Merge
-```
-
-Direct pushes to `develop` are restricted by the repository ruleset.
-
-## 7. Completed Components
-- FastAPI application foundation
-- Health endpoint
-- PostgreSQL connection
-- SQLAlchemy foundation
-- Application configuration
-- Alembic foundation
-- Initial Staff model
-- React application shell
-- Route structure
-- Basic UI layout foundation
-- CI quality gate
-
-## 8. In Progress
-- Staff / Authentication / RBAC
-- Database migration foundation
-
-## 9. Pending Major Work
-- First Staff migration
-- Authentication
-- Password hashing
-- Session/token strategy
-- RBAC and permission model
-- Protected backend routes
-- Frontend login
-- Route-level authorization
+## Pending
+- Production-grade secret management
+- Authentication hardening
+- Complete RBAC permission matrix
+- Staff update/deactivation/delete workflows
 - Rooms module
 - Guests module
 - Bookings module
@@ -201,24 +95,23 @@ Direct pushes to `develop` are restricted by the repository ruleset.
 - Payments module
 - Vouchers module
 - Invoices module
-- Cash module
+- Cash management
 - Reports
+- Dashboard data layer
+- Frontend authentication
+- Frontend RBAC
 - Audit logging
-- Settings
-- Assistant
-- Production deployment
-- Backup / recovery strategy
-- Security hardening
-- Direct booking / growth integrations
+- Error monitoring
+- Deployment setup
+- Production documentation
+- Security review
+- Growth/direct-booking capabilities
 
-## 10. Legacy / Reference
-- Previous Google Apps Script hotel operations prototype is retained as reference only.
-- It is not the production architecture for the new system.
-
-## 11. Handover Notes
-- Keep GitHub as the source of truth.
-- Develop feature-by-feature using feature branches and pull requests.
-- Keep modules independently testable.
-- Keep authentication, authorization, validation, transactions, and auditability as first-class concerns.
-- Avoid coupling unrelated hotel workflows.
-- Update this tracker whenever a major file, module, architecture decision, check, or milestone changes.
+## Development Rules
+- Work in small feature batches
+- Update this tracker with each completed batch
+- Run `npm run check` before every PR
+- Never bypass failing tests, lint, type checks, or builds
+- Commit related code and tracker changes together
+- Merge feature branches into `develop` through PRs
+- Keep modules isolated and maintainable

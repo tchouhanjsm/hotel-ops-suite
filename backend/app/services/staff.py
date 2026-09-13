@@ -9,6 +9,12 @@ class StaffService:
     def __init__(self, db: Session) -> None:
         self.repository = StaffRepository(db)
 
+    def list_staff(self) -> list[Staff]:
+        return self.repository.list_all()
+
+    def get_staff(self, staff_id: int) -> Staff | None:
+        return self.repository.get_by_id(staff_id)
+
     def create_staff(
         self,
         username: str,
