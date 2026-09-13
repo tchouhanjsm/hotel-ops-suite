@@ -35,3 +35,29 @@ class StaffService:
             full_name=full_name,
             role=role,
         )
+
+    def update_staff(
+        self,
+        staff_id: int,
+        full_name: str | None = None,
+        role: str | None = None,
+        is_active: bool | None = None,
+    ) -> Staff | None:
+        staff = self.repository.get_by_id(staff_id)
+
+        if staff is None:
+            return None
+
+        if full_name is not None:
+            staff.full_name = full_name
+
+        if role is not None:
+            staff.role = role
+
+        if is_active is not None:
+            staff.is_active = is_active
+
+        self.repository.db.flush()
+        self.repository.db.refresh(staff)
+
+        return staff

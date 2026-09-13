@@ -14,6 +14,12 @@ class StaffCreate(StaffBase):
     password: str
 
 
+class StaffUpdate(BaseModel):
+    full_name: str | None = None
+    role: str | None = None
+    is_active: bool | None = None
+
+
 class StaffRead(StaffBase):
     id: int
     created_at: datetime

@@ -5,7 +5,7 @@ from app.api.auth import get_current_staff
 from app.api.dependencies import get_db
 from app.core.rbac import require_permission
 from app.models.staff import Staff
-from app.schemas.staff import StaffCreate, StaffRead
+from app.schemas.staff import StaffCreate, StaffRead, StaffUpdate
 from app.services.staff import StaffService
 
 router = APIRouter(prefix="/staff", tags=["Staff"])
@@ -69,6 +69,57 @@ def create_staff(
             status_code=status.HTTP_409_CONFLICT,
             detail=str(exc),
         ) from exc
+
+
+@router.patch(
+    "/{staff_id}",
+    response_model=StaffRead,
+)
+def update_staff(
+    staff_id: int,
+    data: StaffUpdate,
+    db: Session = Depends(get_db),  # noqa: B008
+    _: Staff = Depends(require_permission("staff:update")),  # noqa: B008
+) -> Staff:
+    staff = StaffService(db).update_staff(
+        staff_id=staff_id,
+        full_name=data.full_name,
+        role=data.role,
+        is_active=data.is_active,
+    )
+
+    if staff is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Staff member not found.",
+        )
+
+    db.commit()
+    return staff
+
+
+@router.post(
+    "/{staff_id}/deactivate",
+    response_model=StaffRead,
+)
+def deactivate_staff(
+    staff_id: int,
+    db: Session = Depends(get_db),  # noqa: B008
+    _: Staff = Depends(require_permission("staff:update")),  # noqa: B008
+) -> Staff:
+    staff = StaffService(db).update_staff(
+        staff_id=staff_id,
+        is_active=False,
+    )
+
+    if staff is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Staff member not found.",
+        )
+
+    db.commit()
+    return staff
 
 
 @router.get(
