@@ -23,15 +23,11 @@ def override_get_db():
         yield db
 
 
-app.dependency_overrides[get_db] = override_get_db
-client = TestClient(app)
-
-
 def test_login_success() -> None:
     with Session(engine) as db:
         db.add(
             Staff(
-                username="admin",
+                username="login_admin",
                 password_hash=hash_password("StrongPassword123!"),
                 full_name="System Admin",
                 role="admin",
@@ -39,32 +35,46 @@ def test_login_success() -> None:
         )
         db.commit()
 
-    response = client.post(
-        "/auth/login",
-        json={
-            "username": "admin",
-            "password": "StrongPassword123!",
-        },
-    )
+    app.dependency_overrides[get_db] = override_get_db
 
-    assert response.status_code == 200
+    try:
+        client = TestClient(app)
 
-    data = response.json()
+        response = client.post(
+            "/auth/login",
+            json={
+                "username": "login_admin",
+                "password": "StrongPassword123!",
+            },
+        )
 
-    assert data["token_type"] == "bearer"
-    assert data["access_token"]
-    assert data["staff"]["username"] == "admin"
-    assert data["staff"]["role"] == "admin"
+        assert response.status_code == 200
+
+        data = response.json()
+
+        assert data["token_type"] == "bearer"
+        assert data["access_token"]
+        assert data["staff"]["username"] == "login_admin"
+        assert data["staff"]["role"] == "admin"
+    finally:
+        app.dependency_overrides.pop(get_db, None)
 
 
 def test_login_failure() -> None:
-    response = client.post(
-        "/auth/login",
-        json={
-            "username": "admin",
-            "password": "WrongPassword123!",
-        },
-    )
+    app.dependency_overrides[get_db] = override_get_db
 
-    assert response.status_code == 401
-    assert response.json()["detail"] == "Invalid username or password."
+    try:
+        client = TestClient(app)
+
+        response = client.post(
+            "/auth/login",
+            json={
+                "username": "login_admin",
+                "password": "WrongPassword123!",
+            },
+        )
+
+        assert response.status_code == 401
+        assert response.json()["detail"] == "Invalid username or password."
+    finally:
+        app.dependency_overrides.pop(get_db, None)
