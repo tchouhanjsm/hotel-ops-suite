@@ -15,6 +15,9 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "room:create",
         "room:update",
         "room:delete",
+        "guest:read",
+        "guest:create",
+        "guest:update",
     },
     "manager": {
         "staff:read",
@@ -23,10 +26,16 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "room:read",
         "room:create",
         "room:update",
+        "guest:read",
+        "guest:create",
+        "guest:update",
     },
     "front_desk": {
         "staff:read",
         "room:read",
+        "guest:read",
+        "guest:create",
+        "guest:update",
     },
 }
 
