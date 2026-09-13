@@ -1,3 +1,4 @@
-﻿from app.repositories.staff import StaffRepository
+﻿from app.repositories.room import RoomRepository
+from app.repositories.staff import StaffRepository
 
-__all__ = ["StaffRepository"]
+__all__ = ["RoomRepository", "StaffRepository"]
