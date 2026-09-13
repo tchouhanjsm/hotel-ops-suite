@@ -15,6 +15,10 @@ class StaffRepository:
     def get_by_id(self, staff_id: int) -> Staff | None:
         return self.db.get(Staff, staff_id)
 
+    def list_all(self) -> list[Staff]:
+        statement = select(Staff).order_by(Staff.id)
+        return list(self.db.scalars(statement).all())
+
     def create(
         self,
         username: str,
