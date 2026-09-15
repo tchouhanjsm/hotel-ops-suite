@@ -65,10 +65,13 @@ class BookingService:
         if guest is None or not guest.is_active:
             raise ValueError("Guest not found or inactive.")
 
-        room = self.room_repository.get_by_id(room_id)
+        room = self.room_repository.get_by_id_for_update(room_id)
 
         if room is None or not room.is_active:
             raise ValueError("Room not found or inactive.")
+
+        if room.status in {"maintenance", "out_of_order"}:
+            raise ValueError("Room is not available for booking.")
 
         if check_out <= check_in:
             raise ValueError("Check-out must be after check-in.")
@@ -119,6 +122,14 @@ class BookingService:
         if new_check_out <= new_check_in:
             raise ValueError("Check-out must be after check-in.")
 
+        room = self.room_repository.get_by_id_for_update(new_room_id)
+
+        if room is None or not room.is_active:
+            raise ValueError("Room not found or inactive.")
+
+        if room.status in {"maintenance", "out_of_order"}:
+            raise ValueError("Room is not available for booking.")
+
         if not self.is_room_available(
             room_id=new_room_id,
             check_in=new_check_in,
@@ -152,7 +163,7 @@ class BookingService:
         if booking is None:
             return None
 
-        if booking.status in {"checked_out", "cancelled"}:
+        if booking.status != "confirmed":
             raise ValueError("Booking cannot be cancelled.")
 
         booking.status = "cancelled"
@@ -170,12 +181,19 @@ class BookingService:
         if booking.status != "confirmed":
             raise ValueError("Only confirmed bookings can be checked in.")
 
+        room = self.room_repository.get_by_id_for_update(booking.room_id)
+
+        if room is None:
+            raise ValueError("Room not found.")
+
+        if not room.is_active:
+            raise ValueError("Room is inactive.")
+
+        if room.status in {"maintenance", "out_of_order"}:
+            raise ValueError("Room is not available for check-in.")
+
         booking.status = "checked_in"
-
-        room = self.room_repository.get_by_id(booking.room_id)
-
-        if room is not None:
-            room.status = "occupied"
+        room.status = "occupied"
 
         self.db.flush()
         self.db.refresh(booking)

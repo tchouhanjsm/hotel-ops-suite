@@ -1,3 +1,57 @@
-import sys
+import pytest
+from sqlalchemy import create_engine, delete
+from sqlalchemy.orm import Session
+from sqlalchemy.pool import StaticPool
 
-sys.path.insert(0, ".")
+from app.db.base import Base
+from app.models.booking import Booking
+from app.models.guest import Guest
+from app.models.room import Room
+
+engine = create_engine(
+    "sqlite://",
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
+)
+
+Base.metadata.create_all(engine)
+
+
+@pytest.fixture
+def db_session() -> Session:
+    with Session(engine) as db:
+        yield db
+
+
+@pytest.fixture(autouse=True)
+def clean_database() -> None:
+    with Session(engine) as db:
+        db.execute(delete(Booking))
+        db.execute(delete(Guest))
+        db.execute(delete(Room))
+        db.commit()
+
+
+@pytest.fixture
+def booking_test_data(db_session: Session) -> tuple[Guest, Room]:
+    guest = Guest(
+        first_name="Test",
+        last_name="Guest",
+        phone="9000000000",
+    )
+
+    room = Room(
+        room_number="201",
+        room_name="Test Room",
+        room_type="Heritage",
+        floor=2,
+        capacity=2,
+    )
+
+    db_session.add_all([guest, room])
+    db_session.commit()
+
+    db_session.refresh(guest)
+    db_session.refresh(room)
+
+    return guest, room
