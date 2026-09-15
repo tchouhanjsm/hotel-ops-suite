@@ -1,6 +1,7 @@
 ﻿# Hotel Ops Suite Project Tracker
 
 ## Project Status
+
 - Repository: hotel-ops-suite
 - Primary development branch: develop
 - Workflow: feature branch → Pull Request → CI → approval → develop
@@ -8,6 +9,7 @@
 - Local pre-PR gate: `npm run check`
 
 ## Architecture
+
 - Backend: Python + FastAPI
 - Database: PostgreSQL
 - ORM: SQLAlchemy 2
@@ -35,13 +37,31 @@
 - Improved booking transaction safety for concurrent booking attempts
 - Removed manual test path manipulation in favor of project-level pytest configuration
 - Added `pytest.ini` with backend Python path configuration
+
+### Batch 6.0A — Folio / Billing Foundation
+
+- Added Folio and FolioItem models
+- Added Folio schemas
+- Added Folio repository and service
+- Added Folio API routes
+- Added one-folio-per-booking enforcement
+- Added folio item charge calculation
+- Added tax calculation using Decimal arithmetic
+- Added closed-folio protection
+- Added cancelled-booking protection
+- Added PostgreSQL migration for folio tables
+- PostgreSQL migration verified
+- 53 backend tests passing
+- Ruff passing
+- mypy passing
+- Frontend production build passing
 - **48 backend tests passing**
 - Ruff passing
 - mypy passing
 - Frontend production build passing
 
-
 ### Foundation
+
 - Project repository initialized
 - Git/GitHub workflow established
 - Backend FastAPI foundation
@@ -55,6 +75,7 @@
 - Local pre-PR quality gate
 
 ### Staff / Authentication / RBAC
+
 - Staff SQLAlchemy model
 - Staff database migration
 - Staff schemas
@@ -72,24 +93,29 @@
 - Staff detail API
 
 ## Automated Checks
+
 `npm run check`
 
 Runs:
+
 1. Backend tests
 2. Ruff
 3. Mypy
 4. Frontend production build
 
 ## Current Test Coverage
+
 - 20 backend tests passing
 - Ruff passing
 - Mypy passing
 - Frontend build passing
 
 ## Current Database Migrations
+
 - `5f6d94f8ceb8` - create staff table
 
 ## Current Backend Structure
+
 - `app/api`
 - `app/core`
 - `app/db`
@@ -100,6 +126,7 @@ Runs:
 - `alembic`
 
 ## Pending
+
 - Production-grade secret management
 - Authentication hardening
 - Complete RBAC permission matrix
@@ -124,6 +151,7 @@ Runs:
 - Growth/direct-booking capabilities
 
 ## Development Rules
+
 - Work in small feature batches
 - Update this tracker with each completed batch
 - Run `npm run check` before every PR
@@ -133,6 +161,7 @@ Runs:
 - Keep modules isolated and maintainable
 
 ### Rooms
+
 - Room model
 - Room database migration
 - Room schemas

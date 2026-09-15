@@ -1,0 +1,144 @@
+from datetime import date
+from decimal import Decimal
+
+import pytest
+from sqlalchemy.orm import Session
+
+from app.services.booking import BookingService
+from app.services.folio import FolioService
+
+
+def create_booking(db_session: Session, booking_test_data):
+    guest, room = booking_test_data
+
+    return BookingService(db_session).create_booking(
+        guest_id=guest.id,
+        room_id=room.id,
+        check_in=date(2027, 5, 10),
+        check_out=date(2027, 5, 12),
+        rate=Decimal("4900.00"),
+        source="direct",
+        notes=None,
+    )
+
+
+def test_create_folio(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    booking = create_booking(db_session, booking_test_data)
+    db_session.commit()
+
+    folio = FolioService(db_session).create_folio(
+        booking_id=booking.id,
+        currency="INR",
+        notes=None,
+    )
+
+    assert folio.folio_number.startswith("FOL-")
+    assert folio.booking_id == booking.id
+    assert folio.status == "open"
+    assert folio.currency == "INR"
+
+
+def test_duplicate_folio_rejected(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    booking = create_booking(db_session, booking_test_data)
+    db_session.commit()
+
+    FolioService(db_session).create_folio(
+        booking_id=booking.id,
+        currency="INR",
+        notes=None,
+    )
+    db_session.commit()
+
+    with pytest.raises(
+        ValueError,
+        match="Folio already exists for this booking.",
+    ):
+        FolioService(db_session).create_folio(
+            booking_id=booking.id,
+            currency="INR",
+            notes=None,
+        )
+
+
+def test_add_folio_item_calculates_tax(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    booking = create_booking(db_session, booking_test_data)
+    db_session.commit()
+
+    folio = FolioService(db_session).create_folio(
+        booking_id=booking.id,
+        currency="INR",
+        notes=None,
+    )
+    db_session.commit()
+
+    item = FolioService(db_session).add_item(
+        folio_id=folio.id,
+        item_type="room_charge",
+        description="Room Charges",
+        quantity=Decimal("2.00"),
+        unit_price=Decimal("4900.00"),
+        tax_percent=Decimal("5.00"),
+    )
+
+    assert item.amount == Decimal("9800.00")
+    assert item.tax_amount == Decimal("490.00")
+    assert item.total_amount == Decimal("10290.00")
+
+
+def test_closed_folio_cannot_accept_items(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    booking = create_booking(db_session, booking_test_data)
+    db_session.commit()
+
+    folio = FolioService(db_session).create_folio(
+        booking_id=booking.id,
+        currency="INR",
+        notes=None,
+    )
+    folio.status = "closed"
+    db_session.commit()
+
+    with pytest.raises(
+        ValueError,
+        match="Folio is not open.",
+    ):
+        FolioService(db_session).add_item(
+            folio_id=folio.id,
+            item_type="food",
+            description="Dinner",
+            quantity=Decimal("1.00"),
+            unit_price=Decimal("1000.00"),
+            tax_percent=Decimal("5.00"),
+        )
+
+
+def test_cancelled_booking_cannot_create_folio(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    booking = create_booking(db_session, booking_test_data)
+    db_session.commit()
+
+    BookingService(db_session).cancel_booking(booking.id)
+    db_session.commit()
+
+    with pytest.raises(
+        ValueError,
+        match="Cannot create a folio for a cancelled booking.",
+    ):
+        FolioService(db_session).create_folio(
+            booking_id=booking.id,
+            currency="INR",
+            notes=None,
+        )
