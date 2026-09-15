@@ -60,6 +60,21 @@
 - mypy passing
 - Frontend production build passing
 
+### Batch 6.0B — Folio Totals + Room Charges
+
+- Added automatic room-charge generation when a folio is created
+- Added folio subtotal calculation
+- Added folio tax-total calculation
+- Added folio grand-total calculation
+- Added Decimal-safe financial arithmetic
+- Added FolioSummary API response
+- Added room-charge and totals regression tests
+- 6 Folio tests passing
+- 54 backend tests passing
+- Ruff passing
+- mypy passing
+- Frontend production build passing
+
 ### Foundation
 
 - Project repository initialized
