@@ -5,6 +5,7 @@ from sqlalchemy.pool import StaticPool
 
 from app.db.base import Base
 from app.models.booking import Booking
+from app.models.folio import Folio, FolioItem
 from app.models.guest import Guest
 from app.models.room import Room
 
@@ -26,6 +27,8 @@ def db_session() -> Session:
 @pytest.fixture(autouse=True)
 def clean_database() -> None:
     with Session(engine) as db:
+        db.execute(delete(FolioItem))
+        db.execute(delete(Folio))
         db.execute(delete(Booking))
         db.execute(delete(Guest))
         db.execute(delete(Room))
