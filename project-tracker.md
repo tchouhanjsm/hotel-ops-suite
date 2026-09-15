@@ -25,6 +25,22 @@
 
 ## Completed
 
+### Batch 5.5 — Test Infrastructure + Booking Hardening
+
+- Centralized reusable booking test fixtures in `backend/tests/conftest.py`
+- Added dedicated booking lifecycle regression tests
+- Added PostgreSQL row locking for booking operations
+- Added room operational-state validation for booking and check-in
+- Hardened booking cancellation state transitions
+- Improved booking transaction safety for concurrent booking attempts
+- Removed manual test path manipulation in favor of project-level pytest configuration
+- Added `pytest.ini` with backend Python path configuration
+- **48 backend tests passing**
+- Ruff passing
+- mypy passing
+- Frontend production build passing
+
+
 ### Foundation
 - Project repository initialized
 - Git/GitHub workflow established
