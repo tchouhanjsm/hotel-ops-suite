@@ -1,8 +1,10 @@
 import secrets
 from decimal import ROUND_HALF_UP, Decimal
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.models.booking import Booking
 from app.models.folio import Folio, FolioItem
 from app.repositories.booking import BookingRepository
 from app.repositories.folio import FolioRepository
@@ -17,7 +19,8 @@ class FolioService:
     def _generate_folio_number(self) -> str:
         while True:
             number = f"FOL-{secrets.token_hex(4).upper()}"
-            if self.repository.get_by_number(number) is None:
+            statement = select(Folio).where(Folio.folio_number == number)
+            if self.db.scalar(statement) is None:
                 return number
 
     def get_folio(self, folio_id: int) -> Folio | None:
@@ -28,6 +31,25 @@ class FolioService:
 
     def list_items(self, folio_id: int) -> list[FolioItem]:
         return self.repository.list_items(folio_id)
+
+    def get_totals(self, folio_id: int) -> tuple[Decimal, Decimal, Decimal]:
+        items = self.repository.list_items(folio_id)
+
+        subtotal = sum(
+            (item.amount for item in items),
+            Decimal("0.00"),
+        )
+        tax_total = sum(
+            (item.tax_amount for item in items),
+            Decimal("0.00"),
+        )
+        grand_total = subtotal + tax_total
+
+        return (
+            subtotal.quantize(Decimal("0.01")),
+            tax_total.quantize(Decimal("0.01")),
+            grand_total.quantize(Decimal("0.01")),
+        )
 
     def create_folio(
         self,
@@ -46,12 +68,16 @@ class FolioService:
         if self.repository.get_by_booking_id(booking_id) is not None:
             raise ValueError("Folio already exists for this booking.")
 
-        return self.repository.create_folio(
+        folio = self.repository.create_folio(
             folio_number=self._generate_folio_number(),
             booking_id=booking_id,
             currency=currency.upper(),
             notes=notes,
         )
+
+        self.add_room_charge(folio.id, booking)
+
+        return folio
 
     def add_item(
         self,
@@ -93,3 +119,37 @@ class FolioService:
             tax_amount=tax_amount,
             total_amount=total_amount,
         )
+
+    def add_room_charge(
+        self,
+        folio_id: int,
+        booking: Booking,
+    ) -> FolioItem:
+        items = self.repository.list_items(folio_id)
+
+        if any(item.item_type == "room_charge" for item in items):
+            raise ValueError("Room charge already exists for this folio.")
+
+        return self.add_item(
+            folio_id=folio_id,
+            item_type="room_charge",
+            description=f"Room {booking.room_id} - {booking.nights} night(s)",
+            quantity=Decimal(str(booking.nights)),
+            unit_price=booking.rate,
+            tax_percent=Decimal("5.00"),
+        )
+
+    def create_folio_summary(self, folio_id: int) -> dict[str, object]:
+        folio = self.repository.get_by_id(folio_id)
+
+        if folio is None:
+            raise ValueError("Folio not found.")
+
+        subtotal, tax_total, grand_total = self.get_totals(folio_id)
+
+        return {
+            "folio": folio,
+            "subtotal": subtotal,
+            "tax_total": tax_total,
+            "grand_total": grand_total,
+        }
