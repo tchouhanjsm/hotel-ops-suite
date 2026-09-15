@@ -11,6 +11,10 @@ class RoomRepository:
     def get_by_id(self, room_id: int) -> Room | None:
         return self.db.get(Room, room_id)
 
+    def get_by_id_for_update(self, room_id: int) -> Room | None:
+        statement = select(Room).where(Room.id == room_id).with_for_update()
+        return self.db.scalar(statement)
+
     def get_by_number(self, room_number: str) -> Room | None:
         statement = select(Room).where(Room.room_number == room_number)
         return self.db.scalar(statement)
