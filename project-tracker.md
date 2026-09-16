@@ -85,6 +85,22 @@
 - mypy passing
 - Frontend production build passing
 
+### Batch 6.1 — Payments Foundation
+
+- Added Payment model and migration
+- Added payment methods and statuses
+- Added payment creation, listing, and void workflows
+- Added payment audit fields
+- Changed folio balance to derive from completed payments
+- Removed mutable folio paid amount storage
+- Added overpayment protection
+- Added payment regression tests
+- Added PostgreSQL payments table
+- 59 backend tests passing
+- Ruff passing
+- mypy passing
+- Frontend production build passing
+
 ### Foundation
 
 - Project repository initialized

@@ -7,6 +7,7 @@ from app.db.base import Base
 from app.models.booking import Booking
 from app.models.folio import Folio, FolioItem
 from app.models.guest import Guest
+from app.models.payment import Payment
 from app.models.room import Room
 
 engine = create_engine(
@@ -27,6 +28,7 @@ def db_session() -> Session:
 @pytest.fixture(autouse=True)
 def clean_database() -> None:
     with Session(engine) as db:
+        db.execute(delete(Payment))
         db.execute(delete(FolioItem))
         db.execute(delete(Folio))
         db.execute(delete(Booking))

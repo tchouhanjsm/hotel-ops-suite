@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.models.booking import Booking
 from app.models.folio import Folio, FolioItem
+from app.models.payment import Payment
 from app.repositories.booking import BookingRepository
 from app.repositories.folio import FolioRepository
 
@@ -50,6 +51,33 @@ class FolioService:
             tax_total.quantize(Decimal("0.01")),
             grand_total.quantize(Decimal("0.01")),
         )
+
+    def get_balance(self, folio_id: int) -> tuple[Decimal, Decimal]:
+        folio = self.repository.get_by_id(folio_id)
+
+        if folio is None:
+            raise ValueError("Folio not found.")
+
+        _, _, grand_total = self.get_totals(folio_id)
+
+        payments = self.db.scalars(
+            select(Payment).where(
+                Payment.folio_id == folio_id,
+                Payment.status == "completed",
+            )
+        ).all()
+
+        paid_amount = sum(
+            (payment.amount for payment in payments),
+            Decimal("0.00"),
+        ).quantize(Decimal("0.01"))
+
+        balance_due = max(
+            grand_total - paid_amount,
+            Decimal("0.00"),
+        ).quantize(Decimal("0.01"))
+
+        return paid_amount, balance_due
 
     def create_folio(
         self,
