@@ -76,3 +76,5 @@ class FolioSummary(BaseModel):
     subtotal: Decimal
     tax_total: Decimal
     grand_total: Decimal
+    paid_amount: Decimal
+    balance_due: Decimal

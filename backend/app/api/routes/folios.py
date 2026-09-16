@@ -60,6 +60,7 @@ def get_folio(
         )
 
     subtotal, tax_total, grand_total = service.get_totals(folio_id)
+    paid_amount, balance_due = service.get_balance(folio_id)
 
     return FolioSummary(
         id=folio.id,
@@ -72,6 +73,8 @@ def get_folio(
         subtotal=subtotal,
         tax_total=tax_total,
         grand_total=grand_total,
+        paid_amount=paid_amount,
+        balance_due=balance_due,
     )
 
 
