@@ -58,5 +58,21 @@ class FolioRead(BaseModel):
     currency: str
     notes: str | None
     created_at: datetime
+    subtotal: Decimal
+    tax_total: Decimal
+    grand_total: Decimal
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class FolioSummary(BaseModel):
+    id: int
+    folio_number: str
+    booking_id: int
+    status: FolioStatus
+    currency: str
+    notes: str | None
+    created_at: datetime
+    subtotal: Decimal
+    tax_total: Decimal
+    grand_total: Decimal
