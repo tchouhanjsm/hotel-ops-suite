@@ -22,7 +22,7 @@ def create_booking(db_session: Session, booking_test_data):
     )
 
 
-def test_create_folio(
+def test_create_folio_generates_room_charge(
     db_session: Session,
     booking_test_data,
 ) -> None:
@@ -35,10 +35,15 @@ def test_create_folio(
         notes=None,
     )
 
-    assert folio.folio_number.startswith("FOL-")
-    assert folio.booking_id == booking.id
-    assert folio.status == "open"
-    assert folio.currency == "INR"
+    items = FolioService(db_session).list_items(folio.id)
+
+    assert len(items) == 1
+    assert items[0].item_type == "room_charge"
+    assert items[0].quantity == Decimal("2.00")
+    assert items[0].unit_price == Decimal("4900.00")
+    assert items[0].amount == Decimal("9800.00")
+    assert items[0].tax_amount == Decimal("490.00")
+    assert items[0].total_amount == Decimal("10290.00")
 
 
 def test_duplicate_folio_rejected(
@@ -82,16 +87,47 @@ def test_add_folio_item_calculates_tax(
 
     item = FolioService(db_session).add_item(
         folio_id=folio.id,
-        item_type="room_charge",
-        description="Room Charges",
-        quantity=Decimal("2.00"),
-        unit_price=Decimal("4900.00"),
+        item_type="food",
+        description="Dinner",
+        quantity=Decimal("1.00"),
+        unit_price=Decimal("1000.00"),
         tax_percent=Decimal("5.00"),
     )
 
-    assert item.amount == Decimal("9800.00")
-    assert item.tax_amount == Decimal("490.00")
-    assert item.total_amount == Decimal("10290.00")
+    assert item.amount == Decimal("1000.00")
+    assert item.tax_amount == Decimal("50.00")
+    assert item.total_amount == Decimal("1050.00")
+
+
+def test_folio_totals_include_all_items(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    booking = create_booking(db_session, booking_test_data)
+    db_session.commit()
+
+    folio = FolioService(db_session).create_folio(
+        booking_id=booking.id,
+        currency="INR",
+        notes=None,
+    )
+    db_session.commit()
+
+    FolioService(db_session).add_item(
+        folio_id=folio.id,
+        item_type="food",
+        description="Dinner",
+        quantity=Decimal("1.00"),
+        unit_price=Decimal("1000.00"),
+        tax_percent=Decimal("5.00"),
+    )
+    db_session.commit()
+
+    subtotal, tax_total, grand_total = FolioService(db_session).get_totals(folio.id)
+
+    assert subtotal == Decimal("10800.00")
+    assert tax_total == Decimal("540.00")
+    assert grand_total == Decimal("11340.00")
 
 
 def test_closed_folio_cannot_accept_items(

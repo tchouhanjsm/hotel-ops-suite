@@ -10,6 +10,8 @@ from app.schemas.folio import (
     FolioItemCreate,
     FolioItemRead,
     FolioRead,
+    FolioStatus,
+    FolioSummary,
 )
 from app.services.folio import FolioService
 
@@ -42,13 +44,14 @@ def create_folio(
         ) from exc
 
 
-@router.get("/{folio_id}", response_model=FolioRead)
+@router.get("/{folio_id}", response_model=FolioSummary)
 def get_folio(
     folio_id: int,
     db: Session = Depends(get_db),  # noqa: B008
     _: Staff = Depends(require_permission("booking:read")),  # noqa: B008
-) -> Folio:
-    folio = FolioService(db).get_folio(folio_id)
+) -> FolioSummary:
+    service = FolioService(db)
+    folio = service.get_folio(folio_id)
 
     if folio is None:
         raise HTTPException(
@@ -56,7 +59,20 @@ def get_folio(
             detail="Folio not found.",
         )
 
-    return folio
+    subtotal, tax_total, grand_total = service.get_totals(folio_id)
+
+    return FolioSummary(
+        id=folio.id,
+        folio_number=folio.folio_number,
+        booking_id=folio.booking_id,
+        status=FolioStatus(folio.status),
+        currency=folio.currency,
+        notes=folio.notes,
+        created_at=folio.created_at,
+        subtotal=subtotal,
+        tax_total=tax_total,
+        grand_total=grand_total,
+    )
 
 
 @router.get(
