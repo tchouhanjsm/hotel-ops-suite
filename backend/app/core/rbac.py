@@ -24,6 +24,9 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "booking:cancel",
         "booking:check_in",
         "booking:check_out",
+        "payment:read",
+        "payment:create",
+        "payment:void",
     },
     "manager": {
         "staff:read",
@@ -41,6 +44,9 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "booking:cancel",
         "booking:check_in",
         "booking:check_out",
+        "payment:read",
+        "payment:create",
+        "payment:void",
     },
     "front_desk": {
         "staff:read",
@@ -54,6 +60,9 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "booking:cancel",
         "booking:check_in",
         "booking:check_out",
+        "payment:read",
+        "payment:create",
+        "payment:void",
     },
 }
 
