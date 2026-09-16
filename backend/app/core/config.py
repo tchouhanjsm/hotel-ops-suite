@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -6,6 +8,7 @@ class Settings(BaseSettings):
     jwt_secret_key: str = "dev-only-change-this"
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 480
+    gst_percent: Decimal = Decimal("5.00")
 
     model_config = SettingsConfigDict(
         env_file=".env",

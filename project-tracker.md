@@ -60,6 +60,20 @@
 - mypy passing
 - Frontend production build passing
 
+### Batch 6.0C — Folio Tax + Balance Foundation
+
+- Moved GST percentage to application configuration
+- Added configurable `GST_PERCENT`
+- Added folio paid amount tracking
+- Added balance-due calculation
+- Prevented negative paid balances
+- Added folio balance regression tests
+- Added PostgreSQL migration for `paid_amount`
+- 53 backend tests passing
+- Ruff passing
+- mypy passing
+- Frontend production build passing
+
 ### Foundation
 
 - Project repository initialized
