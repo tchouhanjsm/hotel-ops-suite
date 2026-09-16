@@ -4,6 +4,7 @@ from decimal import ROUND_HALF_UP, Decimal
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.models.booking import Booking
 from app.models.folio import Folio, FolioItem
 from app.models.payment import Payment
@@ -164,7 +165,7 @@ class FolioService:
             description=f"Room {booking.room_id} - {booking.nights} night(s)",
             quantity=Decimal(str(booking.nights)),
             unit_price=booking.rate,
-            tax_percent=Decimal("5.00"),
+            tax_percent=settings.gst_percent,
         )
 
     def create_folio_summary(self, folio_id: int) -> dict[str, object]:
