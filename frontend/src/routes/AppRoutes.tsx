@@ -11,10 +11,12 @@ import Rooms from "./pages/Rooms";
 import Settings from "./pages/Settings";
 import Vouchers from "./pages/Vouchers";
 import NotFound from "./NotFound";
+import Login from "./pages/Login";
 
 export default function AppRoutes() {
   return (
     <Routes>
+      <Route path="/login" element={<Login />} />
       <Route element={<AppLayout />}>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
