@@ -15,6 +15,57 @@ describe("Bookings UAT", () => {
     cy.url().should("include", "/dashboard");
   });
 
+  function createConfirmedBooking(
+    checkIn: string,
+    checkOut: string,
+  ) {
+    cy.visit("/bookings");
+
+    cy.contains("button", "New Booking").click();
+
+    cy.contains("h2", "New Booking").should("be.visible");
+
+    cy.get("select")
+      .filter(":visible")
+      .first()
+      .select("1");
+
+    cy.get("select")
+      .filter(":visible")
+      .eq(1)
+      .select("1");
+
+    cy.get('input[type="date"]')
+      .filter(":visible")
+      .first()
+      .clear()
+      .type(checkIn);
+
+    cy.get('input[type="date"]')
+      .filter(":visible")
+      .eq(1)
+      .clear()
+      .type(checkOut);
+
+    cy.get('input[type="number"]')
+      .filter(":visible")
+      .first()
+      .clear()
+      .type("4900");
+
+    cy.get("select")
+      .filter(":visible")
+      .eq(2)
+      .select("direct");
+
+    cy.contains("button", "Create Booking")
+      .should("be.visible")
+      .click();
+
+    cy.contains("created.")
+      .should("be.visible");
+  }
+
   it("loads the bookings page", () => {
     cy.visit("/bookings");
 
@@ -47,62 +98,13 @@ describe("Bookings UAT", () => {
   });
 
   it("creates a booking", () => {
-    cy.visit("/bookings");
-
-    cy.contains("button", "New Booking").click();
-
-    cy.contains("h2", "New Booking").should("be.visible");
-
-    // Guest
-    cy.get("select")
-      .filter(":visible")
-      .first()
-      .should("be.visible")
-      .select("1");
-
-    // Room
-    cy.get("select")
-      .filter(":visible")
-      .eq(1)
-      .should("be.visible")
-      .select("1");
-
-    // Dates
-    cy.get('input[type="date"]')
-      .filter(":visible")
-      .first()
-      .clear()
-      .type("2027-06-10");
-
-    cy.get('input[type="date"]')
-      .filter(":visible")
-      .eq(1)
-      .clear()
-      .type("2027-06-12");
-
-    // Rate
-    cy.get('input[type="number"]')
-      .filter(":visible")
-      .first()
-      .clear()
-      .type("4900");
-
-    // Source
-    cy.get("select")
-      .filter(":visible")
-      .eq(2)
-      .select("direct");
-
-    cy.contains("button", "Create Booking")
-      .should("be.visible")
-      .click();
-
-    cy.contains("created.").should("be.visible");
+    createConfirmedBooking("2027-06-10", "2027-06-12");
   });
 
   it("rejects an unavailable room/date combination", () => {
-    cy.visit("/bookings");
+    createConfirmedBooking("2027-06-20", "2027-06-22");
 
+    cy.visit("/bookings");
     cy.contains("button", "New Booking").click();
 
     cy.get("select")
@@ -119,13 +121,13 @@ describe("Bookings UAT", () => {
       .filter(":visible")
       .first()
       .clear()
-      .type("2027-06-10");
+      .type("2027-06-20");
 
     cy.get('input[type="date"]')
       .filter(":visible")
       .eq(1)
       .clear()
-      .type("2027-06-12");
+      .type("2027-06-22");
 
     cy.get('input[type="number"]')
       .filter(":visible")
@@ -140,53 +142,84 @@ describe("Bookings UAT", () => {
   });
 
   it("checks a confirmed booking in", () => {
+    createConfirmedBooking("2027-07-10", "2027-07-12");
+
     cy.visit("/bookings");
 
     cy.contains("button", "Check in")
-      .first()
       .should("be.visible")
       .click();
 
-    cy.contains("checked in.").should("be.visible");
-    cy.contains("checked in").should("be.visible");
+    cy.contains("checked in.")
+      .should("be.visible");
+
+    cy.contains("checked in")
+      .should("be.visible");
   });
 
   it("checks an in-house booking out", () => {
+    createConfirmedBooking("2027-07-20", "2027-07-22");
+
     cy.visit("/bookings");
 
-    cy.contains("button", "Check out")
-      .first()
+    cy.contains("button", "Check in")
       .should("be.visible")
       .click();
 
-    cy.contains("checked out.").should("be.visible");
-    cy.contains("checked out").should("be.visible");
+    cy.contains("checked in.")
+      .should("be.visible");
+
+    cy.contains("button", "Check out")
+      .should("be.visible")
+      .click();
+
+    cy.contains("checked out.")
+      .should("be.visible");
+
+    cy.contains("checked out")
+      .should("be.visible");
   });
 
   it("cancels a confirmed booking", () => {
-    cy.visit("/bookings");
+    createConfirmedBooking("2027-08-10", "2027-08-12");
 
-    cy.contains("button", "Cancel")
-      .first()
-      .should("be.visible")
-      .click();
+    cy.visit("/bookings");
 
     cy.on("window:confirm", (text) => {
       expect(text).to.contain("Cancel booking");
       return true;
     });
 
-    cy.contains("cancelled.").should("be.visible");
-    cy.contains("cancelled").should("be.visible");
+    cy.contains("button", "Cancel")
+      .should("be.visible")
+      .click();
+
+    cy.contains("cancelled.")
+      .should("be.visible");
+
+    cy.contains("cancelled")
+      .should("be.visible");
   });
 
   it("searches for a cancelled booking", () => {
+    createConfirmedBooking("2027-08-20", "2027-08-22");
+
     cy.visit("/bookings");
+
+    cy.on("window:confirm", () => true);
+
+    cy.contains("button", "Cancel")
+      .should("be.visible")
+      .click();
+
+    cy.contains("cancelled.")
+      .should("be.visible");
 
     cy.get('input[placeholder*="Search booking"]')
       .clear()
       .type("cancelled");
 
-    cy.contains("cancelled").should("be.visible");
+    cy.contains("cancelled")
+      .should("be.visible");
   });
 });
