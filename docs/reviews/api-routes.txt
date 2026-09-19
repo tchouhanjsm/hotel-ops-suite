@@ -1,0 +1,32 @@
+backend/app/api/routes/rooms.py:15:@router.get("", response_model=list[RoomRead])
+backend/app/api/routes/rooms.py:23:@router.post(
+backend/app/api/routes/rooms.py:65:@router.get(
+backend/app/api/routes/rooms.py:85:@router.patch(
+backend/app/api/routes/guests.py:15:@router.get("", response_model=list[GuestRead])
+backend/app/api/routes/guests.py:29:@router.post(
+backend/app/api/routes/guests.py:81:@router.get(
+backend/app/api/routes/guests.py:101:@router.patch(
+backend/app/api/routes/auth.py:13:@router.post("/login", response_model=LoginResponse)
+backend/app/api/routes/payments.py:15:@router.get(
+backend/app/api/routes/payments.py:33:@router.post(
+backend/app/api/routes/payments.py:77:@router.post(
+backend/app/api/routes/staff.py:15:@router.get("/me")
+backend/app/api/routes/staff.py:27:@router.get("/protected")
+backend/app/api/routes/staff.py:37:@router.get(
+backend/app/api/routes/staff.py:48:@router.post(
+backend/app/api/routes/staff.py:88:@router.patch(
+backend/app/api/routes/staff.py:138:@router.post(
+backend/app/api/routes/staff.py:163:@router.get(
+backend/app/api/routes/bookings.py:18:@router.get("", response_model=list[BookingRead])
+backend/app/api/routes/bookings.py:26:@router.get("/availability", response_model=AvailabilityResponse)
+backend/app/api/routes/bookings.py:52:@router.post(
+backend/app/api/routes/bookings.py:96:@router.patch(
+backend/app/api/routes/bookings.py:149:@router.post(
+backend/app/api/routes/bookings.py:187:@router.post(
+backend/app/api/routes/bookings.py:228:@router.post(
+backend/app/api/routes/bookings.py:269:@router.get(
+backend/app/api/routes/folios.py:22:@router.post(
+backend/app/api/routes/folios.py:61:@router.get("/{folio_id}", response_model=FolioSummary)
+backend/app/api/routes/folios.py:95:@router.get(
+backend/app/api/routes/folios.py:115:@router.post(
+backend/app/api/routes/audit_logs.py:13:@router.get("", response_model=list[AuditLogRead])

@@ -7,6 +7,7 @@ from app.models.staff import Staff
 
 ROLE_PERMISSIONS: dict[str, set[str]] = {
     "admin": {
+        "audit:read",
         "staff:read",
         "staff:create",
         "staff:update",

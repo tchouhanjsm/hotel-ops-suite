@@ -1,0 +1,60 @@
+frontend/src/api/folio.ts:1:import { apiFetch } from "./client";
+frontend/src/api/folio.ts:14:  created_at: string;
+frontend/src/api/folio.ts:24:  created_at: string;
+frontend/src/api/folio.ts:32:export function getFolio(folioId: number) {
+frontend/src/api/folio.ts:33:  return apiFetch<Folio>(`/folios/${folioId}`);
+frontend/src/api/folio.ts:36:export function getFolioItems(folioId: number) {
+frontend/src/api/folio.ts:37:  return apiFetch<FolioItem[]>(`/folios/${folioId}/items`);
+frontend/src/api/client.ts:3:export async function apiFetch<T>(
+frontend/src/api/client.ts:7:  const token = localStorage.getItem("access_token");
+frontend/src/api/client.ts:9:  const response = await fetch(`${API_BASE_URL}${path}`, {
+frontend/src/api/bookings.ts:1:import { apiFetch } from "./client";
+frontend/src/api/bookings.ts:22:  created_at: string;
+frontend/src/api/bookings.ts:45:export function getBookings() {
+frontend/src/api/bookings.ts:46:  return apiFetch<Booking[]>("/bookings");
+frontend/src/api/bookings.ts:49:export function getGuests() {
+frontend/src/api/bookings.ts:50:  return apiFetch<Guest[]>("/guests");
+frontend/src/api/bookings.ts:53:export function getRooms() {
+frontend/src/api/bookings.ts:54:  return apiFetch<Room[]>("/rooms");
+frontend/src/api/bookings.ts:62:  return apiFetch<{ room_id: number; available: boolean }>(
+frontend/src/api/bookings.ts:67:export function createBooking(data: {
+frontend/src/api/bookings.ts:76:  return apiFetch<Booking>("/bookings", {
+frontend/src/api/bookings.ts:83:  return apiFetch<Booking>(`/bookings/${id}/cancel`, {
+frontend/src/api/bookings.ts:89:  return apiFetch<Booking>(`/bookings/${id}/check-in`, {
+frontend/src/api/bookings.ts:95:  return apiFetch<Booking>(`/bookings/${id}/check-out`, {
+frontend/src/api/audit.ts:1:import { apiFetch } from "./client";
+frontend/src/api/audit.ts:14:  created_at: string;
+frontend/src/api/audit.ts:17:export function getAuditLogs() {
+frontend/src/api/audit.ts:18:  return apiFetch<AuditLog[]>("/audit-logs");
+frontend/src/api/payments.ts:1:import { apiFetch } from "./client";
+frontend/src/api/payments.ts:33:export function getPayments(folioId: number) {
+frontend/src/api/payments.ts:34:  return apiFetch<Payment[]>(`/payments/folio/${folioId}`);
+frontend/src/api/payments.ts:37:export function createPayment(data: PaymentCreate) {
+frontend/src/api/payments.ts:38:  return apiFetch<Payment>("/payments", {
+frontend/src/api/payments.ts:45:  return apiFetch<Payment>(`/payments/${paymentId}/void`, {
+frontend/src/api/auth.ts:1:import { apiFetch } from "./client";
+frontend/src/api/auth.ts:17:  return apiFetch<LoginResponse>("/auth/login", {
+frontend/src/routes/pages/Login.tsx:5:import { login } from "../../api/auth";
+frontend/src/routes/pages/Bookings.tsx:18:  createBooking,
+frontend/src/routes/pages/Bookings.tsx:19:  getBookings,
+frontend/src/routes/pages/Bookings.tsx:20:  getGuests,
+frontend/src/routes/pages/Bookings.tsx:21:  getRooms,
+frontend/src/routes/pages/Bookings.tsx:25:} from "../../api/bookings";
+frontend/src/routes/pages/Bookings.tsx:78:        getBookings(),
+frontend/src/routes/pages/Bookings.tsx:79:        getGuests(),
+frontend/src/routes/pages/Bookings.tsx:80:        getRooms(),
+frontend/src/routes/pages/Bookings.tsx:195:      const booking = await createBooking({
+frontend/src/routes/pages/Bookings.tsx:207:      setMessage(`Booking ${booking.booking_reference} created.`);
+frontend/src/routes/pages/Payments.tsx:4:  createPayment,
+frontend/src/routes/pages/Payments.tsx:5:  getPayments,
+frontend/src/routes/pages/Payments.tsx:9:} from "../../api/payments";
+frontend/src/routes/pages/Payments.tsx:51:      setPayments(await getPayments(id));
+frontend/src/routes/pages/Payments.tsx:81:      await createPayment({
+frontend/src/routes/pages/Rooms.tsx:4:import { apiFetch } from "../../api/client";
+frontend/src/routes/pages/Rooms.tsx:36:      setRooms(await apiFetch<Room[]>("/rooms"));
+frontend/src/routes/pages/Folio.tsx:3:import { getFolio, getFolioItems, type Folio as FolioData, type FolioItem } from "../../api/folio";
+frontend/src/routes/pages/Folio.tsx:32:        getFolio(id),
+frontend/src/routes/pages/Folio.tsx:33:        getFolioItems(id),
+frontend/src/routes/pages/AuditLog.tsx:4:import { getAuditLogs, type AuditLog as AuditEntry } from "../../api/audit";
+frontend/src/routes/pages/AuditLog.tsx:17:      setLogs(await getAuditLogs());
+frontend/src/routes/pages/AuditLog.tsx:113:                    {new Date(log.created_at).toLocaleString("en-IN")}

@@ -23,10 +23,6 @@ class Folio(Base):
     )
     status: Mapped[str] = mapped_column(String(20), default="open")
     currency: Mapped[str] = mapped_column(String(3), default="INR")
-    paid_amount: Mapped[Decimal] = mapped_column(
-        Numeric(12, 2),
-        default=Decimal("0.00"),
-    )
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

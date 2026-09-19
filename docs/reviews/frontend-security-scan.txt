@@ -1,0 +1,6 @@
+frontend/src/components/layout/Topbar.tsx:8:  const staff = JSON.parse(localStorage.getItem("staff") || "null") as {
+frontend/src/api/client.ts:7:  const token = localStorage.getItem("access_token");
+frontend/src/api/client.ts:13:      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+frontend/src/api/auth.ts:11:  access_token: string;
+frontend/src/routes/pages/Login.tsx:21:      localStorage.setItem("access_token", data.access_token);
+frontend/src/routes/pages/Login.tsx:22:      localStorage.setItem("staff", JSON.stringify(data.staff));

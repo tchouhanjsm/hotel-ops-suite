@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_db
+from app.core.audit import record_audit
 from app.core.rbac import require_permission
 from app.models.room import Room
 from app.models.staff import Staff
@@ -26,8 +27,9 @@ def list_rooms(
 )
 def create_room(
     data: RoomCreate,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("room:create")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("room:create")),  # noqa: B008
 ) -> Room:
     try:
         room = RoomService(db).create_room(
@@ -37,6 +39,18 @@ def create_room(
             floor=data.floor,
             capacity=data.capacity,
             status=data.status.value,
+        )
+        record_audit(
+            db,
+            request,
+            current_staff,
+            action="CREATE_ROOM",
+            entity_type="room",
+            entity_id=room.id,
+            details={
+                "room_number": room.room_number,
+                "room_name": room.room_name,
+            },
         )
         db.commit()
         return room
@@ -75,8 +89,9 @@ def get_room(
 def update_room(
     room_id: int,
     data: RoomUpdate,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("room:update")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("room:update")),  # noqa: B008
 ) -> Room:
     try:
         room = RoomService(db).update_room(
@@ -101,5 +116,17 @@ def update_room(
             detail="Room not found.",
         )
 
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="UPDATE_ROOM",
+        entity_type="room",
+        entity_id=room.id,
+        details={
+            "room_number": room.room_number,
+            "status": room.status,
+        },
+    )
     db.commit()
     return room

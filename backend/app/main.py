@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.routes.audit_logs import router as audit_logs_router
 from app.api.routes.auth import router as auth_router
 from app.api.routes.bookings import router as bookings_router
 from app.api.routes.folios import router as folios_router
@@ -23,6 +24,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(audit_logs_router)
 app.include_router(staff_router)
 app.include_router(rooms_router)
 app.include_router(guests_router)

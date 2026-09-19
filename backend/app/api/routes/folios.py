@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_db
+from app.core.audit import record_audit
 from app.core.rbac import require_permission
 from app.models.folio import Folio, FolioItem
 from app.models.staff import Staff
@@ -25,14 +26,27 @@ router = APIRouter(prefix="/folios", tags=["Folios"])
 )
 def create_folio(
     data: FolioCreate,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("booking:update")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("booking:update")),  # noqa: B008
 ) -> Folio:
     try:
         folio = FolioService(db).create_folio(
             booking_id=data.booking_id,
             currency=data.currency,
             notes=data.notes,
+        )
+        record_audit(
+            db,
+            request,
+            current_staff,
+            action="CREATE_FOLIO",
+            entity_type="folio",
+            entity_id=folio.id,
+            details={
+                "folio_number": folio.folio_number,
+                "booking_id": folio.booking_id,
+            },
         )
         db.commit()
         return folio
@@ -106,8 +120,9 @@ def list_folio_items(
 def add_folio_item(
     folio_id: int,
     data: FolioItemCreate,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("booking:update")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("booking:update")),  # noqa: B008
 ) -> FolioItem:
     try:
         item = FolioService(db).add_item(
@@ -117,6 +132,20 @@ def add_folio_item(
             quantity=data.quantity,
             unit_price=data.unit_price,
             tax_percent=data.tax_percent,
+        )
+        record_audit(
+            db,
+            request,
+            current_staff,
+            action="ADD_FOLIO_ITEM",
+            entity_type="folio_item",
+            entity_id=item.id,
+            details={
+                "folio_id": item.folio_id,
+                "item_type": item.item_type,
+                "description": item.description,
+                "total_amount": str(item.total_amount),
+            },
         )
         db.commit()
         return item

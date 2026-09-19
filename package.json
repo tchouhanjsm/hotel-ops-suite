@@ -8,11 +8,19 @@
     "backend:lint": "cd backend && ruff check .",
     "backend:typecheck": "cd backend && mypy app",
     "frontend:build": "cd frontend && npm run build",
-    "check": "npm run backend:test && npm run backend:lint && npm run backend:typecheck && npm run frontend:build"
+    "check": "npm run backend:test && npm run backend:lint && npm run backend:typecheck && npm run frontend:build",
+    "diagnose": "bash scripts/diagnostics/diagnose.sh",
+    "api:staging": "bash scripts/run-staging-api.sh",
+    "staging:preflight": "bash scripts/preflight-staging.sh",
+    "uat:staging": "bash scripts/run-staging-uat.sh"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/tchouhanjsm/hotel-ops-suite.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^16.1.0",
+    "typescript": "^7.0.2"
+  }
 }
