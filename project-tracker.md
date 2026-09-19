@@ -191,7 +191,117 @@ Runs:
 - Security review
 - Growth/direct-booking capabilities
 
+## Architecture Evolution
+
+### Batch 6.1A: Platform Core v0.1
+
+**Idea**
+
+The project reached a point where repeated technical rules across domain modules would increase maintenance cost and create inconsistent behavior. A small domain-neutral Platform Core was introduced so reusable engineering rules are implemented once and shared across modules.
+
+**How we are proceeding**
+
+New work follows: Boundary → Reuse Check → Domain → API → UI → Tests → E2E → Audit/Security Review → Extract reusable pieces → Full project gate.
+
+The Platform Core stays domain-neutral. Hotel-specific rules remain owned by their domain modules.
+
+**Platform primitives introduced**
+
+- identifiers: shared reference generation
+- money: currency precision, rounding, tax, totals and balance helpers
+- dates: date-range validation and night calculation
+- pagination: reusable pagination contract
+- errors: common domain-error hierarchy
+
+**Modules migrated**
+
+- Booking: shared identifier and date-range primitives
+- Folio: shared identifier and money primitives
+- Payment: shared identifier primitive
+- Invoice: shared identifier and money primitives
+
+**Reasoning**
+
+The platform layer reduces duplicated technical logic while keeping business rules inside their owning domain modules. Migration is incremental so existing behavior remains protected by regression tests.
+
+**Verification**
+
+- Platform Core tests: 14 passing
+- Booking + Core targeted tests: 19 passing
+- Full backend suite: 80 passing
+- mypy: passing
+- Ruff: passing
+- frontend production build: passing through the project check
+- git diff --check: passing
+
+**RCA / Lessons**
+
+- Shared abstractions must remain generic and small.
+- Compiler and lint feedback are part of the design loop.
+- Large shell commands increase execution risk; future changes should use smaller atomic operations.
+- Tests must validate the intended behavior and mathematical result, not an assumed result.
+
+**Next Architecture Target**
+
+Shared API Error Boundary: consolidate repeated domain-error-to-HTTP translation at the API boundary while preserving domain-specific business messages and HTTP semantics.
+
+## Engineering Guardrails
+
+### Batch 6.2A.1: Reusable Test Infrastructure
+
+**Problem**
+
+Repeated framework-specific test setup and large shell edits were creating avoidable syntax and typing failures.
+
+**Change**
+
+Introduced reusable HTTP request construction in the shared test configuration and standardized the change workflow around small atomic edits followed by formatting, linting, type checking, and tests.
+
+**Why**
+
+Test infrastructure is application infrastructure. Framework-specific plumbing should be centralized so individual tests focus on behavior rather than constructing low-level objects repeatedly.
+
+**Verification**
+
+- Domain error handler unit tests: 7 passing
+- Ruff: passing
+- mypy: passing
+- FastAPI integration dispatch verified
+
+**Next**
+
+Migrate Booking from ValueError to typed DomainError classes and remove duplicated route-level exception translation.
+
+### Batch 6.2A.7 — Domain Error Boundary
+
+- Migrated business-service errors from generic `ValueError` to typed `DomainError` subclasses
+- Removed route-level `ValueError` translation
+- Removed duplicated route-level rollback handling
+- Preserved schema-level `ValueError` validation
+- Standardized global API error translation through `DomainError`
+- 88 backend tests passing
+- Ruff passing
+- mypy passing
+- Frontend production build passing
+
+### Batch 6.2B.1 — Repository Boundary Refactor
+
+- Moved SQLAlchemy persistence mechanics from services into repositories
+- Added repository persistence boundaries where lifecycle workflows require flush visibility
+- Added Booking row-lock repository operation
+- Added Payment reference lookup repository operation
+- Moved Folio payment and folio-number queries into repositories
+- Moved Invoice source-data queries and booking locking into repositories
+- Preserved route-owned transaction commits
+- Preserved `get_db()` rollback boundary
+- Fixed Booking check-in/check-out persistence synchronization
+- 88 backend tests passing
+- Ruff passing
+- mypy passing
+- Frontend production build passing
+
 ## Development Rules
+
 
 - Work in small feature batches
 - Update this tracker with each completed batch

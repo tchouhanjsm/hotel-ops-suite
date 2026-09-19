@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from app.core.errors import ConflictError
 from app.core.security import hash_password
 from app.models.staff import Staff
 from app.repositories.staff import StaffRepository
@@ -25,7 +26,7 @@ class StaffService:
         existing = self.repository.get_by_username(username)
 
         if existing is not None:
-            raise ValueError("Username already exists.")
+            raise ConflictError("Username already exists.")
 
         password_hash = hash_password(password)
 
@@ -56,8 +57,5 @@ class StaffService:
 
         if is_active is not None:
             staff.is_active = is_active
-
-        self.repository.db.flush()
-        self.repository.db.refresh(staff)
 
         return staff

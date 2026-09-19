@@ -1,9 +1,9 @@
-import secrets
 from decimal import Decimal
 
-from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.errors import ConflictError, NotFoundError, StateError
+from app.core.identifiers import generate_reference
 from app.models.payment import Payment
 from app.repositories.folio import FolioRepository
 from app.repositories.payment import PaymentRepository
@@ -12,22 +12,19 @@ from app.services.folio import FolioService
 
 class PaymentService:
     def __init__(self, db: Session) -> None:
-        self.db = db
         self.repository = PaymentRepository(db)
         self.folio_repository = FolioRepository(db)
         self.folio_service = FolioService(db)
 
     def _generate_reference(self) -> str:
         while True:
-            reference = f"PAY-{secrets.token_hex(4).upper()}"
-            statement = select(Payment).where(Payment.payment_reference == reference)
-
-            if self.db.scalar(statement) is None:
+            reference = generate_reference("PAY")
+            if self.repository.get_by_reference(reference) is None:
                 return reference
 
     def list_payments(self, folio_id: int) -> list[Payment]:
         if self.folio_repository.get_by_id(folio_id) is None:
-            raise ValueError("Folio not found.")
+            raise NotFoundError("Folio not found.")
 
         return self.repository.list_by_folio(folio_id)
 
@@ -43,15 +40,15 @@ class PaymentService:
         folio = self.folio_repository.get_by_id(folio_id)
 
         if folio is None:
-            raise ValueError("Folio not found.")
+            raise NotFoundError("Folio not found.")
 
         if folio.status != "open":
-            raise ValueError("Folio is not open.")
+            raise StateError("Folio is not open.")
 
         _, balance_due = self.folio_service.get_balance(folio_id)
 
         if amount > balance_due:
-            raise ValueError("Payment exceeds outstanding balance.")
+            raise ConflictError("Payment exceeds outstanding balance.")
 
         return self.repository.create(
             payment_reference=self._generate_reference(),
@@ -70,10 +67,8 @@ class PaymentService:
             return None
 
         if payment.status != "completed":
-            raise ValueError("Only completed payments can be voided.")
+            raise StateError("Only completed payments can be voided.")
 
         payment.status = "voided"
-        self.db.flush()
-        self.db.refresh(payment)
 
         return payment

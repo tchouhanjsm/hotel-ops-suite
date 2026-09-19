@@ -1,4 +1,7 @@
+from collections.abc import Generator
+
 import pytest
+from fastapi import Request
 from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
@@ -7,6 +10,7 @@ from app.db.base import Base
 from app.models.booking import Booking
 from app.models.folio import Folio, FolioItem
 from app.models.guest import Guest
+from app.models.invoice import Invoice, InvoiceItem
 from app.models.payment import Payment
 from app.models.room import Room
 
@@ -20,7 +24,24 @@ Base.metadata.create_all(engine)
 
 
 @pytest.fixture
-def db_session() -> Session:
+def http_request() -> Request:
+    return Request(
+        {
+            "type": "http",
+            "method": "GET",
+            "path": "/",
+            "raw_path": b"/",
+            "query_string": b"",
+            "headers": [],
+            "scheme": "http",
+            "server": ("testserver", 80),
+            "client": ("testclient", 50000),
+        }
+    )
+
+
+@pytest.fixture
+def db_session() -> Generator[Session]:
     with Session(engine) as db:
         yield db
 
@@ -28,6 +49,8 @@ def db_session() -> Session:
 @pytest.fixture(autouse=True)
 def clean_database() -> None:
     with Session(engine) as db:
+        db.execute(delete(InvoiceItem))
+        db.execute(delete(Invoice))
         db.execute(delete(Payment))
         db.execute(delete(FolioItem))
         db.execute(delete(Folio))

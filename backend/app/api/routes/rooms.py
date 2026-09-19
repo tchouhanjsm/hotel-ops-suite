@@ -31,37 +31,28 @@ def create_room(
     db: Session = Depends(get_db),  # noqa: B008
     current_staff: Staff = Depends(require_permission("room:create")),  # noqa: B008
 ) -> Room:
-    try:
-        room = RoomService(db).create_room(
-            room_number=data.room_number,
-            room_name=data.room_name,
-            room_type=data.room_type,
-            floor=data.floor,
-            capacity=data.capacity,
-            status=data.status.value,
-        )
-        record_audit(
-            db,
-            request,
-            current_staff,
-            action="CREATE_ROOM",
-            entity_type="room",
-            entity_id=room.id,
-            details={
-                "room_number": room.room_number,
-                "room_name": room.room_name,
-            },
-        )
-        db.commit()
-        return room
-    except ValueError as exc:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=str(exc),
-        ) from exc
-
-
+    room = RoomService(db).create_room(
+        room_number=data.room_number,
+        room_name=data.room_name,
+        room_type=data.room_type,
+        floor=data.floor,
+        capacity=data.capacity,
+        status=data.status.value,
+    )
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="CREATE_ROOM",
+        entity_type="room",
+        entity_id=room.id,
+        details={
+            "room_number": room.room_number,
+            "room_name": room.room_name,
+        },
+    )
+    db.commit()
+    return room
 @router.get(
     "/{room_id}",
     response_model=RoomRead,
@@ -93,23 +84,15 @@ def update_room(
     db: Session = Depends(get_db),  # noqa: B008
     current_staff: Staff = Depends(require_permission("room:update")),  # noqa: B008
 ) -> Room:
-    try:
-        room = RoomService(db).update_room(
-            room_id=room_id,
-            room_name=data.room_name,
-            room_type=data.room_type,
-            floor=data.floor,
-            capacity=data.capacity,
-            status=data.status.value if data.status is not None else None,
-            is_active=data.is_active,
-        )
-    except ValueError as exc:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-            detail=str(exc),
-        ) from exc
-
+    room = RoomService(db).update_room(
+        room_id=room_id,
+        room_name=data.room_name,
+        room_type=data.room_type,
+        floor=data.floor,
+        capacity=data.capacity,
+        status=data.status.value if data.status is not None else None,
+        is_active=data.is_active,
+    )
     if room is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

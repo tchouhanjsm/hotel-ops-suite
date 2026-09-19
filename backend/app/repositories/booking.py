@@ -18,6 +18,10 @@ class BookingRepository:
     def get_by_id(self, booking_id: int) -> Booking | None:
         return self.db.get(Booking, booking_id)
 
+    def get_by_id_for_update(self, booking_id: int) -> Booking | None:
+        statement = select(Booking).where(Booking.id == booking_id).with_for_update()
+        return self.db.scalar(statement)
+
     def get_by_reference(self, reference: str) -> Booking | None:
         statement = select(Booking).where(Booking.booking_reference == reference)
         return self.db.scalar(statement)
@@ -46,6 +50,11 @@ class BookingRepository:
             )
 
         return list(self.db.scalars(statement).all())
+
+    def save(self, booking: Booking) -> Booking:
+        self.db.flush()
+        self.db.refresh(booking)
+        return booking
 
     def create(
         self,

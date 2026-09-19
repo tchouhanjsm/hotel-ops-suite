@@ -4,6 +4,7 @@ from decimal import Decimal
 import pytest
 from sqlalchemy.orm import Session
 
+from app.core.errors import ConflictError, StateError
 from app.services.booking import BookingService
 from app.services.folio import FolioService
 from app.services.payment import PaymentService
@@ -82,7 +83,7 @@ def test_overpayment_rejected(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        ConflictError,
         match="Payment exceeds outstanding balance.",
     ):
         PaymentService(db_session).create_payment(
@@ -142,7 +143,7 @@ def test_voided_payment_cannot_be_voided_again(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        StateError,
         match="Only completed payments can be voided.",
     ):
         PaymentService(db_session).void_payment(payment.id)

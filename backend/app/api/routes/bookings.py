@@ -60,37 +60,32 @@ def create_booking(
     db: Session = Depends(get_db),  # noqa: B008
     current_staff: Staff = Depends(require_permission("booking:create")),  # noqa: B008
 ) -> Booking:
-    try:
-        booking = BookingService(db).create_booking(
-            guest_id=data.guest_id,
-            room_id=data.room_id,
-            check_in=data.check_in,
-            check_out=data.check_out,
-            rate=data.rate,
-            source=data.source,
-            notes=data.notes,
-        )
-        record_audit(
-            db,
-            request,
-            current_staff,
-            action="CREATE_BOOKING",
-            entity_type="booking",
-            entity_id=booking.id,
-            details={
-                "booking_reference": booking.booking_reference,
-                "guest_id": booking.guest_id,
-                "room_id": booking.room_id,
-            },
-        )
-        db.commit()
-        return booking
-    except ValueError as exc:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=str(exc),
-        ) from exc
+    booking = BookingService(db).create_booking(
+        guest_id=data.guest_id,
+        room_id=data.room_id,
+        check_in=data.check_in,
+        check_out=data.check_out,
+        rate=data.rate,
+        source=data.source,
+        notes=data.notes,
+    )
+
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="CREATE_BOOKING",
+        entity_type="booking",
+        entity_id=booking.id,
+        details={
+            "booking_reference": booking.booking_reference,
+            "guest_id": booking.guest_id,
+            "room_id": booking.room_id,
+        },
+    )
+
+    db.commit()
+    return booking
 
 
 @router.patch(
@@ -104,46 +99,39 @@ def update_booking(
     db: Session = Depends(get_db),  # noqa: B008
     current_staff: Staff = Depends(require_permission("booking:update")),  # noqa: B008
 ) -> Booking:
-    try:
-        booking = BookingService(db).update_booking(
-            booking_id=booking_id,
-            room_id=data.room_id,
-            check_in=data.check_in,
-            check_out=data.check_out,
-            rate=data.rate,
-            source=data.source,
-            notes=data.notes,
-        )
+    booking = BookingService(db).update_booking(
+        booking_id=booking_id,
+        room_id=data.room_id,
+        check_in=data.check_in,
+        check_out=data.check_out,
+        rate=data.rate,
+        source=data.source,
+        notes=data.notes,
+    )
 
-        if booking is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Booking not found.",
-            )
-
-        record_audit(
-            db,
-            request,
-            current_staff,
-            action="UPDATE_BOOKING",
-            entity_type="booking",
-            entity_id=booking.id,
-            details={
-                "booking_reference": booking.booking_reference,
-                "room_id": booking.room_id,
-                "check_in": booking.check_in.isoformat(),
-                "check_out": booking.check_out.isoformat(),
-            },
-        )
-        db.commit()
-        return booking
-
-    except ValueError as exc:
-        db.rollback()
+    if booking is None:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=str(exc),
-        ) from exc
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Booking not found.",
+        )
+
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="UPDATE_BOOKING",
+        entity_type="booking",
+        entity_id=booking.id,
+        details={
+            "booking_reference": booking.booking_reference,
+            "room_id": booking.room_id,
+            "check_in": booking.check_in.isoformat(),
+            "check_out": booking.check_out.isoformat(),
+        },
+    )
+
+    db.commit()
+    return booking
 
 
 @router.post(
@@ -156,14 +144,7 @@ def cancel_booking(
     db: Session = Depends(get_db),  # noqa: B008
     current_staff: Staff = Depends(require_permission("booking:cancel")),  # noqa: B008
 ) -> Booking:
-    try:
-        booking = BookingService(db).cancel_booking(booking_id)
-    except ValueError as exc:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=str(exc),
-        ) from exc
+    booking = BookingService(db).cancel_booking(booking_id)
 
     if booking is None:
         raise HTTPException(
@@ -180,6 +161,7 @@ def cancel_booking(
         entity_id=booking.id,
         details={"booking_reference": booking.booking_reference},
     )
+
     db.commit()
     return booking
 
@@ -194,14 +176,7 @@ def check_in_booking(
     db: Session = Depends(get_db),  # noqa: B008
     current_staff: Staff = Depends(require_permission("booking:check_in")),  # noqa: B008
 ) -> Booking:
-    try:
-        booking = BookingService(db).check_in(booking_id)
-    except ValueError as exc:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=str(exc),
-        ) from exc
+    booking = BookingService(db).check_in(booking_id)
 
     if booking is None:
         raise HTTPException(
@@ -221,6 +196,7 @@ def check_in_booking(
             "room_id": booking.room_id,
         },
     )
+
     db.commit()
     return booking
 
@@ -235,14 +211,7 @@ def check_out_booking(
     db: Session = Depends(get_db),  # noqa: B008
     current_staff: Staff = Depends(require_permission("booking:check_out")),  # noqa: B008
 ) -> Booking:
-    try:
-        booking = BookingService(db).check_out(booking_id)
-    except ValueError as exc:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=str(exc),
-        ) from exc
+    booking = BookingService(db).check_out(booking_id)
 
     if booking is None:
         raise HTTPException(
@@ -262,6 +231,7 @@ def check_out_booking(
             "room_id": booking.room_id,
         },
     )
+
     db.commit()
     return booking
 

@@ -13,6 +13,12 @@ class PaymentRepository:
     def get_by_id(self, payment_id: int) -> Payment | None:
         return self.db.get(Payment, payment_id)
 
+    def get_by_reference(self, reference: str) -> Payment | None:
+        statement = select(Payment).where(
+            Payment.payment_reference == reference,
+        )
+        return self.db.scalar(statement)
+
     def list_by_folio(self, folio_id: int) -> list[Payment]:
         statement = (
             select(Payment)
