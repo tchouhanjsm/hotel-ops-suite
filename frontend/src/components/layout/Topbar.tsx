@@ -1,8 +1,48 @@
-export default function Topbar() {
+import { Menu, UserCircle } from "lucide-react";
+
+type Props = {
+  onMenuClick: () => void;
+};
+
+export default function Topbar({ onMenuClick }: Props) {
+  const staff = JSON.parse(localStorage.getItem("staff") || "null") as {
+    full_name?: string;
+    role?: string;
+  } | null;
+
   return (
-    <header>
-      <div>
-        <strong>Hotel Operations</strong>
+    <header className="flex h-16 items-center justify-between border-b bg-white px-4 md:px-6">
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={onMenuClick}
+          className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 md:hidden"
+          aria-label="Open navigation"
+        >
+          <Menu size={20} />
+        </button>
+
+        <div>
+          <div className="text-sm font-semibold text-gray-900">
+            Hotel Operations
+          </div>
+          <div className="text-xs text-gray-500">
+            Garh Jaisal Haveli
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <UserCircle size={22} className="text-gray-500" />
+
+        <div className="hidden text-right sm:block">
+          <div className="text-sm font-medium text-gray-900">
+            {staff?.full_name || "Admin"}
+          </div>
+          <div className="text-xs capitalize text-gray-500">
+            {staff?.role || "admin"}
+          </div>
+        </div>
       </div>
     </header>
   );

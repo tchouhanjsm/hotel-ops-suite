@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import AppLayout from "../layouts/AppLayout";
+import AuditLog from "./pages/AuditLog";
 import Bookings from "./pages/Bookings";
 import Dashboard from "./pages/Dashboard";
 import Folio from "./pages/Folio";
@@ -28,6 +29,7 @@ export default function AppRoutes() {
         <Route path="/vouchers" element={<Vouchers />} />
         <Route path="/invoices" element={<Invoices />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/audit-log" element={<AuditLog />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

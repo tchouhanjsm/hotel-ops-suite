@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_db
+from app.core.audit import record_audit
 from app.core.rbac import require_permission
 from app.models.guest import Guest
 from app.models.staff import Staff
@@ -32,8 +33,9 @@ def list_guests(
 )
 def create_guest(
     data: GuestCreate,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("guest:create")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("guest:create")),  # noqa: B008
 ) -> Guest:
     guest = GuestService(db).create_guest(
         first_name=data.first_name,
@@ -48,6 +50,30 @@ def create_guest(
         notes=data.notes,
     )
 
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="CREATE_GUEST",
+        entity_type="guest",
+        entity_id=guest.id,
+        details={
+            "name": f"{guest.first_name} {guest.last_name}",
+            "phone": guest.phone,
+        },
+    )
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="UPDATE_GUEST",
+        entity_type="guest",
+        entity_id=guest.id,
+        details={
+            "name": f"{guest.first_name} {guest.last_name}",
+            "phone": guest.phone,
+        },
+    )
     db.commit()
     return guest
 
@@ -79,8 +105,9 @@ def get_guest(
 def update_guest(
     guest_id: int,
     data: GuestUpdate,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("guest:update")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("guest:update")),  # noqa: B008
 ) -> Guest:
     guest = GuestService(db).update_guest(
         guest_id=guest_id,

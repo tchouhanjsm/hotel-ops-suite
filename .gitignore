@@ -19,3 +19,8 @@ dist/
 
 # GAS backup
 src/appsscript.json.bak
+.env.staging.local
+cypress.env.json
+
+.uat-frontend.log
+.uat-api.log

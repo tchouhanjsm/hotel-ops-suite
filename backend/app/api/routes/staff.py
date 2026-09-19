@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from app.api.auth import get_current_staff
 from app.api.dependencies import get_db
+from app.core.audit import record_audit
 from app.core.rbac import require_permission
 from app.models.staff import Staff
 from app.schemas.staff import StaffCreate, StaffRead, StaffUpdate
@@ -51,8 +52,9 @@ def list_staff(
 )
 def create_staff(
     data: StaffCreate,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("staff:create")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("staff:create")),  # noqa: B008
 ) -> Staff:
     try:
         staff = StaffService(db).create_staff(
@@ -60,6 +62,18 @@ def create_staff(
             password=data.password,
             full_name=data.full_name,
             role=data.role,
+        )
+        record_audit(
+            db,
+            request,
+            current_staff,
+            action="CREATE_STAFF",
+            entity_type="staff",
+            entity_id=staff.id,
+            details={
+                "username": staff.username,
+                "role": staff.role,
+            },
         )
         db.commit()
         return staff
@@ -78,8 +92,9 @@ def create_staff(
 def update_staff(
     staff_id: int,
     data: StaffUpdate,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("staff:update")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("staff:update")),  # noqa: B008
 ) -> Staff:
     staff = StaffService(db).update_staff(
         staff_id=staff_id,
@@ -94,6 +109,28 @@ def update_staff(
             detail="Staff member not found.",
         )
 
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="UPDATE_STAFF",
+        entity_type="staff",
+        entity_id=staff.id,
+        details={
+            "username": staff.username,
+            "role": staff.role,
+            "is_active": staff.is_active,
+        },
+    )
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="DEACTIVATE_STAFF",
+        entity_type="staff",
+        entity_id=staff.id,
+        details={"username": staff.username},
+    )
     db.commit()
     return staff
 
@@ -104,8 +141,9 @@ def update_staff(
 )
 def deactivate_staff(
     staff_id: int,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("staff:update")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("staff:update")),  # noqa: B008
 ) -> Staff:
     staff = StaffService(db).update_staff(
         staff_id=staff_id,

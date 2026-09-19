@@ -1,0 +1,1779 @@
+frontend/src/components/layout/Sidebar.tsx:35:      { label: "Bookings", path: "/bookings", icon: BookOpen },
+frontend/src/components/layout/Sidebar.tsx:36:      { label: "Rooms", path: "/rooms", icon: BedDouble },
+frontend/src/components/layout/Sidebar.tsx:37:      { label: "Guests", path: "/guests", icon: Users },
+frontend/src/components/layout/Sidebar.tsx:43:      { label: "Folio", path: "/folio", icon: WalletCards },
+frontend/src/components/layout/Sidebar.tsx:44:      { label: "Payments", path: "/payments", icon: CreditCard },
+frontend/src/components/layout/Sidebar.tsx:45:      { label: "Vouchers", path: "/vouchers", icon: Building2 },
+frontend/src/components/layout/Sidebar.tsx:46:      { label: "Invoices", path: "/invoices", icon: FileText },
+frontend/src/components/layout/Sidebar.tsx:53:      { label: "Audit Log", path: "/audit-log", icon: FileText },
+frontend/src/api/folio.ts:3:export type FolioItem = {
+frontend/src/api/folio.ts:5:  folio_id: number;
+frontend/src/api/folio.ts:17:export type Folio = {
+frontend/src/api/folio.ts:19:  folio_number: string;
+frontend/src/api/folio.ts:20:  booking_id: number;
+frontend/src/api/folio.ts:32:export function getFolio(folioId: number) {
+frontend/src/api/folio.ts:33:  return apiFetch<Folio>(`/folios/${folioId}`);
+frontend/src/api/folio.ts:36:export function getFolioItems(folioId: number) {
+frontend/src/api/folio.ts:37:  return apiFetch<FolioItem[]>(`/folios/${folioId}/items`);
+frontend/src/api/bookings.ts:3:export type BookingStatus =
+frontend/src/api/bookings.ts:10:export type Booking = {
+frontend/src/api/bookings.ts:12:  booking_reference: string;
+frontend/src/api/bookings.ts:13:  guest_id: number;
+frontend/src/api/bookings.ts:14:  room_id: number;
+frontend/src/api/bookings.ts:15:  check_in: string;
+frontend/src/api/bookings.ts:16:  check_out: string;
+frontend/src/api/bookings.ts:21:  status: BookingStatus;
+frontend/src/api/bookings.ts:25:export type Guest = {
+frontend/src/api/bookings.ts:34:export type Room = {
+frontend/src/api/bookings.ts:36:  room_number: string;
+frontend/src/api/bookings.ts:37:  room_name: string;
+frontend/src/api/bookings.ts:38:  room_type: string;
+frontend/src/api/bookings.ts:45:export function getBookings() {
+frontend/src/api/bookings.ts:46:  return apiFetch<Booking[]>("/bookings");
+frontend/src/api/bookings.ts:49:export function getGuests() {
+frontend/src/api/bookings.ts:50:  return apiFetch<Guest[]>("/guests");
+frontend/src/api/bookings.ts:53:export function getRooms() {
+frontend/src/api/bookings.ts:54:  return apiFetch<Room[]>("/rooms");
+frontend/src/api/bookings.ts:58:  roomId: number,
+frontend/src/api/bookings.ts:59:  checkIn: string,
+frontend/src/api/bookings.ts:60:  checkOut: string,
+frontend/src/api/bookings.ts:62:  return apiFetch<{ room_id: number; available: boolean }>(
+frontend/src/api/bookings.ts:63:    `/bookings/availability?room_id=${roomId}&check_in=${checkIn}&check_out=${checkOut}`,
+frontend/src/api/bookings.ts:67:export function createBooking(data: {
+frontend/src/api/bookings.ts:68:  guest_id: number;
+frontend/src/api/bookings.ts:69:  room_id: number;
+frontend/src/api/bookings.ts:70:  check_in: string;
+frontend/src/api/bookings.ts:71:  check_out: string;
+frontend/src/api/bookings.ts:76:  return apiFetch<Booking>("/bookings", {
+frontend/src/api/bookings.ts:82:export function cancelBooking(id: number) {
+frontend/src/api/bookings.ts:83:  return apiFetch<Booking>(`/bookings/${id}/cancel`, {
+frontend/src/api/bookings.ts:88:export function checkInBooking(id: number) {
+frontend/src/api/bookings.ts:89:  return apiFetch<Booking>(`/bookings/${id}/check-in`, {
+frontend/src/api/bookings.ts:94:export function checkOutBooking(id: number) {
+frontend/src/api/bookings.ts:95:  return apiFetch<Booking>(`/bookings/${id}/check-out`, {
+frontend/src/api/audit.ts:3:export type AuditLog = {
+frontend/src/api/audit.ts:17:export function getAuditLogs() {
+frontend/src/api/audit.ts:18:  return apiFetch<AuditLog[]>("/audit-logs");
+frontend/src/api/payments.ts:3:export type PaymentMethod =
+frontend/src/api/payments.ts:10:export type PaymentStatus = "completed" | "voided";
+frontend/src/api/payments.ts:12:export type Payment = {
+frontend/src/api/payments.ts:14:  payment_reference: string;
+frontend/src/api/payments.ts:15:  folio_id: number;
+frontend/src/api/payments.ts:17:  payment_method: PaymentMethod;
+frontend/src/api/payments.ts:18:  status: PaymentStatus;
+frontend/src/api/payments.ts:25:export type PaymentCreate = {
+frontend/src/api/payments.ts:26:  folio_id: number;
+frontend/src/api/payments.ts:28:  payment_method: PaymentMethod;
+frontend/src/api/payments.ts:33:export function getPayments(folioId: number) {
+frontend/src/api/payments.ts:34:  return apiFetch<Payment[]>(`/payments/folio/${folioId}`);
+frontend/src/api/payments.ts:37:export function createPayment(data: PaymentCreate) {
+frontend/src/api/payments.ts:38:  return apiFetch<Payment>("/payments", {
+frontend/src/api/payments.ts:44:export function voidPayment(paymentId: number) {
+frontend/src/api/payments.ts:45:  return apiFetch<Payment>(`/payments/${paymentId}/void`, {
+frontend/src/routes/AppRoutes.tsx:4:import AuditLog from "./pages/AuditLog";
+frontend/src/routes/AppRoutes.tsx:5:import Bookings from "./pages/Bookings";
+frontend/src/routes/AppRoutes.tsx:7:import Folio from "./pages/Folio";
+frontend/src/routes/AppRoutes.tsx:8:import Guests from "./pages/Guests";
+frontend/src/routes/AppRoutes.tsx:9:import Invoices from "./pages/Invoices";
+frontend/src/routes/AppRoutes.tsx:10:import Payments from "./pages/Payments";
+frontend/src/routes/AppRoutes.tsx:11:import Rooms from "./pages/Rooms";
+frontend/src/routes/AppRoutes.tsx:13:import Vouchers from "./pages/Vouchers";
+frontend/src/routes/AppRoutes.tsx:24:        <Route path="/bookings" element={<Bookings />} />
+frontend/src/routes/AppRoutes.tsx:25:        <Route path="/rooms" element={<Rooms />} />
+frontend/src/routes/AppRoutes.tsx:26:        <Route path="/guests" element={<Guests />} />
+frontend/src/routes/AppRoutes.tsx:27:        <Route path="/folio" element={<Folio />} />
+frontend/src/routes/AppRoutes.tsx:28:        <Route path="/payments" element={<Payments />} />
+frontend/src/routes/AppRoutes.tsx:29:        <Route path="/vouchers" element={<Vouchers />} />
+frontend/src/routes/AppRoutes.tsx:30:        <Route path="/invoices" element={<Invoices />} />
+frontend/src/routes/AppRoutes.tsx:32:        <Route path="/audit-log" element={<AuditLog />} />
+frontend/src/routes/pages/Vouchers.tsx:1:export default function Vouchers() {
+frontend/src/routes/pages/Vouchers.tsx:2:  return <h1>Vouchers</h1>;
+frontend/src/routes/pages/Bookings.tsx:14:  cancelBooking,
+frontend/src/routes/pages/Bookings.tsx:16:  checkInBooking,
+frontend/src/routes/pages/Bookings.tsx:17:  checkOutBooking,
+frontend/src/routes/pages/Bookings.tsx:18:  createBooking,
+frontend/src/routes/pages/Bookings.tsx:19:  getBookings,
+frontend/src/routes/pages/Bookings.tsx:20:  getGuests,
+frontend/src/routes/pages/Bookings.tsx:21:  getRooms,
+frontend/src/routes/pages/Bookings.tsx:22:  type Booking,
+frontend/src/routes/pages/Bookings.tsx:23:  type Guest,
+frontend/src/routes/pages/Bookings.tsx:24:  type Room,
+frontend/src/routes/pages/Bookings.tsx:25:} from "../../api/bookings";
+frontend/src/routes/pages/Bookings.tsx:36:const STATUS_STYLES: Record<Booking["status"], string> = {
+frontend/src/routes/pages/Bookings.tsx:44:function displayStatus(status: Booking["status"]) {
+frontend/src/routes/pages/Bookings.tsx:48:export default function Bookings() {
+frontend/src/routes/pages/Bookings.tsx:49:  const [bookings, setBookings] = useState<Booking[]>([]);
+frontend/src/routes/pages/Bookings.tsx:50:  const [guests, setGuests] = useState<Guest[]>([]);
+frontend/src/routes/pages/Bookings.tsx:51:  const [rooms, setRooms] = useState<Room[]>([]);
+frontend/src/routes/pages/Bookings.tsx:57:  const [guestId, setGuestId] = useState("");
+frontend/src/routes/pages/Bookings.tsx:58:  const [roomId, setRoomId] = useState("");
+frontend/src/routes/pages/Bookings.tsx:59:  const [checkIn, setCheckIn] = useState(today);
+frontend/src/routes/pages/Bookings.tsx:60:  const [checkOut, setCheckOut] = useState("");
+frontend/src/routes/pages/Bookings.tsx:67:  const [busyBookingId, setBusyBookingId] = useState<number | null>(null);
+frontend/src/routes/pages/Bookings.tsx:77:      const [bookingData, guestData, roomData] = await Promise.all([
+frontend/src/routes/pages/Bookings.tsx:78:        getBookings(),
+frontend/src/routes/pages/Bookings.tsx:79:        getGuests(),
+frontend/src/routes/pages/Bookings.tsx:80:        getRooms(),
+frontend/src/routes/pages/Bookings.tsx:83:      setBookings(bookingData);
+frontend/src/routes/pages/Bookings.tsx:84:      setGuests(guestData.filter((guest) => guest.is_active));
+frontend/src/routes/pages/Bookings.tsx:85:      setRooms(roomData.filter((room) => room.is_active));
+frontend/src/routes/pages/Bookings.tsx:88:        err instanceof Error ? err.message : "Unable to load booking data.",
+frontend/src/routes/pages/Bookings.tsx:99:  const guestMap = useMemo(
+frontend/src/routes/pages/Bookings.tsx:100:    () => new Map(guests.map((guest) => [guest.id, guest])),
+frontend/src/routes/pages/Bookings.tsx:101:    [guests],
+frontend/src/routes/pages/Bookings.tsx:104:  const roomMap = useMemo(
+frontend/src/routes/pages/Bookings.tsx:105:    () => new Map(rooms.map((room) => [room.id, room])),
+frontend/src/routes/pages/Bookings.tsx:106:    [rooms],
+frontend/src/routes/pages/Bookings.tsx:109:  const filteredBookings = useMemo(() => {
+frontend/src/routes/pages/Bookings.tsx:113:      return bookings;
+frontend/src/routes/pages/Bookings.tsx:116:    return bookings.filter((booking) => {
+frontend/src/routes/pages/Bookings.tsx:117:      const guest = guestMap.get(booking.guest_id);
+frontend/src/routes/pages/Bookings.tsx:118:      const room = roomMap.get(booking.room_id);
+frontend/src/routes/pages/Bookings.tsx:121:        booking.booking_reference,
+frontend/src/routes/pages/Bookings.tsx:122:        booking.status,
+frontend/src/routes/pages/Bookings.tsx:123:        booking.source,
+frontend/src/routes/pages/Bookings.tsx:124:        guest ? `${guest.first_name} ${guest.last_name}` : "",
+frontend/src/routes/pages/Bookings.tsx:125:        guest?.phone ?? "",
+frontend/src/routes/pages/Bookings.tsx:126:        room?.room_number ?? "",
+frontend/src/routes/pages/Bookings.tsx:127:        room?.room_name ?? "",
+frontend/src/routes/pages/Bookings.tsx:133:  }, [bookings, guestMap, roomMap, search]);
+frontend/src/routes/pages/Bookings.tsx:136:    setGuestId("");
+frontend/src/routes/pages/Bookings.tsx:137:    setRoomId("");
+frontend/src/routes/pages/Bookings.tsx:138:    setCheckIn(today);
+frontend/src/routes/pages/Bookings.tsx:139:    setCheckOut("");
+frontend/src/routes/pages/Bookings.tsx:163:    if (!guestId || !roomId || !checkIn || !checkOut) {
+frontend/src/routes/pages/Bookings.tsx:164:      setError("Guest, room, check-in and check-out are required.");
+frontend/src/routes/pages/Bookings.tsx:168:    if (checkOut <= checkIn) {
+frontend/src/routes/pages/Bookings.tsx:169:      setError("Check-out must be after check-in.");
+frontend/src/routes/pages/Bookings.tsx:186:        Number(roomId),
+frontend/src/routes/pages/Bookings.tsx:187:        checkIn,
+frontend/src/routes/pages/Bookings.tsx:188:        checkOut,
+frontend/src/routes/pages/Bookings.tsx:192:        throw new Error("Room is not available for the selected dates.");
+frontend/src/routes/pages/Bookings.tsx:195:      const booking = await createBooking({
+frontend/src/routes/pages/Bookings.tsx:196:        guest_id: Number(guestId),
+frontend/src/routes/pages/Bookings.tsx:197:        room_id: Number(roomId),
+frontend/src/routes/pages/Bookings.tsx:198:        check_in: checkIn,
+frontend/src/routes/pages/Bookings.tsx:199:        check_out: checkOut,
+frontend/src/routes/pages/Bookings.tsx:207:      setMessage(`Booking ${booking.booking_reference} created.`);
+frontend/src/routes/pages/Bookings.tsx:211:        err instanceof Error ? err.message : "Unable to create booking.",
+frontend/src/routes/pages/Bookings.tsx:219:    bookingId: number,
+frontend/src/routes/pages/Bookings.tsx:220:    action: () => Promise<Booking>,
+frontend/src/routes/pages/Bookings.tsx:223:    setBusyBookingId(bookingId);
+frontend/src/routes/pages/Bookings.tsx:234:      setBusyBookingId(null);
+frontend/src/routes/pages/Bookings.tsx:238:  async function handleCancel(booking: Booking) {
+frontend/src/routes/pages/Bookings.tsx:240:      `Cancel booking ${booking.booking_reference}?`,
+frontend/src/routes/pages/Bookings.tsx:248:      booking.id,
+frontend/src/routes/pages/Bookings.tsx:249:      () => cancelBooking(booking.id),
+frontend/src/routes/pages/Bookings.tsx:250:      `Booking ${booking.booking_reference} cancelled.`,
+frontend/src/routes/pages/Bookings.tsx:258:          <h1 className="text-2xl font-semibold text-gray-950">Bookings</h1>
+frontend/src/routes/pages/Bookings.tsx:281:            New Booking
+frontend/src/routes/pages/Bookings.tsx:309:            placeholder="Search booking, guest, phone, room, source or status..."
+frontend/src/routes/pages/Bookings.tsx:315:          Showing {filteredBookings.length} of {bookings.length} bookings
+frontend/src/routes/pages/Bookings.tsx:324:                <th className="px-5 py-3">Booking</th>
+frontend/src/routes/pages/Bookings.tsx:325:                <th className="px-5 py-3">Guest</th>
+frontend/src/routes/pages/Bookings.tsx:326:                <th className="px-5 py-3">Room</th>
+frontend/src/routes/pages/Bookings.tsx:336:                filteredBookings.map((booking) => {
+frontend/src/routes/pages/Bookings.tsx:337:                  const guest = guestMap.get(booking.guest_id);
+frontend/src/routes/pages/Bookings.tsx:338:                  const room = roomMap.get(booking.room_id);
+frontend/src/routes/pages/Bookings.tsx:339:                  const busy = busyBookingId === booking.id;
+frontend/src/routes/pages/Bookings.tsx:343:                      key={booking.id}
+frontend/src/routes/pages/Bookings.tsx:348:                          {booking.booking_reference}
+frontend/src/routes/pages/Bookings.tsx:351:                          Booking #{booking.id}
+frontend/src/routes/pages/Bookings.tsx:357:                          {guest
+frontend/src/routes/pages/Bookings.tsx:358:                            ? `${guest.first_name} ${guest.last_name}`
+frontend/src/routes/pages/Bookings.tsx:359:                            : `Guest #${booking.guest_id}`}
+frontend/src/routes/pages/Bookings.tsx:362:                          {guest?.phone ?? ""}
+frontend/src/routes/pages/Bookings.tsx:368:                          {room?.room_number ?? `Room #${booking.room_id}`}
+frontend/src/routes/pages/Bookings.tsx:371:                          {room?.room_name ?? ""}
+frontend/src/routes/pages/Bookings.tsx:377:                          {booking.check_in} → {booking.check_out}
+frontend/src/routes/pages/Bookings.tsx:380:                          {booking.nights} night
+frontend/src/routes/pages/Bookings.tsx:381:                          {booking.nights === 1 ? "" : "s"}
+frontend/src/routes/pages/Bookings.tsx:386:                        {money(booking.rate)}
+frontend/src/routes/pages/Bookings.tsx:394:                          className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium capitalize ring-1 ring-inset ${STATUS_STYLES[booking.status]}`}
+frontend/src/routes/pages/Bookings.tsx:396:                          {displayStatus(booking.status)}
+frontend/src/routes/pages/Bookings.tsx:402:                          {booking.status === "confirmed" && (
+frontend/src/routes/pages/Bookings.tsx:409:                                    booking.id,
+frontend/src/routes/pages/Bookings.tsx:410:                                    () => checkInBooking(booking.id),
+frontend/src/routes/pages/Bookings.tsx:411:                                    `Booking ${booking.booking_reference} checked in.`,
+frontend/src/routes/pages/Bookings.tsx:417:                                Check in
+frontend/src/routes/pages/Bookings.tsx:423:                                onClick={() => void handleCancel(booking)}
+frontend/src/routes/pages/Bookings.tsx:432:                          {booking.status === "checked_in" && (
+frontend/src/routes/pages/Bookings.tsx:438:                                  booking.id,
+frontend/src/routes/pages/Bookings.tsx:439:                                  () => checkOutBooking(booking.id),
+frontend/src/routes/pages/Bookings.tsx:440:                                  `Booking ${booking.booking_reference} checked out.`,
+frontend/src/routes/pages/Bookings.tsx:446:                              Check out
+frontend/src/routes/pages/Bookings.tsx:456:                          {booking.status === "checked_out" && (
+frontend/src/routes/pages/Bookings.tsx:462:                          {booking.status === "cancelled" && (
+frontend/src/routes/pages/Bookings.tsx:473:              {!loading && filteredBookings.length === 0 && (
+frontend/src/routes/pages/Bookings.tsx:479:                        No bookings found
+frontend/src/routes/pages/Bookings.tsx:484:                          : "Create your first booking."}
+frontend/src/routes/pages/Bookings.tsx:494:                    Loading bookings...
+frontend/src/routes/pages/Bookings.tsx:516:                  New Booking
+frontend/src/routes/pages/Bookings.tsx:519:                  Create a reservation for a guest and room.
+frontend/src/routes/pages/Bookings.tsx:537:                  <span className="font-medium text-gray-800">Guest</span>
+frontend/src/routes/pages/Bookings.tsx:540:                    value={guestId}
+frontend/src/routes/pages/Bookings.tsx:541:                    onChange={(event) => setGuestId(event.target.value)}
+frontend/src/routes/pages/Bookings.tsx:544:                    <option value="">Select guest</option>
+frontend/src/routes/pages/Bookings.tsx:545:                    {guests.map((guest) => (
+frontend/src/routes/pages/Bookings.tsx:546:                      <option key={guest.id} value={guest.id}>
+frontend/src/routes/pages/Bookings.tsx:547:                        {guest.first_name} {guest.last_name} · {guest.phone}
+frontend/src/routes/pages/Bookings.tsx:554:                  <span className="font-medium text-gray-800">Room</span>
+frontend/src/routes/pages/Bookings.tsx:558:                    value={roomId}
+frontend/src/routes/pages/Bookings.tsx:559:                    onChange={(event) => setRoomId(event.target.value)}
+frontend/src/routes/pages/Bookings.tsx:562:                    <option value="">Select room</option>
+frontend/src/routes/pages/Bookings.tsx:564:                    {rooms.map((room) => (
+frontend/src/routes/pages/Bookings.tsx:566:                        key={room.id}
+frontend/src/routes/pages/Bookings.tsx:567:                        value={room.id}
+frontend/src/routes/pages/Bookings.tsx:569:                          room.status === "maintenance" ||
+frontend/src/routes/pages/Bookings.tsx:570:                          room.status === "out_of_order"
+frontend/src/routes/pages/Bookings.tsx:573:                        {room.room_number} · {room.room_name} ·{" "}
+frontend/src/routes/pages/Bookings.tsx:574:                        {room.status.replace("_", " ")}
+frontend/src/routes/pages/Bookings.tsx:581:                  <span className="font-medium text-gray-800">Check-in</span>
+frontend/src/routes/pages/Bookings.tsx:585:                    value={checkIn}
+frontend/src/routes/pages/Bookings.tsx:586:                    onChange={(event) => setCheckIn(event.target.value)}
+frontend/src/routes/pages/Bookings.tsx:592:                  <span className="font-medium text-gray-800">Check-out</span>
+frontend/src/routes/pages/Bookings.tsx:596:                    value={checkOut}
+frontend/src/routes/pages/Bookings.tsx:597:                    onChange={(event) => setCheckOut(event.target.value)}
+frontend/src/routes/pages/Bookings.tsx:625:                    <option value="booking.com">Booking.com</option>
+frontend/src/routes/pages/Bookings.tsx:641:                  placeholder="Optional booking notes"
+frontend/src/routes/pages/Bookings.tsx:657:                  disabled={saving || !guestId}
+frontend/src/routes/pages/Bookings.tsx:660:                  {saving ? "Creating..." : "Create Booking"}
+frontend/src/routes/pages/Payments.tsx:4:  createPayment,
+frontend/src/routes/pages/Payments.tsx:5:  getPayments,
+frontend/src/routes/pages/Payments.tsx:6:  voidPayment,
+frontend/src/routes/pages/Payments.tsx:7:  type Payment,
+frontend/src/routes/pages/Payments.tsx:8:  type PaymentMethod,
+frontend/src/routes/pages/Payments.tsx:9:} from "../../api/payments";
+frontend/src/routes/pages/Payments.tsx:18:const methods: PaymentMethod[] = [
+frontend/src/routes/pages/Payments.tsx:26:export default function Payments() {
+frontend/src/routes/pages/Payments.tsx:27:  const [folioId, setFolioId] = useState("1");
+frontend/src/routes/pages/Payments.tsx:28:  const [payments, setPayments] = useState<Payment[]>([]);
+frontend/src/routes/pages/Payments.tsx:30:  const [method, setMethod] = useState<PaymentMethod>("cash");
+frontend/src/routes/pages/Payments.tsx:38:  async function loadPayments() {
+frontend/src/routes/pages/Payments.tsx:39:    const id = Number(folioId);
+frontend/src/routes/pages/Payments.tsx:42:      setError("Enter a valid folio ID.");
+frontend/src/routes/pages/Payments.tsx:51:      setPayments(await getPayments(id));
+frontend/src/routes/pages/Payments.tsx:53:      setPayments([]);
+frontend/src/routes/pages/Payments.tsx:54:      setError(err instanceof Error ? err.message : "Unable to load payments.");
+frontend/src/routes/pages/Payments.tsx:63:    const id = Number(folioId);
+frontend/src/routes/pages/Payments.tsx:67:      setError("Enter a valid folio ID.");
+frontend/src/routes/pages/Payments.tsx:72:      setError("Enter a valid payment amount.");
+frontend/src/routes/pages/Payments.tsx:81:      await createPayment({
+frontend/src/routes/pages/Payments.tsx:82:        folio_id: id,
+frontend/src/routes/pages/Payments.tsx:84:        payment_method: method,
+frontend/src/routes/pages/Payments.tsx:92:      setMessage("Payment recorded.");
+frontend/src/routes/pages/Payments.tsx:93:      await loadPayments();
+frontend/src/routes/pages/Payments.tsx:95:      setError(err instanceof Error ? err.message : "Unable to record payment.");
+frontend/src/routes/pages/Payments.tsx:101:  async function handleVoid(paymentId: number) {
+frontend/src/routes/pages/Payments.tsx:106:      await voidPayment(paymentId);
+frontend/src/routes/pages/Payments.tsx:107:      setMessage("Payment voided.");
+frontend/src/routes/pages/Payments.tsx:108:      await loadPayments();
+frontend/src/routes/pages/Payments.tsx:110:      setError(err instanceof Error ? err.message : "Unable to void payment.");
+frontend/src/routes/pages/Payments.tsx:115:    void loadPayments();
+frontend/src/routes/pages/Payments.tsx:121:        <h1 className="text-2xl font-semibold">Payments</h1>
+frontend/src/routes/pages/Payments.tsx:123:          Record and manage payments against a folio.
+frontend/src/routes/pages/Payments.tsx:132:          value={folioId}
+frontend/src/routes/pages/Payments.tsx:133:          onChange={(event) => setFolioId(event.target.value)}
+frontend/src/routes/pages/Payments.tsx:134:          placeholder="Folio ID"
+frontend/src/routes/pages/Payments.tsx:138:          onClick={() => void loadPayments()}
+frontend/src/routes/pages/Payments.tsx:142:          {loading ? "Loading..." : "Load Payments"}
+frontend/src/routes/pages/Payments.tsx:159:        <h2 className="font-semibold">Record Payment</h2>
+frontend/src/routes/pages/Payments.tsx:176:            onChange={(event) => setMethod(event.target.value as PaymentMethod)}
+frontend/src/routes/pages/Payments.tsx:205:              {saving ? "Saving..." : "Record Payment"}
+frontend/src/routes/pages/Payments.tsx:212:        <div className="border-b p-4 font-semibold">Payment History</div>
+frontend/src/routes/pages/Payments.tsx:227:              {payments.map((payment) => (
+frontend/src/routes/pages/Payments.tsx:228:                <tr key={payment.id} className="border-b last:border-0">
+frontend/src/routes/pages/Payments.tsx:230:                    {payment.payment_reference}
+frontend/src/routes/pages/Payments.tsx:232:                  <td className="px-4 py-3">{money(payment.amount)}</td>
+frontend/src/routes/pages/Payments.tsx:234:                    {payment.payment_method.replace("_", " ")}
+frontend/src/routes/pages/Payments.tsx:236:                  <td className="px-4 py-3">{payment.status}</td>
+frontend/src/routes/pages/Payments.tsx:238:                    {new Date(payment.received_at).toLocaleString("en-IN")}
+frontend/src/routes/pages/Payments.tsx:241:                    {payment.status === "completed" && (
+frontend/src/routes/pages/Payments.tsx:244:                        onClick={() => void handleVoid(payment.id)}
+frontend/src/routes/pages/Payments.tsx:254:              {payments.length === 0 && (
+frontend/src/routes/pages/Payments.tsx:257:                    No payments found.
+frontend/src/routes/pages/Guests.tsx:1:export default function Guests() {
+frontend/src/routes/pages/Guests.tsx:2:  return <h1>Guests</h1>;
+frontend/src/routes/pages/Rooms.tsx:6:type Room = {
+frontend/src/routes/pages/Rooms.tsx:8:  room_number: string;
+frontend/src/routes/pages/Rooms.tsx:9:  room_name: string;
+frontend/src/routes/pages/Rooms.tsx:10:  room_type: string;
+frontend/src/routes/pages/Rooms.tsx:26:export default function Rooms() {
+frontend/src/routes/pages/Rooms.tsx:27:  const [rooms, setRooms] = useState<Room[]>([]);
+frontend/src/routes/pages/Rooms.tsx:31:  async function loadRooms() {
+frontend/src/routes/pages/Rooms.tsx:36:      setRooms(await apiFetch<Room[]>("/rooms"));
+frontend/src/routes/pages/Rooms.tsx:38:      setError(err instanceof Error ? err.message : "Unable to load rooms.");
+frontend/src/routes/pages/Rooms.tsx:45:    void loadRooms();
+frontend/src/routes/pages/Rooms.tsx:52:          <h1 className="text-2xl font-semibold">Rooms</h1>
+frontend/src/routes/pages/Rooms.tsx:54:            Current room availability and housekeeping status.
+frontend/src/routes/pages/Rooms.tsx:60:          onClick={() => void loadRooms()}
+frontend/src/routes/pages/Rooms.tsx:76:        {rooms.map((room) => (
+frontend/src/routes/pages/Rooms.tsx:77:          <div key={room.id} className="rounded-xl border bg-white p-5">
+frontend/src/routes/pages/Rooms.tsx:85:                  <div className="font-semibold">{room.room_number}</div>
+frontend/src/routes/pages/Rooms.tsx:86:                  <div className="text-sm text-gray-500">{room.room_name}</div>
+frontend/src/routes/pages/Rooms.tsx:91:                className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${STATUS_STYLES[room.status] ?? "bg-gray-100 text-gray-600"}`}
+frontend/src/routes/pages/Rooms.tsx:93:                {room.status.replace("_", " ")}
+frontend/src/routes/pages/Rooms.tsx:100:                <div className="mt-1">{room.room_type}</div>
+frontend/src/routes/pages/Rooms.tsx:104:                <div className="mt-1">{room.floor}</div>
+frontend/src/routes/pages/Rooms.tsx:108:                <div className="mt-1">{room.capacity}</div>
+frontend/src/routes/pages/Rooms.tsx:114:        {!loading && rooms.length === 0 && (
+frontend/src/routes/pages/Rooms.tsx:116:            No rooms found.
+frontend/src/routes/pages/Folio.tsx:3:import { getFolio, getFolioItems, type Folio as FolioData, type FolioItem } from "../../api/folio";
+frontend/src/routes/pages/Folio.tsx:12:export default function Folio() {
+frontend/src/routes/pages/Folio.tsx:13:  const [folioId, setFolioId] = useState("1");
+frontend/src/routes/pages/Folio.tsx:14:  const [folio, setFolio] = useState<FolioData | null>(null);
+frontend/src/routes/pages/Folio.tsx:15:  const [items, setItems] = useState<FolioItem[]>([]);
+frontend/src/routes/pages/Folio.tsx:19:  async function loadFolio() {
+frontend/src/routes/pages/Folio.tsx:20:    const id = Number(folioId);
+frontend/src/routes/pages/Folio.tsx:23:      setError("Enter a valid folio ID.");
+frontend/src/routes/pages/Folio.tsx:31:      const [folioData, itemData] = await Promise.all([
+frontend/src/routes/pages/Folio.tsx:32:        getFolio(id),
+frontend/src/routes/pages/Folio.tsx:33:        getFolioItems(id),
+frontend/src/routes/pages/Folio.tsx:36:      setFolio(folioData);
+frontend/src/routes/pages/Folio.tsx:39:      setFolio(null);
+frontend/src/routes/pages/Folio.tsx:41:      setError(err instanceof Error ? err.message : "Unable to load folio.");
+frontend/src/routes/pages/Folio.tsx:48:    void loadFolio();
+frontend/src/routes/pages/Folio.tsx:54:        <h1 className="text-2xl font-semibold">Folio</h1>
+frontend/src/routes/pages/Folio.tsx:56:          Review charges, taxes, payments, and balance due.
+frontend/src/routes/pages/Folio.tsx:62:          value={folioId}
+frontend/src/routes/pages/Folio.tsx:63:          onChange={(event) => setFolioId(event.target.value)}
+frontend/src/routes/pages/Folio.tsx:67:          placeholder="Folio ID"
+frontend/src/routes/pages/Folio.tsx:71:          onClick={() => void loadFolio()}
+frontend/src/routes/pages/Folio.tsx:75:          {loading ? "Loading..." : "Load Folio"}
+frontend/src/routes/pages/Folio.tsx:85:      {folio && (
+frontend/src/routes/pages/Folio.tsx:91:                {money(folio.subtotal, folio.currency)}
+frontend/src/routes/pages/Folio.tsx:98:                {money(folio.tax_total, folio.currency)}
+frontend/src/routes/pages/Folio.tsx:105:                {money(folio.paid_amount, folio.currency)}
+frontend/src/routes/pages/Folio.tsx:112:                {money(folio.balance_due, folio.currency)}
+frontend/src/routes/pages/Folio.tsx:119:              <div className="font-semibold">{folio.folio_number}</div>
+frontend/src/routes/pages/Folio.tsx:121:                Booking #{folio.booking_id} · {folio.status}
+frontend/src/routes/pages/Folio.tsx:147:                        {money(item.unit_price, folio.currency)}
+frontend/src/routes/pages/Folio.tsx:153:                        {money(item.total_amount, folio.currency)}
+frontend/src/routes/pages/Folio.tsx:164:                        No folio items.
+frontend/src/routes/pages/Folio.tsx:176:                  <span>{money(folio.grand_total, folio.currency)}</span>
+frontend/src/routes/pages/Folio.tsx:180:                  <span>{money(folio.paid_amount, folio.currency)}</span>
+frontend/src/routes/pages/Folio.tsx:184:                  <span>{money(folio.balance_due, folio.currency)}</span>
+frontend/src/routes/pages/AuditLog.tsx:4:import { getAuditLogs, type AuditLog as AuditEntry } from "../../api/audit";
+frontend/src/routes/pages/AuditLog.tsx:6:export default function AuditLog() {
+frontend/src/routes/pages/AuditLog.tsx:7:  const [logs, setLogs] = useState<AuditEntry[]>([]);
+frontend/src/routes/pages/AuditLog.tsx:17:      setLogs(await getAuditLogs());
+frontend/src/routes/pages/AuditLog.tsx:19:      setError(err instanceof Error ? err.message : "Unable to load audit log.");
+frontend/src/routes/pages/AuditLog.tsx:54:          <h1 className="text-2xl font-semibold">Audit Log</h1>
+frontend/src/routes/pages/AuditLog.tsx:148:                    No audit events found.
+frontend/src/routes/pages/AuditLog.tsx:159:                    Loading audit log...
+frontend/src/routes/pages/Invoices.tsx:1:export default function Invoices() {
+frontend/src/routes/pages/Invoices.tsx:2:  return <h1>Invoices</h1>;
+backend/app/core/audit.py:4:from app.models.audit_log import AuditLog
+backend/app/core/audit.py:6:from app.services.audit_log import AuditLogService
+backend/app/core/audit.py:9:def record_audit(
+backend/app/core/audit.py:18:) -> AuditLog:
+backend/app/core/audit.py:19:    return AuditLogService(db).log(
+backend/app/core/rbac.py:10:        "audit:read",
+backend/app/core/rbac.py:15:        "room:read",
+backend/app/core/rbac.py:16:        "room:create",
+backend/app/core/rbac.py:17:        "room:update",
+backend/app/core/rbac.py:18:        "room:delete",
+backend/app/core/rbac.py:19:        "guest:read",
+backend/app/core/rbac.py:20:        "guest:create",
+backend/app/core/rbac.py:21:        "guest:update",
+backend/app/core/rbac.py:22:        "booking:read",
+backend/app/core/rbac.py:23:        "booking:create",
+backend/app/core/rbac.py:24:        "booking:update",
+backend/app/core/rbac.py:25:        "booking:cancel",
+backend/app/core/rbac.py:26:        "booking:check_in",
+backend/app/core/rbac.py:27:        "booking:check_out",
+backend/app/core/rbac.py:28:        "payment:read",
+backend/app/core/rbac.py:29:        "payment:create",
+backend/app/core/rbac.py:30:        "payment:void",
+backend/app/core/rbac.py:36:        "room:read",
+backend/app/core/rbac.py:37:        "room:create",
+backend/app/core/rbac.py:38:        "room:update",
+backend/app/core/rbac.py:39:        "guest:read",
+backend/app/core/rbac.py:40:        "guest:create",
+backend/app/core/rbac.py:41:        "guest:update",
+backend/app/core/rbac.py:42:        "booking:read",
+backend/app/core/rbac.py:43:        "booking:create",
+backend/app/core/rbac.py:44:        "booking:update",
+backend/app/core/rbac.py:45:        "booking:cancel",
+backend/app/core/rbac.py:46:        "booking:check_in",
+backend/app/core/rbac.py:47:        "booking:check_out",
+backend/app/core/rbac.py:48:        "payment:read",
+backend/app/core/rbac.py:49:        "payment:create",
+backend/app/core/rbac.py:50:        "payment:void",
+backend/app/core/rbac.py:54:        "room:read",
+backend/app/core/rbac.py:55:        "guest:read",
+backend/app/core/rbac.py:56:        "guest:create",
+backend/app/core/rbac.py:57:        "guest:update",
+backend/app/core/rbac.py:58:        "booking:read",
+backend/app/core/rbac.py:59:        "booking:create",
+backend/app/core/rbac.py:60:        "booking:update",
+backend/app/core/rbac.py:61:        "booking:cancel",
+backend/app/core/rbac.py:62:        "booking:check_in",
+backend/app/core/rbac.py:63:        "booking:check_out",
+backend/app/core/rbac.py:64:        "payment:read",
+backend/app/core/rbac.py:65:        "payment:create",
+backend/app/core/rbac.py:66:        "payment:void",
+Binary file backend/app/core/__pycache__/audit.cpython-314.pyc matches
+Binary file backend/app/core/__pycache__/rbac.cpython-314.pyc matches
+backend/app/repositories/booking.py:6:from app.models.booking import Booking
+backend/app/repositories/booking.py:8:ACTIVE_BOOKING_STATUSES = (
+backend/app/repositories/booking.py:14:class BookingRepository:
+backend/app/repositories/booking.py:18:    def get_by_id(self, booking_id: int) -> Booking | None:
+backend/app/repositories/booking.py:19:        return self.db.get(Booking, booking_id)
+backend/app/repositories/booking.py:21:    def get_by_reference(self, reference: str) -> Booking | None:
+backend/app/repositories/booking.py:22:        statement = select(Booking).where(Booking.booking_reference == reference)
+backend/app/repositories/booking.py:25:    def list_all(self) -> list[Booking]:
+backend/app/repositories/booking.py:26:        statement = select(Booking).order_by(Booking.id.desc())
+backend/app/repositories/booking.py:31:        room_id: int,
+backend/app/repositories/booking.py:32:        check_in: date,
+backend/app/repositories/booking.py:33:        check_out: date,
+backend/app/repositories/booking.py:34:        exclude_booking_id: int | None = None,
+backend/app/repositories/booking.py:35:    ) -> list[Booking]:
+backend/app/repositories/booking.py:36:        statement = select(Booking).where(
+backend/app/repositories/booking.py:37:            Booking.room_id == room_id,
+backend/app/repositories/booking.py:38:            Booking.status.in_(ACTIVE_BOOKING_STATUSES),
+backend/app/repositories/booking.py:39:            Booking.check_in < check_out,
+backend/app/repositories/booking.py:40:            Booking.check_out > check_in,
+backend/app/repositories/booking.py:43:        if exclude_booking_id is not None:
+backend/app/repositories/booking.py:45:                Booking.id != exclude_booking_id,
+backend/app/repositories/booking.py:52:        booking_reference: str,
+backend/app/repositories/booking.py:53:        guest_id: int,
+backend/app/repositories/booking.py:54:        room_id: int,
+backend/app/repositories/booking.py:55:        check_in: date,
+backend/app/repositories/booking.py:56:        check_out: date,
+backend/app/repositories/booking.py:61:    ) -> Booking:
+backend/app/repositories/booking.py:62:        booking = Booking(
+backend/app/repositories/booking.py:63:            booking_reference=booking_reference,
+backend/app/repositories/booking.py:64:            guest_id=guest_id,
+backend/app/repositories/booking.py:65:            room_id=room_id,
+backend/app/repositories/booking.py:66:            check_in=check_in,
+backend/app/repositories/booking.py:67:            check_out=check_out,
+backend/app/repositories/booking.py:74:        self.db.add(booking)
+backend/app/repositories/booking.py:76:        self.db.refresh(booking)
+backend/app/repositories/booking.py:78:        return booking
+backend/app/repositories/__init__.py:1:from app.repositories.booking import BookingRepository
+backend/app/repositories/__init__.py:2:from app.repositories.guest import GuestRepository
+backend/app/repositories/__init__.py:3:from app.repositories.room import RoomRepository
+backend/app/repositories/__init__.py:7:    "BookingRepository",
+backend/app/repositories/__init__.py:8:    "GuestRepository",
+backend/app/repositories/__init__.py:9:    "RoomRepository",
+Binary file backend/app/repositories/__pycache__/guest.cpython-314.pyc matches
+Binary file backend/app/repositories/__pycache__/folio.cpython-314.pyc matches
+Binary file backend/app/repositories/__pycache__/audit_log.cpython-314.pyc matches
+Binary file backend/app/repositories/__pycache__/booking.cpython-314.pyc matches
+Binary file backend/app/repositories/__pycache__/payment.cpython-314.pyc matches
+Binary file backend/app/repositories/__pycache__/__init__.cpython-314.pyc matches
+Binary file backend/app/repositories/__pycache__/room.cpython-314.pyc matches
+backend/app/repositories/guest.py:4:from app.models.guest import Guest
+backend/app/repositories/guest.py:7:class GuestRepository:
+backend/app/repositories/guest.py:11:    def get_by_id(self, guest_id: int) -> Guest | None:
+backend/app/repositories/guest.py:12:        return self.db.get(Guest, guest_id)
+backend/app/repositories/guest.py:14:    def list_all(self) -> list[Guest]:
+backend/app/repositories/guest.py:15:        statement = select(Guest).order_by(Guest.id)
+backend/app/repositories/guest.py:18:    def search(self, query: str) -> list[Guest]:
+backend/app/repositories/guest.py:22:            select(Guest)
+backend/app/repositories/guest.py:24:                (Guest.first_name.ilike(pattern))
+backend/app/repositories/guest.py:25:                | (Guest.last_name.ilike(pattern))
+backend/app/repositories/guest.py:26:                | (Guest.phone.ilike(pattern))
+backend/app/repositories/guest.py:27:                | (Guest.email.ilike(pattern))
+backend/app/repositories/guest.py:29:            .order_by(Guest.id)
+backend/app/repositories/guest.py:46:    ) -> Guest:
+backend/app/repositories/guest.py:47:        guest = Guest(
+backend/app/repositories/guest.py:60:        self.db.add(guest)
+backend/app/repositories/guest.py:62:        self.db.refresh(guest)
+backend/app/repositories/guest.py:64:        return guest
+backend/app/repositories/folio.py:6:from app.models.folio import Folio, FolioItem
+backend/app/repositories/folio.py:9:class FolioRepository:
+backend/app/repositories/folio.py:13:    def get_by_id(self, folio_id: int) -> Folio | None:
+backend/app/repositories/folio.py:14:        return self.db.get(Folio, folio_id)
+backend/app/repositories/folio.py:16:    def get_by_booking_id(self, booking_id: int) -> Folio | None:
+backend/app/repositories/folio.py:17:        statement = select(Folio).where(Folio.booking_id == booking_id)
+backend/app/repositories/folio.py:20:    def get_by_number(self, folio_number: str) -> Folio | None:
+backend/app/repositories/folio.py:21:        statement = select(Folio).where(Folio.folio_number == folio_number)
+backend/app/repositories/folio.py:24:    def list_items(self, folio_id: int) -> list[FolioItem]:
+backend/app/repositories/folio.py:26:            select(FolioItem)
+backend/app/repositories/folio.py:27:            .where(FolioItem.folio_id == folio_id)
+backend/app/repositories/folio.py:28:            .order_by(FolioItem.id)
+backend/app/repositories/folio.py:32:    def create_folio(
+backend/app/repositories/folio.py:34:        folio_number: str,
+backend/app/repositories/folio.py:35:        booking_id: int,
+backend/app/repositories/folio.py:38:    ) -> Folio:
+backend/app/repositories/folio.py:39:        folio = Folio(
+backend/app/repositories/folio.py:40:            folio_number=folio_number,
+backend/app/repositories/folio.py:41:            booking_id=booking_id,
+backend/app/repositories/folio.py:45:        self.db.add(folio)
+backend/app/repositories/folio.py:47:        self.db.refresh(folio)
+backend/app/repositories/folio.py:48:        return folio
+backend/app/repositories/folio.py:52:        folio_id: int,
+backend/app/repositories/folio.py:61:    ) -> FolioItem:
+backend/app/repositories/folio.py:62:        item = FolioItem(
+backend/app/repositories/folio.py:63:            folio_id=folio_id,
+backend/app/repositories/payment.py:6:from app.models.payment import Payment
+backend/app/repositories/payment.py:9:class PaymentRepository:
+backend/app/repositories/payment.py:13:    def get_by_id(self, payment_id: int) -> Payment | None:
+backend/app/repositories/payment.py:14:        return self.db.get(Payment, payment_id)
+backend/app/repositories/payment.py:16:    def list_by_folio(self, folio_id: int) -> list[Payment]:
+backend/app/repositories/payment.py:18:            select(Payment)
+backend/app/repositories/payment.py:19:            .where(Payment.folio_id == folio_id)
+backend/app/repositories/payment.py:20:            .order_by(Payment.id.desc())
+backend/app/repositories/payment.py:26:        payment_reference: str,
+backend/app/repositories/payment.py:27:        folio_id: int,
+backend/app/repositories/payment.py:29:        payment_method: str,
+backend/app/repositories/payment.py:33:    ) -> Payment:
+backend/app/repositories/payment.py:34:        payment = Payment(
+backend/app/repositories/payment.py:35:            payment_reference=payment_reference,
+backend/app/repositories/payment.py:36:            folio_id=folio_id,
+backend/app/repositories/payment.py:38:            payment_method=payment_method,
+backend/app/repositories/payment.py:43:        self.db.add(payment)
+backend/app/repositories/payment.py:45:        self.db.refresh(payment)
+backend/app/repositories/payment.py:46:        return payment
+backend/app/repositories/audit_log.py:4:from app.models.audit_log import AuditLog
+backend/app/repositories/audit_log.py:8:class AuditLogRepository:
+backend/app/repositories/audit_log.py:22:    ) -> AuditLog:
+backend/app/repositories/audit_log.py:23:        log = AuditLog(
+backend/app/repositories/audit_log.py:41:    ) -> list[tuple[AuditLog, Staff]]:
+backend/app/repositories/audit_log.py:43:            select(AuditLog, Staff)
+backend/app/repositories/audit_log.py:44:            .join(Staff, Staff.id == AuditLog.staff_id)
+backend/app/repositories/audit_log.py:45:            .order_by(AuditLog.created_at.desc())
+backend/app/repositories/room.py:4:from app.models.room import Room
+backend/app/repositories/room.py:7:class RoomRepository:
+backend/app/repositories/room.py:11:    def get_by_id(self, room_id: int) -> Room | None:
+backend/app/repositories/room.py:12:        return self.db.get(Room, room_id)
+backend/app/repositories/room.py:14:    def get_by_id_for_update(self, room_id: int) -> Room | None:
+backend/app/repositories/room.py:15:        statement = select(Room).where(Room.id == room_id).with_for_update()
+backend/app/repositories/room.py:18:    def get_by_number(self, room_number: str) -> Room | None:
+backend/app/repositories/room.py:19:        statement = select(Room).where(Room.room_number == room_number)
+backend/app/repositories/room.py:22:    def list_all(self) -> list[Room]:
+backend/app/repositories/room.py:23:        statement = select(Room).order_by(Room.room_number)
+backend/app/repositories/room.py:28:        room_number: str,
+backend/app/repositories/room.py:29:        room_name: str,
+backend/app/repositories/room.py:30:        room_type: str,
+backend/app/repositories/room.py:34:    ) -> Room:
+backend/app/repositories/room.py:35:        room = Room(
+backend/app/repositories/room.py:36:            room_number=room_number,
+backend/app/repositories/room.py:37:            room_name=room_name,
+backend/app/repositories/room.py:38:            room_type=room_type,
+backend/app/repositories/room.py:44:        self.db.add(room)
+backend/app/repositories/room.py:46:        self.db.refresh(room)
+backend/app/repositories/room.py:48:        return room
+backend/app/models/booking.py:10:class Booking(Base):
+backend/app/models/booking.py:11:    __tablename__ = "bookings"
+backend/app/models/booking.py:14:    booking_reference: Mapped[str] = mapped_column(
+backend/app/models/booking.py:19:    guest_id: Mapped[int] = mapped_column(ForeignKey("guests.id"))
+backend/app/models/booking.py:20:    room_id: Mapped[int] = mapped_column(ForeignKey("rooms.id"))
+backend/app/models/booking.py:21:    check_in: Mapped[date] = mapped_column(Date)
+backend/app/models/booking.py:22:    check_out: Mapped[date] = mapped_column(Date)
+backend/app/models/__init__.py:2:from app.models.audit_log import AuditLog
+backend/app/models/__init__.py:3:from app.models.booking import Booking
+backend/app/models/__init__.py:4:from app.models.folio import Folio, FolioItem
+backend/app/models/__init__.py:5:from app.models.guest import Guest
+backend/app/models/__init__.py:6:from app.models.payment import Payment
+backend/app/models/__init__.py:7:from app.models.room import Room
+backend/app/models/__init__.py:11:    "AuditLog",
+backend/app/models/__init__.py:13:    "Booking",
+backend/app/models/__init__.py:14:    "Folio",
+backend/app/models/__init__.py:15:    "FolioItem",
+backend/app/models/__init__.py:16:    "Guest",
+backend/app/models/__init__.py:17:    "Payment",
+backend/app/models/__init__.py:18:    "Room",
+Binary file backend/app/models/__pycache__/guest.cpython-314.pyc matches
+Binary file backend/app/models/__pycache__/folio.cpython-314.pyc matches
+Binary file backend/app/models/__pycache__/audit_log.cpython-314.pyc matches
+Binary file backend/app/models/__pycache__/booking.cpython-314.pyc matches
+Binary file backend/app/models/__pycache__/payment.cpython-314.pyc matches
+Binary file backend/app/models/__pycache__/__init__.cpython-314.pyc matches
+Binary file backend/app/models/__pycache__/room.cpython-314.pyc matches
+backend/app/models/guest.py:9:class Guest(Base):
+backend/app/models/guest.py:10:    __tablename__ = "guests"
+backend/app/models/folio.py:10:class Folio(Base):
+backend/app/models/folio.py:11:    __tablename__ = "folios"
+backend/app/models/folio.py:14:    folio_number: Mapped[str] = mapped_column(
+backend/app/models/folio.py:19:    booking_id: Mapped[int] = mapped_column(
+backend/app/models/folio.py:20:        ForeignKey("bookings.id"),
+backend/app/models/folio.py:33:class FolioItem(Base):
+backend/app/models/folio.py:34:    __tablename__ = "folio_items"
+backend/app/models/folio.py:37:    folio_id: Mapped[int] = mapped_column(
+backend/app/models/folio.py:38:        ForeignKey("folios.id"),
+backend/app/models/payment.py:10:class Payment(Base):
+backend/app/models/payment.py:11:    __tablename__ = "payments"
+backend/app/models/payment.py:14:    payment_reference: Mapped[str] = mapped_column(
+backend/app/models/payment.py:19:    folio_id: Mapped[int] = mapped_column(
+backend/app/models/payment.py:20:        ForeignKey("folios.id"),
+backend/app/models/payment.py:24:    payment_method: Mapped[str] = mapped_column(String(30))
+backend/app/models/audit_log.py:9:class AuditLog(Base):
+backend/app/models/audit_log.py:10:    __tablename__ = "audit_logs"
+backend/app/models/room.py:9:class Room(Base):
+backend/app/models/room.py:10:    __tablename__ = "rooms"
+backend/app/models/room.py:13:    room_number: Mapped[str] = mapped_column(String(20), unique=True, index=True)
+backend/app/models/room.py:14:    room_name: Mapped[str] = mapped_column(String(100))
+backend/app/models/room.py:15:    room_type: Mapped[str] = mapped_column(String(50))
+Binary file backend/app/__pycache__/main.cpython-314.pyc matches
+backend/app/schemas/booking.py:8:class BookingStatus(StrEnum):
+backend/app/schemas/booking.py:16:class BookingBase(BaseModel):
+backend/app/schemas/booking.py:17:    guest_id: int = Field(gt=0)
+backend/app/schemas/booking.py:18:    room_id: int = Field(gt=0)
+backend/app/schemas/booking.py:19:    check_in: date
+backend/app/schemas/booking.py:20:    check_out: date
+backend/app/schemas/booking.py:27:        if self.check_out <= self.check_in:
+backend/app/schemas/booking.py:28:            raise ValueError("Check-out must be after check-in.")
+backend/app/schemas/booking.py:32:class BookingCreate(BookingBase):
+backend/app/schemas/booking.py:36:class BookingUpdate(BaseModel):
+backend/app/schemas/booking.py:37:    room_id: int | None = Field(default=None, gt=0)
+backend/app/schemas/booking.py:38:    check_in: date | None = None
+backend/app/schemas/booking.py:39:    check_out: date | None = None
+backend/app/schemas/booking.py:43:    status: BookingStatus | None = None
+backend/app/schemas/booking.py:48:            self.check_in is not None
+backend/app/schemas/booking.py:49:            and self.check_out is not None
+backend/app/schemas/booking.py:50:            and self.check_out <= self.check_in
+backend/app/schemas/booking.py:52:            raise ValueError("Check-out must be after check-in.")
+backend/app/schemas/booking.py:56:class BookingRead(BookingBase):
+backend/app/schemas/booking.py:58:    booking_reference: str
+backend/app/schemas/booking.py:60:    status: BookingStatus
+backend/app/schemas/__init__.py:3:from app.schemas.booking import (
+backend/app/schemas/__init__.py:4:    BookingBase,
+backend/app/schemas/__init__.py:5:    BookingCreate,
+backend/app/schemas/__init__.py:6:    BookingRead,
+backend/app/schemas/__init__.py:7:    BookingStatus,
+backend/app/schemas/__init__.py:8:    BookingUpdate,
+backend/app/schemas/__init__.py:10:from app.schemas.guest import GuestBase, GuestCreate, GuestRead, GuestUpdate
+backend/app/schemas/__init__.py:11:from app.schemas.room import RoomBase, RoomCreate, RoomRead, RoomStatus, RoomUpdate
+backend/app/schemas/__init__.py:18:    "BookingBase",
+backend/app/schemas/__init__.py:19:    "BookingCreate",
+backend/app/schemas/__init__.py:20:    "BookingRead",
+backend/app/schemas/__init__.py:21:    "BookingStatus",
+backend/app/schemas/__init__.py:22:    "BookingUpdate",
+backend/app/schemas/__init__.py:23:    "GuestBase",
+backend/app/schemas/__init__.py:24:    "GuestCreate",
+backend/app/schemas/__init__.py:25:    "GuestRead",
+backend/app/schemas/__init__.py:26:    "GuestUpdate",
+backend/app/schemas/__init__.py:29:    "RoomBase",
+backend/app/schemas/__init__.py:30:    "RoomCreate",
+backend/app/schemas/__init__.py:31:    "RoomRead",
+backend/app/schemas/__init__.py:32:    "RoomStatus",
+backend/app/schemas/__init__.py:33:    "RoomUpdate",
+Binary file backend/app/schemas/__pycache__/guest.cpython-314.pyc matches
+Binary file backend/app/schemas/__pycache__/availability.cpython-314.pyc matches
+Binary file backend/app/schemas/__pycache__/folio.cpython-314.pyc matches
+Binary file backend/app/schemas/__pycache__/audit_log.cpython-314.pyc matches
+Binary file backend/app/schemas/__pycache__/booking.cpython-314.pyc matches
+Binary file backend/app/schemas/__pycache__/payment.cpython-314.pyc matches
+Binary file backend/app/schemas/__pycache__/__init__.cpython-314.pyc matches
+Binary file backend/app/schemas/__pycache__/room.cpython-314.pyc matches
+backend/app/schemas/guest.py:6:class GuestBase(BaseModel):
+backend/app/schemas/guest.py:20:class GuestCreate(GuestBase):
+backend/app/schemas/guest.py:24:class GuestUpdate(BaseModel):
+backend/app/schemas/guest.py:38:class GuestRead(GuestBase):
+backend/app/schemas/folio.py:8:class FolioStatus(StrEnum):
+backend/app/schemas/folio.py:14:class FolioItemType(StrEnum):
+backend/app/schemas/folio.py:15:    ROOM_CHARGE = "room_charge"
+backend/app/schemas/folio.py:23:class FolioCreate(BaseModel):
+backend/app/schemas/folio.py:24:    booking_id: int = Field(gt=0)
+backend/app/schemas/folio.py:29:class FolioItemCreate(BaseModel):
+backend/app/schemas/folio.py:30:    item_type: FolioItemType
+backend/app/schemas/folio.py:42:class FolioItemRead(FolioItemCreate):
+backend/app/schemas/folio.py:44:    folio_id: int
+backend/app/schemas/folio.py:53:class FolioRead(BaseModel):
+backend/app/schemas/folio.py:55:    folio_number: str
+backend/app/schemas/folio.py:56:    booking_id: int
+backend/app/schemas/folio.py:57:    status: FolioStatus
+backend/app/schemas/folio.py:68:class FolioSummary(BaseModel):
+backend/app/schemas/folio.py:70:    folio_number: str
+backend/app/schemas/folio.py:71:    booking_id: int
+backend/app/schemas/folio.py:72:    status: FolioStatus
+backend/app/schemas/availability.py:7:    room_id: int = Field(gt=0)
+backend/app/schemas/availability.py:8:    check_in: date
+backend/app/schemas/availability.py:9:    check_out: date
+backend/app/schemas/availability.py:13:        if self.check_out <= self.check_in:
+backend/app/schemas/availability.py:14:            raise ValueError("Check-out must be after check-in.")
+backend/app/schemas/availability.py:19:    room_id: int
+backend/app/schemas/payment.py:8:class PaymentMethod(StrEnum):
+backend/app/schemas/payment.py:16:class PaymentStatus(StrEnum):
+backend/app/schemas/payment.py:21:class PaymentCreate(BaseModel):
+backend/app/schemas/payment.py:22:    folio_id: int = Field(gt=0)
+backend/app/schemas/payment.py:24:    payment_method: PaymentMethod
+backend/app/schemas/payment.py:32:class PaymentRead(BaseModel):
+backend/app/schemas/payment.py:34:    payment_reference: str
+backend/app/schemas/payment.py:35:    folio_id: int
+backend/app/schemas/payment.py:37:    payment_method: PaymentMethod
+backend/app/schemas/payment.py:38:    status: PaymentStatus
+backend/app/schemas/audit_log.py:7:class AuditLogRead(BaseModel):
+backend/app/schemas/room.py:7:class RoomStatus(StrEnum):
+backend/app/schemas/room.py:16:class RoomBase(BaseModel):
+backend/app/schemas/room.py:17:    room_number: str
+backend/app/schemas/room.py:18:    room_name: str
+backend/app/schemas/room.py:19:    room_type: str
+backend/app/schemas/room.py:22:    status: RoomStatus = RoomStatus.AVAILABLE
+backend/app/schemas/room.py:26:class RoomCreate(RoomBase):
+backend/app/schemas/room.py:30:class RoomUpdate(BaseModel):
+backend/app/schemas/room.py:31:    room_name: str | None = None
+backend/app/schemas/room.py:32:    room_type: str | None = None
+backend/app/schemas/room.py:35:    status: RoomStatus | None = None
+backend/app/schemas/room.py:39:class RoomRead(RoomBase):
+backend/app/api/routes/rooms.py:5:from app.core.audit import record_audit
+backend/app/api/routes/rooms.py:7:from app.models.room import Room
+backend/app/api/routes/rooms.py:9:from app.schemas.room import RoomCreate, RoomRead, RoomUpdate
+backend/app/api/routes/rooms.py:10:from app.services.room import RoomService
+backend/app/api/routes/rooms.py:12:router = APIRouter(prefix="/rooms", tags=["Rooms"])
+backend/app/api/routes/rooms.py:15:@router.get("", response_model=list[RoomRead])
+backend/app/api/routes/rooms.py:16:def list_rooms(
+backend/app/api/routes/rooms.py:18:    _: Staff = Depends(require_permission("room:read")),  # noqa: B008
+backend/app/api/routes/rooms.py:19:) -> list[Room]:
+backend/app/api/routes/rooms.py:20:    return RoomService(db).list_rooms()
+backend/app/api/routes/rooms.py:25:    response_model=RoomRead,
+backend/app/api/routes/rooms.py:28:def create_room(
+backend/app/api/routes/rooms.py:29:    data: RoomCreate,
+backend/app/api/routes/rooms.py:32:    current_staff: Staff = Depends(require_permission("room:create")),  # noqa: B008
+backend/app/api/routes/rooms.py:33:) -> Room:
+backend/app/api/routes/rooms.py:35:        room = RoomService(db).create_room(
+backend/app/api/routes/rooms.py:36:            room_number=data.room_number,
+backend/app/api/routes/rooms.py:37:            room_name=data.room_name,
+backend/app/api/routes/rooms.py:38:            room_type=data.room_type,
+backend/app/api/routes/rooms.py:43:        record_audit(
+backend/app/api/routes/rooms.py:47:            action="CREATE_ROOM",
+backend/app/api/routes/rooms.py:48:            entity_type="room",
+backend/app/api/routes/rooms.py:49:            entity_id=room.id,
+backend/app/api/routes/rooms.py:51:                "room_number": room.room_number,
+backend/app/api/routes/rooms.py:52:                "room_name": room.room_name,
+backend/app/api/routes/rooms.py:56:        return room
+backend/app/api/routes/rooms.py:66:    "/{room_id}",
+backend/app/api/routes/rooms.py:67:    response_model=RoomRead,
+backend/app/api/routes/rooms.py:69:def get_room(
+backend/app/api/routes/rooms.py:70:    room_id: int,
+backend/app/api/routes/rooms.py:72:    _: Staff = Depends(require_permission("room:read")),  # noqa: B008
+backend/app/api/routes/rooms.py:73:) -> Room:
+backend/app/api/routes/rooms.py:74:    room = RoomService(db).get_room(room_id)
+backend/app/api/routes/rooms.py:76:    if room is None:
+backend/app/api/routes/rooms.py:79:            detail="Room not found.",
+backend/app/api/routes/rooms.py:82:    return room
+backend/app/api/routes/rooms.py:86:    "/{room_id}",
+backend/app/api/routes/rooms.py:87:    response_model=RoomRead,
+backend/app/api/routes/rooms.py:89:def update_room(
+backend/app/api/routes/rooms.py:90:    room_id: int,
+backend/app/api/routes/rooms.py:91:    data: RoomUpdate,
+backend/app/api/routes/rooms.py:94:    current_staff: Staff = Depends(require_permission("room:update")),  # noqa: B008
+backend/app/api/routes/rooms.py:95:) -> Room:
+backend/app/api/routes/rooms.py:97:        room = RoomService(db).update_room(
+backend/app/api/routes/rooms.py:98:            room_id=room_id,
+backend/app/api/routes/rooms.py:99:            room_name=data.room_name,
+backend/app/api/routes/rooms.py:100:            room_type=data.room_type,
+backend/app/api/routes/rooms.py:113:    if room is None:
+backend/app/api/routes/rooms.py:116:            detail="Room not found.",
+backend/app/api/routes/rooms.py:119:    record_audit(
+backend/app/api/routes/rooms.py:123:        action="UPDATE_ROOM",
+backend/app/api/routes/rooms.py:124:        entity_type="room",
+backend/app/api/routes/rooms.py:125:        entity_id=room.id,
+backend/app/api/routes/rooms.py:127:            "room_number": room.room_number,
+backend/app/api/routes/rooms.py:128:            "status": room.status,
+backend/app/api/routes/rooms.py:132:    return room
+backend/app/api/routes/guests.py:5:from app.core.audit import record_audit
+backend/app/api/routes/guests.py:7:from app.models.guest import Guest
+backend/app/api/routes/guests.py:9:from app.schemas.guest import GuestCreate, GuestRead, GuestUpdate
+backend/app/api/routes/guests.py:10:from app.services.guest import GuestService
+backend/app/api/routes/guests.py:12:router = APIRouter(prefix="/guests", tags=["Guests"])
+backend/app/api/routes/guests.py:15:@router.get("", response_model=list[GuestRead])
+backend/app/api/routes/guests.py:16:def list_guests(
+backend/app/api/routes/guests.py:19:    _: Staff = Depends(require_permission("guest:read")),  # noqa: B008
+backend/app/api/routes/guests.py:20:) -> list[Guest]:
+backend/app/api/routes/guests.py:21:    service = GuestService(db)
+backend/app/api/routes/guests.py:24:        return service.search_guests(query)
+backend/app/api/routes/guests.py:26:    return service.list_guests()
+backend/app/api/routes/guests.py:31:    response_model=GuestRead,
+backend/app/api/routes/guests.py:34:def create_guest(
+backend/app/api/routes/guests.py:35:    data: GuestCreate,
+backend/app/api/routes/guests.py:38:    current_staff: Staff = Depends(require_permission("guest:create")),  # noqa: B008
+backend/app/api/routes/guests.py:39:) -> Guest:
+backend/app/api/routes/guests.py:40:    guest = GuestService(db).create_guest(
+backend/app/api/routes/guests.py:53:    record_audit(
+backend/app/api/routes/guests.py:57:        action="CREATE_GUEST",
+backend/app/api/routes/guests.py:58:        entity_type="guest",
+backend/app/api/routes/guests.py:59:        entity_id=guest.id,
+backend/app/api/routes/guests.py:61:            "name": f"{guest.first_name} {guest.last_name}",
+backend/app/api/routes/guests.py:62:            "phone": guest.phone,
+backend/app/api/routes/guests.py:65:    record_audit(
+backend/app/api/routes/guests.py:69:        action="UPDATE_GUEST",
+backend/app/api/routes/guests.py:70:        entity_type="guest",
+backend/app/api/routes/guests.py:71:        entity_id=guest.id,
+backend/app/api/routes/guests.py:73:            "name": f"{guest.first_name} {guest.last_name}",
+backend/app/api/routes/guests.py:74:            "phone": guest.phone,
+backend/app/api/routes/guests.py:78:    return guest
+backend/app/api/routes/guests.py:82:    "/{guest_id}",
+backend/app/api/routes/guests.py:83:    response_model=GuestRead,
+backend/app/api/routes/guests.py:85:def get_guest(
+backend/app/api/routes/guests.py:86:    guest_id: int,
+backend/app/api/routes/guests.py:88:    _: Staff = Depends(require_permission("guest:read")),  # noqa: B008
+backend/app/api/routes/guests.py:89:) -> Guest:
+backend/app/api/routes/guests.py:90:    guest = GuestService(db).get_guest(guest_id)
+backend/app/api/routes/guests.py:92:    if guest is None:
+backend/app/api/routes/guests.py:95:            detail="Guest not found.",
+backend/app/api/routes/guests.py:98:    return guest
+backend/app/api/routes/guests.py:102:    "/{guest_id}",
+backend/app/api/routes/guests.py:103:    response_model=GuestRead,
+backend/app/api/routes/guests.py:105:def update_guest(
+backend/app/api/routes/guests.py:106:    guest_id: int,
+backend/app/api/routes/guests.py:107:    data: GuestUpdate,
+backend/app/api/routes/guests.py:110:    current_staff: Staff = Depends(require_permission("guest:update")),  # noqa: B008
+backend/app/api/routes/guests.py:111:) -> Guest:
+backend/app/api/routes/guests.py:112:    guest = GuestService(db).update_guest(
+backend/app/api/routes/guests.py:113:        guest_id=guest_id,
+backend/app/api/routes/guests.py:127:    if guest is None:
+backend/app/api/routes/guests.py:130:            detail="Guest not found.",
+backend/app/api/routes/guests.py:134:    return guest
+backend/app/api/routes/auth.py:5:from app.core.audit import record_audit
+backend/app/api/routes/auth.py:30:    record_audit(
+backend/app/api/routes/payments.py:5:from app.core.audit import record_audit
+backend/app/api/routes/payments.py:7:from app.models.payment import Payment
+backend/app/api/routes/payments.py:9:from app.schemas.payment import PaymentCreate, PaymentRead
+backend/app/api/routes/payments.py:10:from app.services.payment import PaymentService
+backend/app/api/routes/payments.py:12:router = APIRouter(prefix="/payments", tags=["Payments"])
+backend/app/api/routes/payments.py:16:    "/folio/{folio_id}",
+backend/app/api/routes/payments.py:17:    response_model=list[PaymentRead],
+backend/app/api/routes/payments.py:19:def list_payments(
+backend/app/api/routes/payments.py:20:    folio_id: int,
+backend/app/api/routes/payments.py:22:    _: Staff = Depends(require_permission("payment:read")),  # noqa: B008
+backend/app/api/routes/payments.py:23:) -> list[Payment]:
+backend/app/api/routes/payments.py:25:        return PaymentService(db).list_payments(folio_id)
+backend/app/api/routes/payments.py:35:    response_model=PaymentRead,
+backend/app/api/routes/payments.py:38:def create_payment(
+backend/app/api/routes/payments.py:39:    data: PaymentCreate,
+backend/app/api/routes/payments.py:41:    current_staff: Staff = Depends(require_permission("payment:create")),  # noqa: B008
+backend/app/api/routes/payments.py:43:) -> Payment:
+backend/app/api/routes/payments.py:45:        payment = PaymentService(db).create_payment(
+backend/app/api/routes/payments.py:46:            folio_id=data.folio_id,
+backend/app/api/routes/payments.py:48:            payment_method=data.payment_method.value,
+backend/app/api/routes/payments.py:53:        record_audit(
+backend/app/api/routes/payments.py:57:            action="CREATE_PAYMENT",
+backend/app/api/routes/payments.py:58:            entity_type="payment",
+backend/app/api/routes/payments.py:59:            entity_id=payment.id,
+backend/app/api/routes/payments.py:61:                "payment_reference": payment.payment_reference,
+backend/app/api/routes/payments.py:62:                "folio_id": payment.folio_id,
+backend/app/api/routes/payments.py:63:                "amount": str(payment.amount),
+backend/app/api/routes/payments.py:64:                "payment_method": payment.payment_method,
+backend/app/api/routes/payments.py:68:        return payment
+backend/app/api/routes/payments.py:78:    "/{payment_id}/void",
+backend/app/api/routes/payments.py:79:    response_model=PaymentRead,
+backend/app/api/routes/payments.py:81:def void_payment(
+backend/app/api/routes/payments.py:82:    payment_id: int,
+backend/app/api/routes/payments.py:85:    current_staff: Staff = Depends(require_permission("payment:void")),  # noqa: B008
+backend/app/api/routes/payments.py:86:) -> Payment:
+backend/app/api/routes/payments.py:88:        payment = PaymentService(db).void_payment(payment_id)
+backend/app/api/routes/payments.py:96:    if payment is None:
+backend/app/api/routes/payments.py:99:            detail="Payment not found.",
+backend/app/api/routes/payments.py:102:    record_audit(
+backend/app/api/routes/payments.py:106:        action="VOID_PAYMENT",
+backend/app/api/routes/payments.py:107:        entity_type="payment",
+backend/app/api/routes/payments.py:108:        entity_id=payment.id,
+backend/app/api/routes/payments.py:110:            "payment_reference": payment.payment_reference,
+backend/app/api/routes/payments.py:111:            "folio_id": payment.folio_id,
+backend/app/api/routes/payments.py:112:            "amount": str(payment.amount),
+backend/app/api/routes/payments.py:116:    return payment
+backend/app/api/routes/staff.py:6:from app.core.audit import record_audit
+backend/app/api/routes/staff.py:66:        record_audit(
+backend/app/api/routes/staff.py:112:    record_audit(
+backend/app/api/routes/staff.py:125:    record_audit(
+backend/app/api/routes/bookings.py:7:from app.core.audit import record_audit
+backend/app/api/routes/bookings.py:9:from app.models.booking import Booking
+backend/app/api/routes/bookings.py:12:from app.schemas.booking import BookingCreate, BookingRead, BookingUpdate
+backend/app/api/routes/bookings.py:13:from app.services.booking import BookingService
+backend/app/api/routes/bookings.py:15:router = APIRouter(prefix="/bookings", tags=["Bookings"])
+backend/app/api/routes/bookings.py:18:@router.get("", response_model=list[BookingRead])
+backend/app/api/routes/bookings.py:19:def list_bookings(
+backend/app/api/routes/bookings.py:21:    _: Staff = Depends(require_permission("booking:read")),  # noqa: B008
+backend/app/api/routes/bookings.py:22:) -> list[Booking]:
+backend/app/api/routes/bookings.py:23:    return BookingService(db).list_bookings()
+backend/app/api/routes/bookings.py:28:    room_id: int = Query(gt=0),
+backend/app/api/routes/bookings.py:29:    check_in: date = Query(),  # noqa: B008
+backend/app/api/routes/bookings.py:30:    check_out: date = Query(),  # noqa: B008
+backend/app/api/routes/bookings.py:32:    _: Staff = Depends(require_permission("booking:read")),  # noqa: B008
+backend/app/api/routes/bookings.py:34:    if check_out <= check_in:
+backend/app/api/routes/bookings.py:37:            detail="Check-out must be after check-in.",
+backend/app/api/routes/bookings.py:40:    available = BookingService(db).is_room_available(
+backend/app/api/routes/bookings.py:41:        room_id=room_id,
+backend/app/api/routes/bookings.py:42:        check_in=check_in,
+backend/app/api/routes/bookings.py:43:        check_out=check_out,
+backend/app/api/routes/bookings.py:47:        room_id=room_id,
+backend/app/api/routes/bookings.py:54:    response_model=BookingRead,
+backend/app/api/routes/bookings.py:57:def create_booking(
+backend/app/api/routes/bookings.py:58:    data: BookingCreate,
+backend/app/api/routes/bookings.py:61:    current_staff: Staff = Depends(require_permission("booking:create")),  # noqa: B008
+backend/app/api/routes/bookings.py:62:) -> Booking:
+backend/app/api/routes/bookings.py:64:        booking = BookingService(db).create_booking(
+backend/app/api/routes/bookings.py:65:            guest_id=data.guest_id,
+backend/app/api/routes/bookings.py:66:            room_id=data.room_id,
+backend/app/api/routes/bookings.py:67:            check_in=data.check_in,
+backend/app/api/routes/bookings.py:68:            check_out=data.check_out,
+backend/app/api/routes/bookings.py:73:        record_audit(
+backend/app/api/routes/bookings.py:77:            action="CREATE_BOOKING",
+backend/app/api/routes/bookings.py:78:            entity_type="booking",
+backend/app/api/routes/bookings.py:79:            entity_id=booking.id,
+backend/app/api/routes/bookings.py:81:                "booking_reference": booking.booking_reference,
+backend/app/api/routes/bookings.py:82:                "guest_id": booking.guest_id,
+backend/app/api/routes/bookings.py:83:                "room_id": booking.room_id,
+backend/app/api/routes/bookings.py:87:        return booking
+backend/app/api/routes/bookings.py:97:    "/{booking_id}",
+backend/app/api/routes/bookings.py:98:    response_model=BookingRead,
+backend/app/api/routes/bookings.py:100:def update_booking(
+backend/app/api/routes/bookings.py:101:    booking_id: int,
+backend/app/api/routes/bookings.py:102:    data: BookingUpdate,
+backend/app/api/routes/bookings.py:105:    current_staff: Staff = Depends(require_permission("booking:update")),  # noqa: B008
+backend/app/api/routes/bookings.py:106:) -> Booking:
+backend/app/api/routes/bookings.py:108:        booking = BookingService(db).update_booking(
+backend/app/api/routes/bookings.py:109:            booking_id=booking_id,
+backend/app/api/routes/bookings.py:110:            room_id=data.room_id,
+backend/app/api/routes/bookings.py:111:            check_in=data.check_in,
+backend/app/api/routes/bookings.py:112:            check_out=data.check_out,
+backend/app/api/routes/bookings.py:118:        if booking is None:
+backend/app/api/routes/bookings.py:121:                detail="Booking not found.",
+backend/app/api/routes/bookings.py:124:        record_audit(
+backend/app/api/routes/bookings.py:128:            action="UPDATE_BOOKING",
+backend/app/api/routes/bookings.py:129:            entity_type="booking",
+backend/app/api/routes/bookings.py:130:            entity_id=booking.id,
+backend/app/api/routes/bookings.py:132:                "booking_reference": booking.booking_reference,
+backend/app/api/routes/bookings.py:133:                "room_id": booking.room_id,
+backend/app/api/routes/bookings.py:134:                "check_in": booking.check_in.isoformat(),
+backend/app/api/routes/bookings.py:135:                "check_out": booking.check_out.isoformat(),
+backend/app/api/routes/bookings.py:139:        return booking
+backend/app/api/routes/bookings.py:150:    "/{booking_id}/cancel",
+backend/app/api/routes/bookings.py:151:    response_model=BookingRead,
+backend/app/api/routes/bookings.py:153:def cancel_booking(
+backend/app/api/routes/bookings.py:154:    booking_id: int,
+backend/app/api/routes/bookings.py:157:    current_staff: Staff = Depends(require_permission("booking:cancel")),  # noqa: B008
+backend/app/api/routes/bookings.py:158:) -> Booking:
+backend/app/api/routes/bookings.py:160:        booking = BookingService(db).cancel_booking(booking_id)
+backend/app/api/routes/bookings.py:168:    if booking is None:
+backend/app/api/routes/bookings.py:171:            detail="Booking not found.",
+backend/app/api/routes/bookings.py:174:    record_audit(
+backend/app/api/routes/bookings.py:178:        action="CANCEL_BOOKING",
+backend/app/api/routes/bookings.py:179:        entity_type="booking",
+backend/app/api/routes/bookings.py:180:        entity_id=booking.id,
+backend/app/api/routes/bookings.py:181:        details={"booking_reference": booking.booking_reference},
+backend/app/api/routes/bookings.py:184:    return booking
+backend/app/api/routes/bookings.py:188:    "/{booking_id}/check-in",
+backend/app/api/routes/bookings.py:189:    response_model=BookingRead,
+backend/app/api/routes/bookings.py:191:def check_in_booking(
+backend/app/api/routes/bookings.py:192:    booking_id: int,
+backend/app/api/routes/bookings.py:195:    current_staff: Staff = Depends(require_permission("booking:check_in")),  # noqa: B008
+backend/app/api/routes/bookings.py:196:) -> Booking:
+backend/app/api/routes/bookings.py:198:        booking = BookingService(db).check_in(booking_id)
+backend/app/api/routes/bookings.py:206:    if booking is None:
+backend/app/api/routes/bookings.py:209:            detail="Booking not found.",
+backend/app/api/routes/bookings.py:212:    record_audit(
+backend/app/api/routes/bookings.py:216:        action="CHECK_IN",
+backend/app/api/routes/bookings.py:217:        entity_type="booking",
+backend/app/api/routes/bookings.py:218:        entity_id=booking.id,
+backend/app/api/routes/bookings.py:220:            "booking_reference": booking.booking_reference,
+backend/app/api/routes/bookings.py:221:            "room_id": booking.room_id,
+backend/app/api/routes/bookings.py:225:    return booking
+backend/app/api/routes/bookings.py:229:    "/{booking_id}/check-out",
+backend/app/api/routes/bookings.py:230:    response_model=BookingRead,
+backend/app/api/routes/bookings.py:232:def check_out_booking(
+backend/app/api/routes/bookings.py:233:    booking_id: int,
+backend/app/api/routes/bookings.py:236:    current_staff: Staff = Depends(require_permission("booking:check_out")),  # noqa: B008
+backend/app/api/routes/bookings.py:237:) -> Booking:
+backend/app/api/routes/bookings.py:239:        booking = BookingService(db).check_out(booking_id)
+backend/app/api/routes/bookings.py:247:    if booking is None:
+backend/app/api/routes/bookings.py:250:            detail="Booking not found.",
+backend/app/api/routes/bookings.py:253:    record_audit(
+backend/app/api/routes/bookings.py:257:        action="CHECK_OUT",
+backend/app/api/routes/bookings.py:258:        entity_type="booking",
+backend/app/api/routes/bookings.py:259:        entity_id=booking.id,
+backend/app/api/routes/bookings.py:261:            "booking_reference": booking.booking_reference,
+backend/app/api/routes/bookings.py:262:            "room_id": booking.room_id,
+backend/app/api/routes/bookings.py:266:    return booking
+backend/app/api/routes/bookings.py:270:    "/{booking_id}",
+backend/app/api/routes/bookings.py:271:    response_model=BookingRead,
+backend/app/api/routes/bookings.py:273:def get_booking(
+backend/app/api/routes/bookings.py:274:    booking_id: int,
+backend/app/api/routes/bookings.py:276:    _: Staff = Depends(require_permission("booking:read")),  # noqa: B008
+backend/app/api/routes/bookings.py:277:) -> Booking:
+backend/app/api/routes/bookings.py:278:    booking = BookingService(db).get_booking(booking_id)
+backend/app/api/routes/bookings.py:280:    if booking is None:
+backend/app/api/routes/bookings.py:283:            detail="Booking not found.",
+backend/app/api/routes/bookings.py:286:    return booking
+backend/app/api/routes/__init__.py:2:from app.api.routes.bookings import router as bookings_router
+backend/app/api/routes/__init__.py:3:from app.api.routes.guests import router as guests_router
+backend/app/api/routes/__init__.py:4:from app.api.routes.rooms import router as rooms_router
+backend/app/api/routes/__init__.py:9:    "bookings_router",
+backend/app/api/routes/__init__.py:10:    "guests_router",
+backend/app/api/routes/__init__.py:11:    "rooms_router",
+Binary file backend/app/api/routes/__pycache__/guests.cpython-314.pyc matches
+Binary file backend/app/api/routes/__pycache__/audit_logs.cpython-314.pyc matches
+Binary file backend/app/api/routes/__pycache__/auth.cpython-314.pyc matches
+Binary file backend/app/api/routes/__pycache__/folios.cpython-314.pyc matches
+Binary file backend/app/api/routes/__pycache__/rooms.cpython-314.pyc matches
+Binary file backend/app/api/routes/__pycache__/__init__.cpython-314.pyc matches
+Binary file backend/app/api/routes/__pycache__/payments.cpython-314.pyc matches
+Binary file backend/app/api/routes/__pycache__/bookings.cpython-314.pyc matches
+Binary file backend/app/api/routes/__pycache__/staff.cpython-314.pyc matches
+backend/app/api/routes/folios.py:5:from app.core.audit import record_audit
+backend/app/api/routes/folios.py:7:from app.models.folio import Folio, FolioItem
+backend/app/api/routes/folios.py:9:from app.schemas.folio import (
+backend/app/api/routes/folios.py:10:    FolioCreate,
+backend/app/api/routes/folios.py:11:    FolioItemCreate,
+backend/app/api/routes/folios.py:12:    FolioItemRead,
+backend/app/api/routes/folios.py:13:    FolioRead,
+backend/app/api/routes/folios.py:14:    FolioStatus,
+backend/app/api/routes/folios.py:15:    FolioSummary,
+backend/app/api/routes/folios.py:17:from app.services.folio import FolioService
+backend/app/api/routes/folios.py:19:router = APIRouter(prefix="/folios", tags=["Folios"])
+backend/app/api/routes/folios.py:24:    response_model=FolioRead,
+backend/app/api/routes/folios.py:27:def create_folio(
+backend/app/api/routes/folios.py:28:    data: FolioCreate,
+backend/app/api/routes/folios.py:31:    current_staff: Staff = Depends(require_permission("booking:update")),  # noqa: B008
+backend/app/api/routes/folios.py:32:) -> Folio:
+backend/app/api/routes/folios.py:34:        folio = FolioService(db).create_folio(
+backend/app/api/routes/folios.py:35:            booking_id=data.booking_id,
+backend/app/api/routes/folios.py:39:        record_audit(
+backend/app/api/routes/folios.py:43:            action="CREATE_FOLIO",
+backend/app/api/routes/folios.py:44:            entity_type="folio",
+backend/app/api/routes/folios.py:45:            entity_id=folio.id,
+backend/app/api/routes/folios.py:47:                "folio_number": folio.folio_number,
+backend/app/api/routes/folios.py:48:                "booking_id": folio.booking_id,
+backend/app/api/routes/folios.py:52:        return folio
+backend/app/api/routes/folios.py:61:@router.get("/{folio_id}", response_model=FolioSummary)
+backend/app/api/routes/folios.py:62:def get_folio(
+backend/app/api/routes/folios.py:63:    folio_id: int,
+backend/app/api/routes/folios.py:65:    _: Staff = Depends(require_permission("booking:read")),  # noqa: B008
+backend/app/api/routes/folios.py:66:) -> FolioSummary:
+backend/app/api/routes/folios.py:67:    service = FolioService(db)
+backend/app/api/routes/folios.py:68:    folio = service.get_folio(folio_id)
+backend/app/api/routes/folios.py:70:    if folio is None:
+backend/app/api/routes/folios.py:73:            detail="Folio not found.",
+backend/app/api/routes/folios.py:76:    subtotal, tax_total, grand_total = service.get_totals(folio_id)
+backend/app/api/routes/folios.py:77:    paid_amount, balance_due = service.get_balance(folio_id)
+backend/app/api/routes/folios.py:79:    return FolioSummary(
+backend/app/api/routes/folios.py:80:        id=folio.id,
+backend/app/api/routes/folios.py:81:        folio_number=folio.folio_number,
+backend/app/api/routes/folios.py:82:        booking_id=folio.booking_id,
+backend/app/api/routes/folios.py:83:        status=FolioStatus(folio.status),
+backend/app/api/routes/folios.py:84:        currency=folio.currency,
+backend/app/api/routes/folios.py:85:        notes=folio.notes,
+backend/app/api/routes/folios.py:86:        created_at=folio.created_at,
+backend/app/api/routes/folios.py:96:    "/{folio_id}/items",
+backend/app/api/routes/folios.py:97:    response_model=list[FolioItemRead],
+backend/app/api/routes/folios.py:99:def list_folio_items(
+backend/app/api/routes/folios.py:100:    folio_id: int,
+backend/app/api/routes/folios.py:102:    _: Staff = Depends(require_permission("booking:read")),  # noqa: B008
+backend/app/api/routes/folios.py:103:) -> list[FolioItem]:
+backend/app/api/routes/folios.py:104:    service = FolioService(db)
+backend/app/api/routes/folios.py:106:    if service.get_folio(folio_id) is None:
+backend/app/api/routes/folios.py:109:            detail="Folio not found.",
+backend/app/api/routes/folios.py:112:    return service.list_items(folio_id)
+backend/app/api/routes/folios.py:116:    "/{folio_id}/items",
+backend/app/api/routes/folios.py:117:    response_model=FolioItemRead,
+backend/app/api/routes/folios.py:120:def add_folio_item(
+backend/app/api/routes/folios.py:121:    folio_id: int,
+backend/app/api/routes/folios.py:122:    data: FolioItemCreate,
+backend/app/api/routes/folios.py:125:    current_staff: Staff = Depends(require_permission("booking:update")),  # noqa: B008
+backend/app/api/routes/folios.py:126:) -> FolioItem:
+backend/app/api/routes/folios.py:128:        item = FolioService(db).add_item(
+backend/app/api/routes/folios.py:129:            folio_id=folio_id,
+backend/app/api/routes/folios.py:136:        record_audit(
+backend/app/api/routes/folios.py:140:            action="ADD_FOLIO_ITEM",
+backend/app/api/routes/folios.py:141:            entity_type="folio_item",
+backend/app/api/routes/folios.py:144:                "folio_id": item.folio_id,
+backend/app/api/routes/audit_logs.py:7:from app.schemas.audit_log import AuditLogRead
+backend/app/api/routes/audit_logs.py:8:from app.services.audit_log import AuditLogService
+backend/app/api/routes/audit_logs.py:10:router = APIRouter(prefix="/audit-logs", tags=["Audit Logs"])
+backend/app/api/routes/audit_logs.py:13:@router.get("", response_model=list[AuditLogRead])
+backend/app/api/routes/audit_logs.py:14:def list_audit_logs(
+backend/app/api/routes/audit_logs.py:18:    _: Staff = Depends(require_permission("audit:read")),  # noqa: B008
+backend/app/api/routes/audit_logs.py:20:    return AuditLogService(db).list_logs(
+backend/app/main.py:4:from app.api.routes.audit_logs import router as audit_logs_router
+backend/app/main.py:6:from app.api.routes.bookings import router as bookings_router
+backend/app/main.py:7:from app.api.routes.folios import router as folios_router
+backend/app/main.py:8:from app.api.routes.guests import router as guests_router
+backend/app/main.py:9:from app.api.routes.payments import router as payments_router
+backend/app/main.py:10:from app.api.routes.rooms import router as rooms_router
+backend/app/main.py:27:app.include_router(audit_logs_router)
+backend/app/main.py:29:app.include_router(rooms_router)
+backend/app/main.py:30:app.include_router(guests_router)
+backend/app/main.py:31:app.include_router(bookings_router)
+backend/app/main.py:39:app.include_router(folios_router)
+backend/app/main.py:40:app.include_router(payments_router)
+backend/app/services/booking.py:6:from app.models.booking import Booking
+backend/app/services/booking.py:7:from app.repositories.booking import BookingRepository
+backend/app/services/booking.py:8:from app.repositories.guest import GuestRepository
+backend/app/services/booking.py:9:from app.repositories.room import RoomRepository
+backend/app/services/booking.py:12:class BookingService:
+backend/app/services/booking.py:15:        self.repository = BookingRepository(db)
+backend/app/services/booking.py:16:        self.guest_repository = GuestRepository(db)
+backend/app/services/booking.py:17:        self.room_repository = RoomRepository(db)
+backend/app/services/booking.py:26:    def list_bookings(self) -> list[Booking]:
+backend/app/services/booking.py:29:    def get_booking(self, booking_id: int) -> Booking | None:
+backend/app/services/booking.py:30:        return self.repository.get_by_id(booking_id)
+backend/app/services/booking.py:32:    def is_room_available(
+backend/app/services/booking.py:34:        room_id: int,
+backend/app/services/booking.py:35:        check_in: date,
+backend/app/services/booking.py:36:        check_out: date,
+backend/app/services/booking.py:37:        exclude_booking_id: int | None = None,
+backend/app/services/booking.py:39:        room = self.room_repository.get_by_id(room_id)
+backend/app/services/booking.py:41:        if room is None or not room.is_active:
+backend/app/services/booking.py:45:            room_id=room_id,
+backend/app/services/booking.py:46:            check_in=check_in,
+backend/app/services/booking.py:47:            check_out=check_out,
+backend/app/services/booking.py:48:            exclude_booking_id=exclude_booking_id,
+backend/app/services/booking.py:53:    def create_booking(
+backend/app/services/booking.py:55:        guest_id: int,
+backend/app/services/booking.py:56:        room_id: int,
+backend/app/services/booking.py:57:        check_in: date,
+backend/app/services/booking.py:58:        check_out: date,
+backend/app/services/booking.py:62:    ) -> Booking:
+backend/app/services/booking.py:63:        guest = self.guest_repository.get_by_id(guest_id)
+backend/app/services/booking.py:65:        if guest is None or not guest.is_active:
+backend/app/services/booking.py:66:            raise ValueError("Guest not found or inactive.")
+backend/app/services/booking.py:68:        room = self.room_repository.get_by_id_for_update(room_id)
+backend/app/services/booking.py:70:        if room is None or not room.is_active:
+backend/app/services/booking.py:71:            raise ValueError("Room not found or inactive.")
+backend/app/services/booking.py:73:        if room.status in {"maintenance", "out_of_order"}:
+backend/app/services/booking.py:74:            raise ValueError("Room is not available for booking.")
+backend/app/services/booking.py:76:        if check_out <= check_in:
+backend/app/services/booking.py:77:            raise ValueError("Check-out must be after check-in.")
+backend/app/services/booking.py:79:        if not self.is_room_available(
+backend/app/services/booking.py:80:            room_id=room_id,
+backend/app/services/booking.py:81:            check_in=check_in,
+backend/app/services/booking.py:82:            check_out=check_out,
+backend/app/services/booking.py:84:            raise ValueError("Room is already booked for the selected dates.")
+backend/app/services/booking.py:86:        nights = (check_out - check_in).days
+backend/app/services/booking.py:89:            booking_reference=self._generate_reference(),
+backend/app/services/booking.py:90:            guest_id=guest_id,
+backend/app/services/booking.py:91:            room_id=room_id,
+backend/app/services/booking.py:92:            check_in=check_in,
+backend/app/services/booking.py:93:            check_out=check_out,
+backend/app/services/booking.py:100:    def update_booking(
+backend/app/services/booking.py:102:        booking_id: int,
+backend/app/services/booking.py:103:        room_id: int | None = None,
+backend/app/services/booking.py:104:        check_in: date | None = None,
+backend/app/services/booking.py:105:        check_out: date | None = None,
+backend/app/services/booking.py:109:    ) -> Booking | None:
+backend/app/services/booking.py:110:        booking = self.repository.get_by_id(booking_id)
+backend/app/services/booking.py:112:        if booking is None:
+backend/app/services/booking.py:115:        if booking.status != "confirmed":
+backend/app/services/booking.py:116:            raise ValueError("Only confirmed bookings can be updated.")
+backend/app/services/booking.py:118:        new_room_id = room_id if room_id is not None else booking.room_id
+backend/app/services/booking.py:119:        new_check_in = check_in if check_in is not None else booking.check_in
+backend/app/services/booking.py:120:        new_check_out = check_out if check_out is not None else booking.check_out
+backend/app/services/booking.py:122:        if new_check_out <= new_check_in:
+backend/app/services/booking.py:123:            raise ValueError("Check-out must be after check-in.")
+backend/app/services/booking.py:125:        room = self.room_repository.get_by_id_for_update(new_room_id)
+backend/app/services/booking.py:127:        if room is None or not room.is_active:
+backend/app/services/booking.py:128:            raise ValueError("Room not found or inactive.")
+backend/app/services/booking.py:130:        if room.status in {"maintenance", "out_of_order"}:
+backend/app/services/booking.py:131:            raise ValueError("Room is not available for booking.")
+backend/app/services/booking.py:133:        if not self.is_room_available(
+backend/app/services/booking.py:134:            room_id=new_room_id,
+backend/app/services/booking.py:135:            check_in=new_check_in,
+backend/app/services/booking.py:136:            check_out=new_check_out,
+backend/app/services/booking.py:137:            exclude_booking_id=booking.id,
+backend/app/services/booking.py:139:            raise ValueError("Room is already booked for the selected dates.")
+backend/app/services/booking.py:141:        booking.room_id = new_room_id
+backend/app/services/booking.py:142:        booking.check_in = new_check_in
+backend/app/services/booking.py:143:        booking.check_out = new_check_out
+backend/app/services/booking.py:144:        booking.nights = (new_check_out - new_check_in).days
+backend/app/services/booking.py:147:            booking.rate = rate
+backend/app/services/booking.py:150:            booking.source = source
+backend/app/services/booking.py:153:            booking.notes = notes
+backend/app/services/booking.py:156:        self.db.refresh(booking)
+backend/app/services/booking.py:158:        return booking
+backend/app/services/booking.py:160:    def cancel_booking(self, booking_id: int) -> Booking | None:
+backend/app/services/booking.py:161:        booking = self.repository.get_by_id(booking_id)
+backend/app/services/booking.py:163:        if booking is None:
+backend/app/services/booking.py:166:        if booking.status != "confirmed":
+backend/app/services/booking.py:167:            raise ValueError("Booking cannot be cancelled.")
+backend/app/services/booking.py:169:        booking.status = "cancelled"
+backend/app/services/booking.py:171:        self.db.refresh(booking)
+backend/app/services/booking.py:173:        return booking
+backend/app/services/booking.py:175:    def check_in(self, booking_id: int) -> Booking | None:
+backend/app/services/booking.py:176:        booking = self.repository.get_by_id(booking_id)
+backend/app/services/booking.py:178:        if booking is None:
+backend/app/services/booking.py:181:        if booking.status != "confirmed":
+backend/app/services/booking.py:182:            raise ValueError("Only confirmed bookings can be checked in.")
+backend/app/services/booking.py:184:        room = self.room_repository.get_by_id_for_update(booking.room_id)
+backend/app/services/booking.py:186:        if room is None:
+backend/app/services/booking.py:187:            raise ValueError("Room not found.")
+backend/app/services/booking.py:189:        if not room.is_active:
+backend/app/services/booking.py:190:            raise ValueError("Room is inactive.")
+backend/app/services/booking.py:192:        if room.status in {"maintenance", "out_of_order"}:
+backend/app/services/booking.py:193:            raise ValueError("Room is not available for check-in.")
+backend/app/services/booking.py:195:        booking.status = "checked_in"
+backend/app/services/booking.py:196:        room.status = "occupied"
+backend/app/services/booking.py:199:        self.db.refresh(booking)
+backend/app/services/booking.py:201:        return booking
+backend/app/services/booking.py:203:    def check_out(self, booking_id: int) -> Booking | None:
+backend/app/services/booking.py:204:        booking = self.repository.get_by_id(booking_id)
+backend/app/services/booking.py:206:        if booking is None:
+backend/app/services/booking.py:209:        if booking.status != "checked_in":
+backend/app/services/booking.py:210:            raise ValueError("Only checked-in bookings can be checked out.")
+backend/app/services/booking.py:212:        booking.status = "checked_out"
+backend/app/services/booking.py:214:        room = self.room_repository.get_by_id(booking.room_id)
+backend/app/services/booking.py:216:        if room is not None:
+backend/app/services/booking.py:217:            room.status = "dirty"
+backend/app/services/booking.py:220:        self.db.refresh(booking)
+backend/app/services/booking.py:222:        return booking
+backend/app/services/__init__.py:2:from app.services.booking import BookingService
+backend/app/services/__init__.py:3:from app.services.guest import GuestService
+backend/app/services/__init__.py:4:from app.services.room import RoomService
+backend/app/services/__init__.py:9:    "BookingService",
+backend/app/services/__init__.py:10:    "GuestService",
+backend/app/services/__init__.py:11:    "RoomService",
+Binary file backend/app/services/__pycache__/guest.cpython-314.pyc matches
+Binary file backend/app/services/__pycache__/folio.cpython-314.pyc matches
+Binary file backend/app/services/__pycache__/audit_log.cpython-314.pyc matches
+Binary file backend/app/services/__pycache__/booking.cpython-314.pyc matches
+Binary file backend/app/services/__pycache__/payment.cpython-314.pyc matches
+Binary file backend/app/services/__pycache__/__init__.cpython-314.pyc matches
+Binary file backend/app/services/__pycache__/room.cpython-314.pyc matches
+backend/app/services/guest.py:3:from app.models.guest import Guest
+backend/app/services/guest.py:4:from app.repositories.guest import GuestRepository
+backend/app/services/guest.py:7:class GuestService:
+backend/app/services/guest.py:9:        self.repository = GuestRepository(db)
+backend/app/services/guest.py:11:    def list_guests(self) -> list[Guest]:
+backend/app/services/guest.py:14:    def search_guests(self, query: str) -> list[Guest]:
+backend/app/services/guest.py:17:    def get_guest(self, guest_id: int) -> Guest | None:
+backend/app/services/guest.py:18:        return self.repository.get_by_id(guest_id)
+backend/app/services/guest.py:20:    def create_guest(
+backend/app/services/guest.py:32:    ) -> Guest:
+backend/app/services/guest.py:46:    def update_guest(
+backend/app/services/guest.py:48:        guest_id: int,
+backend/app/services/guest.py:60:    ) -> Guest | None:
+backend/app/services/guest.py:61:        guest = self.repository.get_by_id(guest_id)
+backend/app/services/guest.py:63:        if guest is None:
+backend/app/services/guest.py:67:            guest.first_name = first_name
+backend/app/services/guest.py:69:            guest.last_name = last_name
+backend/app/services/guest.py:71:            guest.phone = phone
+backend/app/services/guest.py:73:            guest.email = email
+backend/app/services/guest.py:75:            guest.address = address
+backend/app/services/guest.py:77:            guest.city = city
+backend/app/services/guest.py:79:            guest.country = country
+backend/app/services/guest.py:81:            guest.id_type = id_type
+backend/app/services/guest.py:83:            guest.id_number = id_number
+backend/app/services/guest.py:85:            guest.notes = notes
+backend/app/services/guest.py:87:            guest.is_active = is_active
+backend/app/services/guest.py:90:        self.repository.db.refresh(guest)
+backend/app/services/guest.py:92:        return guest
+backend/app/services/folio.py:8:from app.models.booking import Booking
+backend/app/services/folio.py:9:from app.models.folio import Folio, FolioItem
+backend/app/services/folio.py:10:from app.models.payment import Payment
+backend/app/services/folio.py:11:from app.repositories.booking import BookingRepository
+backend/app/services/folio.py:12:from app.repositories.folio import FolioRepository
+backend/app/services/folio.py:15:class FolioService:
+backend/app/services/folio.py:18:        self.repository = FolioRepository(db)
+backend/app/services/folio.py:19:        self.booking_repository = BookingRepository(db)
+backend/app/services/folio.py:21:    def _generate_folio_number(self) -> str:
+backend/app/services/folio.py:24:            statement = select(Folio).where(Folio.folio_number == number)
+backend/app/services/folio.py:28:    def get_folio(self, folio_id: int) -> Folio | None:
+backend/app/services/folio.py:29:        return self.repository.get_by_id(folio_id)
+backend/app/services/folio.py:31:    def get_folio_by_booking(self, booking_id: int) -> Folio | None:
+backend/app/services/folio.py:32:        return self.repository.get_by_booking_id(booking_id)
+backend/app/services/folio.py:34:    def list_items(self, folio_id: int) -> list[FolioItem]:
+backend/app/services/folio.py:35:        return self.repository.list_items(folio_id)
+backend/app/services/folio.py:37:    def get_totals(self, folio_id: int) -> tuple[Decimal, Decimal, Decimal]:
+backend/app/services/folio.py:38:        items = self.repository.list_items(folio_id)
+backend/app/services/folio.py:56:    def get_balance(self, folio_id: int) -> tuple[Decimal, Decimal]:
+backend/app/services/folio.py:57:        folio = self.repository.get_by_id(folio_id)
+backend/app/services/folio.py:59:        if folio is None:
+backend/app/services/folio.py:60:            raise ValueError("Folio not found.")
+backend/app/services/folio.py:62:        _, _, grand_total = self.get_totals(folio_id)
+backend/app/services/folio.py:64:        payments = self.db.scalars(
+backend/app/services/folio.py:65:            select(Payment).where(
+backend/app/services/folio.py:66:                Payment.folio_id == folio_id,
+backend/app/services/folio.py:67:                Payment.status == "completed",
+backend/app/services/folio.py:72:            (payment.amount for payment in payments),
+backend/app/services/folio.py:83:    def create_folio(
+backend/app/services/folio.py:85:        booking_id: int,
+backend/app/services/folio.py:88:    ) -> Folio:
+backend/app/services/folio.py:89:        booking = self.booking_repository.get_by_id(booking_id)
+backend/app/services/folio.py:91:        if booking is None:
+backend/app/services/folio.py:92:            raise ValueError("Booking not found.")
+backend/app/services/folio.py:94:        if booking.status == "cancelled":
+backend/app/services/folio.py:95:            raise ValueError("Cannot create a folio for a cancelled booking.")
+backend/app/services/folio.py:97:        if self.repository.get_by_booking_id(booking_id) is not None:
+backend/app/services/folio.py:98:            raise ValueError("Folio already exists for this booking.")
+backend/app/services/folio.py:100:        folio = self.repository.create_folio(
+backend/app/services/folio.py:101:            folio_number=self._generate_folio_number(),
+backend/app/services/folio.py:102:            booking_id=booking_id,
+backend/app/services/folio.py:107:        self.add_room_charge(folio.id, booking)
+backend/app/services/folio.py:109:        return folio
+backend/app/services/folio.py:113:        folio_id: int,
+backend/app/services/folio.py:119:    ) -> FolioItem:
+backend/app/services/folio.py:120:        folio = self.repository.get_by_id(folio_id)
+backend/app/services/folio.py:122:        if folio is None:
+backend/app/services/folio.py:123:            raise ValueError("Folio not found.")
+backend/app/services/folio.py:125:        if folio.status != "open":
+backend/app/services/folio.py:126:            raise ValueError("Folio is not open.")
+backend/app/services/folio.py:141:            folio_id=folio_id,
+backend/app/services/folio.py:152:    def add_room_charge(
+backend/app/services/folio.py:154:        folio_id: int,
+backend/app/services/folio.py:155:        booking: Booking,
+backend/app/services/folio.py:156:    ) -> FolioItem:
+backend/app/services/folio.py:157:        items = self.repository.list_items(folio_id)
+backend/app/services/folio.py:159:        if any(item.item_type == "room_charge" for item in items):
+backend/app/services/folio.py:160:            raise ValueError("Room charge already exists for this folio.")
+backend/app/services/folio.py:163:            folio_id=folio_id,
+backend/app/services/folio.py:164:            item_type="room_charge",
+backend/app/services/folio.py:165:            description=f"Room {booking.room_id} - {booking.nights} night(s)",
+backend/app/services/folio.py:166:            quantity=Decimal(str(booking.nights)),
+backend/app/services/folio.py:167:            unit_price=booking.rate,
+backend/app/services/folio.py:171:    def create_folio_summary(self, folio_id: int) -> dict[str, object]:
+backend/app/services/folio.py:172:        folio = self.repository.get_by_id(folio_id)
+backend/app/services/folio.py:174:        if folio is None:
+backend/app/services/folio.py:175:            raise ValueError("Folio not found.")
+backend/app/services/folio.py:177:        subtotal, tax_total, grand_total = self.get_totals(folio_id)
+backend/app/services/folio.py:180:            "folio": folio,
+backend/app/services/payment.py:7:from app.models.payment import Payment
+backend/app/services/payment.py:8:from app.repositories.folio import FolioRepository
+backend/app/services/payment.py:9:from app.repositories.payment import PaymentRepository
+backend/app/services/payment.py:10:from app.services.folio import FolioService
+backend/app/services/payment.py:13:class PaymentService:
+backend/app/services/payment.py:16:        self.repository = PaymentRepository(db)
+backend/app/services/payment.py:17:        self.folio_repository = FolioRepository(db)
+backend/app/services/payment.py:18:        self.folio_service = FolioService(db)
+backend/app/services/payment.py:23:            statement = select(Payment).where(Payment.payment_reference == reference)
+backend/app/services/payment.py:28:    def list_payments(self, folio_id: int) -> list[Payment]:
+backend/app/services/payment.py:29:        if self.folio_repository.get_by_id(folio_id) is None:
+backend/app/services/payment.py:30:            raise ValueError("Folio not found.")
+backend/app/services/payment.py:32:        return self.repository.list_by_folio(folio_id)
+backend/app/services/payment.py:34:    def create_payment(
+backend/app/services/payment.py:36:        folio_id: int,
+backend/app/services/payment.py:38:        payment_method: str,
+backend/app/services/payment.py:42:    ) -> Payment:
+backend/app/services/payment.py:43:        folio = self.folio_repository.get_by_id(folio_id)
+backend/app/services/payment.py:45:        if folio is None:
+backend/app/services/payment.py:46:            raise ValueError("Folio not found.")
+backend/app/services/payment.py:48:        if folio.status != "open":
+backend/app/services/payment.py:49:            raise ValueError("Folio is not open.")
+backend/app/services/payment.py:51:        _, balance_due = self.folio_service.get_balance(folio_id)
+backend/app/services/payment.py:54:            raise ValueError("Payment exceeds outstanding balance.")
+backend/app/services/payment.py:57:            payment_reference=self._generate_reference(),
+backend/app/services/payment.py:58:            folio_id=folio_id,
+backend/app/services/payment.py:60:            payment_method=payment_method,
+backend/app/services/payment.py:66:    def void_payment(self, payment_id: int) -> Payment | None:
+backend/app/services/payment.py:67:        payment = self.repository.get_by_id(payment_id)
+backend/app/services/payment.py:69:        if payment is None:
+backend/app/services/payment.py:72:        if payment.status != "completed":
+backend/app/services/payment.py:73:            raise ValueError("Only completed payments can be voided.")
+backend/app/services/payment.py:75:        payment.status = "voided"
+backend/app/services/payment.py:77:        self.db.refresh(payment)
+backend/app/services/payment.py:79:        return payment
+backend/app/services/audit_log.py:3:from app.models.audit_log import AuditLog
+backend/app/services/audit_log.py:4:from app.repositories.audit_log import AuditLogRepository
+backend/app/services/audit_log.py:7:class AuditLogService:
+backend/app/services/audit_log.py:9:        self.repository = AuditLogRepository(db)
+backend/app/services/audit_log.py:21:    ) -> AuditLog:
+backend/app/services/room.py:3:from app.models.room import Room
+backend/app/services/room.py:4:from app.repositories.room import RoomRepository
+backend/app/services/room.py:16:class RoomService:
+backend/app/services/room.py:18:        self.repository = RoomRepository(db)
+backend/app/services/room.py:20:    def list_rooms(self) -> list[Room]:
+backend/app/services/room.py:23:    def get_room(self, room_id: int) -> Room | None:
+backend/app/services/room.py:24:        return self.repository.get_by_id(room_id)
+backend/app/services/room.py:26:    def create_room(
+backend/app/services/room.py:28:        room_number: str,
+backend/app/services/room.py:29:        room_name: str,
+backend/app/services/room.py:30:        room_type: str,
+backend/app/services/room.py:34:    ) -> Room:
+backend/app/services/room.py:35:        existing = self.repository.get_by_number(room_number)
+backend/app/services/room.py:38:            raise ValueError("Room number already exists.")
+backend/app/services/room.py:47:            raise ValueError("Invalid room status.")
+backend/app/services/room.py:50:            room_number=room_number,
+backend/app/services/room.py:51:            room_name=room_name,
+backend/app/services/room.py:52:            room_type=room_type,
+backend/app/services/room.py:58:    def update_room(
+backend/app/services/room.py:60:        room_id: int,
+backend/app/services/room.py:61:        room_name: str | None = None,
+backend/app/services/room.py:62:        room_type: str | None = None,
+backend/app/services/room.py:67:    ) -> Room | None:
+backend/app/services/room.py:68:        room = self.repository.get_by_id(room_id)
+backend/app/services/room.py:70:        if room is None:
+backend/app/services/room.py:80:            raise ValueError("Invalid room status.")
+backend/app/services/room.py:82:        if room_name is not None:
+backend/app/services/room.py:83:            room.room_name = room_name
+backend/app/services/room.py:85:        if room_type is not None:
+backend/app/services/room.py:86:            room.room_type = room_type
+backend/app/services/room.py:89:            room.floor = floor
+backend/app/services/room.py:92:            room.capacity = capacity
+backend/app/services/room.py:95:            room.status = status
+backend/app/services/room.py:98:            room.is_active = is_active
+backend/app/services/room.py:101:        self.repository.db.refresh(room)
+backend/app/services/room.py:103:        return room
+backend/tests/test_bookings.py:6:from app.services.booking import BookingService
+backend/tests/test_bookings.py:9:def test_create_booking(
+backend/tests/test_bookings.py:11:    booking_test_data,
+backend/tests/test_bookings.py:13:    guest, room = booking_test_data
+backend/tests/test_bookings.py:15:    booking = BookingService(db_session).create_booking(
+backend/tests/test_bookings.py:16:        guest_id=guest.id,
+backend/tests/test_bookings.py:17:        room_id=room.id,
+backend/tests/test_bookings.py:18:        check_in=date(2026, 10, 10),
+backend/tests/test_bookings.py:19:        check_out=date(2026, 10, 13),
+backend/tests/test_bookings.py:22:        notes="Test booking",
+backend/tests/test_bookings.py:25:    assert booking.booking_reference.startswith("BK-")
+backend/tests/test_bookings.py:26:    assert booking.nights == 3
+backend/tests/test_bookings.py:27:    assert booking.status == "confirmed"
+backend/tests/test_bookings.py:30:def test_overlapping_booking_is_rejected(
+backend/tests/test_bookings.py:32:    booking_test_data,
+backend/tests/test_bookings.py:34:    guest, room = booking_test_data
+backend/tests/test_bookings.py:36:    BookingService(db_session).create_booking(
+backend/tests/test_bookings.py:37:        guest_id=guest.id,
+backend/tests/test_bookings.py:38:        room_id=room.id,
+backend/tests/test_bookings.py:39:        check_in=date(2026, 11, 10),
+backend/tests/test_bookings.py:40:        check_out=date(2026, 11, 13),
+backend/tests/test_bookings.py:49:        match="Room is already booked for the selected dates.",
+backend/tests/test_bookings.py:51:        BookingService(db_session).create_booking(
+backend/tests/test_bookings.py:52:            guest_id=guest.id,
+backend/tests/test_bookings.py:53:            room_id=room.id,
+backend/tests/test_bookings.py:54:            check_in=date(2026, 11, 12),
+backend/tests/test_bookings.py:55:            check_out=date(2026, 11, 15),
+backend/tests/test_bookings.py:62:def test_back_to_back_booking_is_allowed(
+backend/tests/test_bookings.py:64:    booking_test_data,
+backend/tests/test_bookings.py:66:    guest, room = booking_test_data
+backend/tests/test_bookings.py:68:    BookingService(db_session).create_booking(
+backend/tests/test_bookings.py:69:        guest_id=guest.id,
+backend/tests/test_bookings.py:70:        room_id=room.id,
+backend/tests/test_bookings.py:71:        check_in=date(2026, 12, 10),
+backend/tests/test_bookings.py:72:        check_out=date(2026, 12, 13),
+backend/tests/test_bookings.py:79:    booking = BookingService(db_session).create_booking(
+backend/tests/test_bookings.py:80:        guest_id=guest.id,
+backend/tests/test_bookings.py:81:        room_id=room.id,
+backend/tests/test_bookings.py:82:        check_in=date(2026, 12, 13),
+backend/tests/test_bookings.py:83:        check_out=date(2026, 12, 15),
+backend/tests/test_bookings.py:89:    assert booking.nights == 2
+backend/tests/test_bookings.py:92:def test_cancel_booking(
+backend/tests/test_bookings.py:94:    booking_test_data,
+backend/tests/test_bookings.py:96:    guest, room = booking_test_data
+backend/tests/test_bookings.py:98:    booking = BookingService(db_session).create_booking(
+backend/tests/test_bookings.py:99:        guest_id=guest.id,
+backend/tests/test_bookings.py:100:        room_id=room.id,
+backend/tests/test_bookings.py:101:        check_in=date(2027, 1, 10),
+backend/tests/test_bookings.py:102:        check_out=date(2027, 1, 12),
+backend/tests/test_bookings.py:109:    cancelled = BookingService(db_session).cancel_booking(booking.id)
+backend/tests/test_bookings.py:115:def test_inactive_guest_cannot_book(
+backend/tests/test_bookings.py:117:    booking_test_data,
+backend/tests/test_bookings.py:119:    guest, room = booking_test_data
+backend/tests/test_bookings.py:121:    guest.is_active = False
+backend/tests/test_bookings.py:126:        match="Guest not found or inactive.",
+backend/tests/test_bookings.py:128:        BookingService(db_session).create_booking(
+backend/tests/test_bookings.py:129:            guest_id=guest.id,
+backend/tests/test_bookings.py:130:            room_id=room.id,
+backend/tests/test_bookings.py:131:            check_in=date(2027, 2, 10),
+backend/tests/test_bookings.py:132:            check_out=date(2027, 2, 12),
+backend/tests/test_booking_lifecycle.py:6:from app.services.booking import BookingService
+backend/tests/test_booking_lifecycle.py:9:def create_confirmed_booking(db_session: Session, booking_test_data):
+backend/tests/test_booking_lifecycle.py:10:    guest, room = booking_test_data
+backend/tests/test_booking_lifecycle.py:12:    return BookingService(db_session).create_booking(
+backend/tests/test_booking_lifecycle.py:13:        guest_id=guest.id,
+backend/tests/test_booking_lifecycle.py:14:        room_id=room.id,
+backend/tests/test_booking_lifecycle.py:15:        check_in=date(2027, 3, 10),
+backend/tests/test_booking_lifecycle.py:16:        check_out=date(2027, 3, 12),
+backend/tests/test_booking_lifecycle.py:23:def test_check_in_moves_booking_and_room_to_occupied(
+backend/tests/test_booking_lifecycle.py:25:    booking_test_data,
+backend/tests/test_booking_lifecycle.py:27:    booking = create_confirmed_booking(db_session, booking_test_data)
+backend/tests/test_booking_lifecycle.py:30:    result = BookingService(db_session).check_in(booking.id)
+backend/tests/test_booking_lifecycle.py:35:    _, room = booking_test_data
+backend/tests/test_booking_lifecycle.py:36:    db_session.refresh(room)
+backend/tests/test_booking_lifecycle.py:38:    assert room.status == "occupied"
+backend/tests/test_booking_lifecycle.py:41:def test_check_out_moves_booking_and_room_to_dirty(
+backend/tests/test_booking_lifecycle.py:43:    booking_test_data,
+backend/tests/test_booking_lifecycle.py:45:    booking = create_confirmed_booking(db_session, booking_test_data)
+backend/tests/test_booking_lifecycle.py:48:    BookingService(db_session).check_in(booking.id)
+backend/tests/test_booking_lifecycle.py:51:    result = BookingService(db_session).check_out(booking.id)
+backend/tests/test_booking_lifecycle.py:56:    _, room = booking_test_data
+backend/tests/test_booking_lifecycle.py:57:    db_session.refresh(room)
+backend/tests/test_booking_lifecycle.py:59:    assert room.status == "dirty"
+backend/tests/test_booking_lifecycle.py:62:def test_checked_in_booking_cannot_be_checked_in_again(
+backend/tests/test_booking_lifecycle.py:64:    booking_test_data,
+backend/tests/test_booking_lifecycle.py:66:    booking = create_confirmed_booking(db_session, booking_test_data)
+backend/tests/test_booking_lifecycle.py:69:    BookingService(db_session).check_in(booking.id)
+backend/tests/test_booking_lifecycle.py:74:        match="Only confirmed bookings can be checked in.",
+backend/tests/test_booking_lifecycle.py:76:        BookingService(db_session).check_in(booking.id)
+backend/tests/test_booking_lifecycle.py:79:def test_confirmed_booking_can_be_cancelled(
+backend/tests/test_booking_lifecycle.py:81:    booking_test_data,
+backend/tests/test_booking_lifecycle.py:83:    booking = create_confirmed_booking(db_session, booking_test_data)
+backend/tests/test_booking_lifecycle.py:86:    result = BookingService(db_session).cancel_booking(booking.id)
+backend/tests/test_booking_lifecycle.py:92:def test_checked_in_booking_cannot_be_cancelled(
+backend/tests/test_booking_lifecycle.py:94:    booking_test_data,
+backend/tests/test_booking_lifecycle.py:96:    booking = create_confirmed_booking(db_session, booking_test_data)
+backend/tests/test_booking_lifecycle.py:99:    BookingService(db_session).check_in(booking.id)
+backend/tests/test_booking_lifecycle.py:104:        match="Booking cannot be cancelled.",
+backend/tests/test_booking_lifecycle.py:106:        BookingService(db_session).cancel_booking(booking.id)
+backend/tests/test_booking_lifecycle.py:109:def test_maintenance_room_cannot_be_booked(
+backend/tests/test_booking_lifecycle.py:111:    booking_test_data,
+backend/tests/test_booking_lifecycle.py:113:    guest, room = booking_test_data
+backend/tests/test_booking_lifecycle.py:114:    room.status = "maintenance"
+backend/tests/test_booking_lifecycle.py:119:        match="Room is not available for booking.",
+backend/tests/test_booking_lifecycle.py:121:        BookingService(db_session).create_booking(
+backend/tests/test_booking_lifecycle.py:122:            guest_id=guest.id,
+backend/tests/test_booking_lifecycle.py:123:            room_id=room.id,
+backend/tests/test_booking_lifecycle.py:124:            check_in=date(2027, 4, 10),
+backend/tests/test_booking_lifecycle.py:125:            check_out=date(2027, 4, 12),
+backend/tests/test_booking_lifecycle.py:132:def test_out_of_order_room_cannot_be_booked(
+backend/tests/test_booking_lifecycle.py:134:    booking_test_data,
+backend/tests/test_booking_lifecycle.py:136:    guest, room = booking_test_data
+backend/tests/test_booking_lifecycle.py:137:    room.status = "out_of_order"
+backend/tests/test_booking_lifecycle.py:142:        match="Room is not available for booking.",
+backend/tests/test_booking_lifecycle.py:144:        BookingService(db_session).create_booking(
+backend/tests/test_booking_lifecycle.py:145:            guest_id=guest.id,
+backend/tests/test_booking_lifecycle.py:146:            room_id=room.id,
+backend/tests/test_booking_lifecycle.py:147:            check_in=date(2027, 4, 10),
+backend/tests/test_booking_lifecycle.py:148:            check_out=date(2027, 4, 12),
+backend/tests/test_booking_lifecycle.py:155:def test_maintenance_room_cannot_check_in(
+backend/tests/test_booking_lifecycle.py:157:    booking_test_data,
+backend/tests/test_booking_lifecycle.py:159:    booking = create_confirmed_booking(db_session, booking_test_data)
+backend/tests/test_booking_lifecycle.py:160:    _, room = booking_test_data
+backend/tests/test_booking_lifecycle.py:164:    room.status = "maintenance"
+backend/tests/test_booking_lifecycle.py:169:        match="Room is not available for check-in.",
+backend/tests/test_booking_lifecycle.py:171:        BookingService(db_session).check_in(booking.id)
+backend/tests/test_booking_lifecycle.py:174:def test_out_of_order_room_cannot_check_in(
+backend/tests/test_booking_lifecycle.py:176:    booking_test_data,
+backend/tests/test_booking_lifecycle.py:178:    booking = create_confirmed_booking(db_session, booking_test_data)
+backend/tests/test_booking_lifecycle.py:179:    _, room = booking_test_data
+backend/tests/test_booking_lifecycle.py:183:    room.status = "out_of_order"
+backend/tests/test_booking_lifecycle.py:188:        match="Room is not available for check-in.",
+backend/tests/test_booking_lifecycle.py:190:        BookingService(db_session).check_in(booking.id)
+backend/tests/conftest.py:7:from app.models.booking import Booking
+backend/tests/conftest.py:8:from app.models.folio import Folio, FolioItem
+backend/tests/conftest.py:9:from app.models.guest import Guest
+backend/tests/conftest.py:10:from app.models.payment import Payment
+backend/tests/conftest.py:11:from app.models.room import Room
+backend/tests/conftest.py:31:        db.execute(delete(Payment))
+backend/tests/conftest.py:32:        db.execute(delete(FolioItem))
+backend/tests/conftest.py:33:        db.execute(delete(Folio))
+backend/tests/conftest.py:34:        db.execute(delete(Booking))
+backend/tests/conftest.py:35:        db.execute(delete(Guest))
+backend/tests/conftest.py:36:        db.execute(delete(Room))
+backend/tests/conftest.py:41:def booking_test_data(db_session: Session) -> tuple[Guest, Room]:
+backend/tests/conftest.py:42:    guest = Guest(
+backend/tests/conftest.py:44:        last_name="Guest",
+backend/tests/conftest.py:48:    room = Room(
+backend/tests/conftest.py:49:        room_number="201",
+backend/tests/conftest.py:50:        room_name="Test Room",
+backend/tests/conftest.py:51:        room_type="Heritage",
+backend/tests/conftest.py:56:    db_session.add_all([guest, room])
+backend/tests/conftest.py:59:    db_session.refresh(guest)
+backend/tests/conftest.py:60:    db_session.refresh(room)
+backend/tests/conftest.py:62:    return guest, room
+backend/tests/test_folio.py:7:from app.services.booking import BookingService
+backend/tests/test_folio.py:8:from app.services.folio import FolioService
+backend/tests/test_folio.py:11:def create_booking(db_session: Session, booking_test_data):
+backend/tests/test_folio.py:12:    guest, room = booking_test_data
+backend/tests/test_folio.py:14:    return BookingService(db_session).create_booking(
+backend/tests/test_folio.py:15:        guest_id=guest.id,
+backend/tests/test_folio.py:16:        room_id=room.id,
+backend/tests/test_folio.py:17:        check_in=date(2027, 5, 10),
+backend/tests/test_folio.py:18:        check_out=date(2027, 5, 12),
+backend/tests/test_folio.py:25:def test_create_folio_generates_room_charge(
+backend/tests/test_folio.py:27:    booking_test_data,
+backend/tests/test_folio.py:29:    booking = create_booking(db_session, booking_test_data)
+backend/tests/test_folio.py:32:    folio = FolioService(db_session).create_folio(
+backend/tests/test_folio.py:33:        booking_id=booking.id,
+backend/tests/test_folio.py:38:    items = FolioService(db_session).list_items(folio.id)
+backend/tests/test_folio.py:41:    assert items[0].item_type == "room_charge"
+backend/tests/test_folio.py:49:def test_duplicate_folio_rejected(
+backend/tests/test_folio.py:51:    booking_test_data,
+backend/tests/test_folio.py:53:    booking = create_booking(db_session, booking_test_data)
+backend/tests/test_folio.py:56:    FolioService(db_session).create_folio(
+backend/tests/test_folio.py:57:        booking_id=booking.id,
+backend/tests/test_folio.py:65:        match="Folio already exists for this booking.",
+backend/tests/test_folio.py:67:        FolioService(db_session).create_folio(
+backend/tests/test_folio.py:68:            booking_id=booking.id,
+backend/tests/test_folio.py:74:def test_add_folio_item_calculates_tax(
+backend/tests/test_folio.py:76:    booking_test_data,
+backend/tests/test_folio.py:78:    booking = create_booking(db_session, booking_test_data)
+backend/tests/test_folio.py:81:    folio = FolioService(db_session).create_folio(
+backend/tests/test_folio.py:82:        booking_id=booking.id,
+backend/tests/test_folio.py:88:    item = FolioService(db_session).add_item(
+backend/tests/test_folio.py:89:        folio_id=folio.id,
+backend/tests/test_folio.py:102:def test_folio_totals_include_all_items(
+backend/tests/test_folio.py:104:    booking_test_data,
+backend/tests/test_folio.py:106:    booking = create_booking(db_session, booking_test_data)
+backend/tests/test_folio.py:109:    folio = FolioService(db_session).create_folio(
+backend/tests/test_folio.py:110:        booking_id=booking.id,
+backend/tests/test_folio.py:116:    FolioService(db_session).add_item(
+backend/tests/test_folio.py:117:        folio_id=folio.id,
+backend/tests/test_folio.py:126:    subtotal, tax_total, grand_total = FolioService(db_session).get_totals(folio.id)
+backend/tests/test_folio.py:133:def test_closed_folio_cannot_accept_items(
+backend/tests/test_folio.py:135:    booking_test_data,
+backend/tests/test_folio.py:137:    booking = create_booking(db_session, booking_test_data)
+backend/tests/test_folio.py:140:    folio = FolioService(db_session).create_folio(
+backend/tests/test_folio.py:141:        booking_id=booking.id,
+backend/tests/test_folio.py:145:    folio.status = "closed"
+backend/tests/test_folio.py:150:        match="Folio is not open.",
+backend/tests/test_folio.py:152:        FolioService(db_session).add_item(
+backend/tests/test_folio.py:153:            folio_id=folio.id,
+backend/tests/test_folio.py:162:def test_cancelled_booking_cannot_create_folio(
+backend/tests/test_folio.py:164:    booking_test_data,
+backend/tests/test_folio.py:166:    booking = create_booking(db_session, booking_test_data)
+backend/tests/test_folio.py:169:    BookingService(db_session).cancel_booking(booking.id)
+backend/tests/test_folio.py:174:        match="Cannot create a folio for a cancelled booking.",
+backend/tests/test_folio.py:176:        FolioService(db_session).create_folio(
+backend/tests/test_folio.py:177:            booking_id=booking.id,
+backend/tests/booking_fixture.txt:1:﻿def setup_data(db: Session) -> tuple[Guest, Room]:
+backend/tests/booking_fixture.txt:4:    guest = Guest(
+backend/tests/booking_fixture.txt:6:        last_name=f"Guest-{suffix}",
+backend/tests/booking_fixture.txt:10:    room = Room(
+backend/tests/booking_fixture.txt:11:        room_number=f"T{suffix}",
+backend/tests/booking_fixture.txt:12:        room_name="Test Room",
+backend/tests/booking_fixture.txt:13:        room_type="Heritage",
+backend/tests/booking_fixture.txt:18:    db.add_all([guest, room])
+backend/tests/booking_fixture.txt:21:    db.refresh(guest)
+backend/tests/booking_fixture.txt:22:    db.refresh(room)
+backend/tests/booking_fixture.txt:24:    return guest, room
+Binary file backend/tests/__pycache__/test_bookings.cpython-314-pytest-9.1.1.pyc matches
+Binary file backend/tests/__pycache__/test_guests.cpython-314-pytest-9.1.1.pyc matches
+Binary file backend/tests/__pycache__/test_rooms.cpython-314-pytest-9.1.1.pyc matches
+Binary file backend/tests/__pycache__/test_payment.cpython-314-pytest-9.1.1.pyc matches
+Binary file backend/tests/__pycache__/conftest.cpython-314-pytest-9.1.1.pyc matches
+Binary file backend/tests/__pycache__/test_folio.cpython-314-pytest-9.1.1.pyc matches
+Binary file backend/tests/__pycache__/test_booking_lifecycle.cpython-314-pytest-9.1.1.pyc matches
+backend/tests/test_guests.py:10:from app.models.guest import Guest
+backend/tests/test_guests.py:41:def test_create_guest() -> None:
+backend/tests/test_guests.py:45:        staff = create_staff("guest_manager", "manager")
+backend/tests/test_guests.py:50:            "/guests",
+backend/tests/test_guests.py:69:def test_list_and_search_guests() -> None:
+backend/tests/test_guests.py:73:        staff = create_staff("guest_search", "front_desk")
+backend/tests/test_guests.py:78:                    Guest(
+backend/tests/test_guests.py:83:                    Guest(
+backend/tests/test_guests.py:96:            "/guests",
+backend/tests/test_guests.py:104:            "/guests?query=Alice",
+backend/tests/test_guests.py:115:def test_update_guest() -> None:
+backend/tests/test_guests.py:119:        staff = create_staff("guest_update", "front_desk")
+backend/tests/test_guests.py:122:            guest = Guest(
+backend/tests/test_guests.py:127:            db.add(guest)
+backend/tests/test_guests.py:129:            db.refresh(guest)
+backend/tests/test_guests.py:130:            guest_id = guest.id
+backend/tests/test_guests.py:136:            f"/guests/{guest_id}",
+backend/tests/test_guests.py:147:def test_front_desk_cannot_access_invalid_guest_create_fields() -> None:
+backend/tests/test_guests.py:151:        staff = create_staff("guest_validation", "front_desk")
+backend/tests/test_guests.py:156:            "/guests",
+backend/tests/test_guests.py:170:def test_missing_guest() -> None:
+backend/tests/test_guests.py:174:        staff = create_staff("guest_missing", "front_desk")
+backend/tests/test_guests.py:179:            "/guests/99999",
+backend/tests/test_rooms.py:10:from app.models.room import Room
+backend/tests/test_rooms.py:41:def test_create_room() -> None:
+backend/tests/test_rooms.py:45:        staff = create_staff("room_manager", "manager")
+backend/tests/test_rooms.py:50:            "/rooms",
+backend/tests/test_rooms.py:53:                "room_number": "101",
+backend/tests/test_rooms.py:54:                "room_name": "Sunrise",
+backend/tests/test_rooms.py:55:                "room_type": "Heritage",
+backend/tests/test_rooms.py:62:        assert response.json()["room_number"] == "101"
+backend/tests/test_rooms.py:67:def test_duplicate_room_number() -> None:
+backend/tests/test_rooms.py:76:            "room_number": "102",
+backend/tests/test_rooms.py:77:            "room_name": "Purple",
+backend/tests/test_rooms.py:78:            "room_type": "Heritage",
+backend/tests/test_rooms.py:84:            "/rooms",
+backend/tests/test_rooms.py:89:            "/rooms",
+backend/tests/test_rooms.py:100:def test_invalid_room_capacity() -> None:
+backend/tests/test_rooms.py:109:            "/rooms",
+backend/tests/test_rooms.py:112:                "room_number": "103",
+backend/tests/test_rooms.py:113:                "room_name": "Scarlet",
+backend/tests/test_rooms.py:114:                "room_type": "Heritage",
+backend/tests/test_rooms.py:126:def test_front_desk_cannot_create_room() -> None:
+backend/tests/test_rooms.py:130:        staff = create_staff("room_frontdesk", "front_desk")
+backend/tests/test_rooms.py:135:            "/rooms",
+backend/tests/test_rooms.py:138:                "room_number": "104",
+backend/tests/test_rooms.py:139:                "room_name": "Blue",
+backend/tests/test_rooms.py:140:                "room_type": "Heritage",
+backend/tests/test_rooms.py:151:def test_update_room() -> None:
+backend/tests/test_rooms.py:158:            room = Room(
+backend/tests/test_rooms.py:159:                room_number="105",
+backend/tests/test_rooms.py:160:                room_name="Green",
+backend/tests/test_rooms.py:161:                room_type="Heritage",
+backend/tests/test_rooms.py:165:            db.add(room)
+backend/tests/test_rooms.py:167:            db.refresh(room)
+backend/tests/test_rooms.py:169:            room_id = room.id
+backend/tests/test_rooms.py:175:            f"/rooms/{room_id}",
+backend/tests/test_rooms.py:178:                "room_name": "Updated Green",
+backend/tests/test_rooms.py:184:        assert response.json()["room_name"] == "Updated Green"
+backend/tests/test_rooms.py:190:def test_get_missing_room() -> None:
+backend/tests/test_rooms.py:199:            "/rooms/99999",
+backend/tests/test_payment.py:7:from app.services.booking import BookingService
+backend/tests/test_payment.py:8:from app.services.folio import FolioService
+backend/tests/test_payment.py:9:from app.services.payment import PaymentService
+backend/tests/test_payment.py:12:def create_folio(db_session: Session, booking_test_data):
+backend/tests/test_payment.py:13:    guest, room = booking_test_data
+backend/tests/test_payment.py:15:    booking = BookingService(db_session).create_booking(
+backend/tests/test_payment.py:16:        guest_id=guest.id,
+backend/tests/test_payment.py:17:        room_id=room.id,
+backend/tests/test_payment.py:18:        check_in=date(2027, 6, 10),
+backend/tests/test_payment.py:19:        check_out=date(2027, 6, 12),
+backend/tests/test_payment.py:26:    return FolioService(db_session).create_folio(
+backend/tests/test_payment.py:27:        booking_id=booking.id,
+backend/tests/test_payment.py:33:def test_create_payment(
+backend/tests/test_payment.py:35:    booking_test_data,
+backend/tests/test_payment.py:37:    folio = create_folio(db_session, booking_test_data)
+backend/tests/test_payment.py:40:    payment = PaymentService(db_session).create_payment(
+backend/tests/test_payment.py:41:        folio_id=folio.id,
+backend/tests/test_payment.py:43:        payment_method="cash",
+backend/tests/test_payment.py:49:    assert payment.payment_reference.startswith("PAY-")
+backend/tests/test_payment.py:50:    assert payment.amount == Decimal("5000.00")
+backend/tests/test_payment.py:51:    assert payment.status == "completed"
+backend/tests/test_payment.py:54:def test_payment_reduces_balance(
+backend/tests/test_payment.py:56:    booking_test_data,
+backend/tests/test_payment.py:58:    folio = create_folio(db_session, booking_test_data)
+backend/tests/test_payment.py:61:    PaymentService(db_session).create_payment(
+backend/tests/test_payment.py:62:        folio_id=folio.id,
+backend/tests/test_payment.py:64:        payment_method="upi",
+backend/tests/test_payment.py:71:    paid_amount, balance_due = FolioService(db_session).get_balance(folio.id)
+backend/tests/test_payment.py:77:def test_overpayment_rejected(
+backend/tests/test_payment.py:79:    booking_test_data,
+backend/tests/test_payment.py:81:    folio = create_folio(db_session, booking_test_data)
+backend/tests/test_payment.py:86:        match="Payment exceeds outstanding balance.",
+backend/tests/test_payment.py:88:        PaymentService(db_session).create_payment(
+backend/tests/test_payment.py:89:            folio_id=folio.id,
+backend/tests/test_payment.py:91:            payment_method="cash",
+backend/tests/test_payment.py:98:def test_void_payment_removes_it_from_balance(
+backend/tests/test_payment.py:100:    booking_test_data,
+backend/tests/test_payment.py:102:    folio = create_folio(db_session, booking_test_data)
+backend/tests/test_payment.py:105:    payment = PaymentService(db_session).create_payment(
+backend/tests/test_payment.py:106:        folio_id=folio.id,
+backend/tests/test_payment.py:108:        payment_method="card",
+backend/tests/test_payment.py:115:    PaymentService(db_session).void_payment(payment.id)
+backend/tests/test_payment.py:118:    paid_amount, balance_due = FolioService(db_session).get_balance(folio.id)
+backend/tests/test_payment.py:124:def test_voided_payment_cannot_be_voided_again(
+backend/tests/test_payment.py:126:    booking_test_data,
+backend/tests/test_payment.py:128:    folio = create_folio(db_session, booking_test_data)
+backend/tests/test_payment.py:131:    payment = PaymentService(db_session).create_payment(
+backend/tests/test_payment.py:132:        folio_id=folio.id,
+backend/tests/test_payment.py:134:        payment_method="cash",
+backend/tests/test_payment.py:141:    PaymentService(db_session).void_payment(payment.id)
+backend/tests/test_payment.py:146:        match="Only completed payments can be voided.",
+backend/tests/test_payment.py:148:        PaymentService(db_session).void_payment(payment.id)
+cypress/e2e/bookings.cy.ts:1:describe("Bookings UAT", () => {
+cypress/e2e/bookings.cy.ts:18:  it("loads the bookings page", () => {
+cypress/e2e/bookings.cy.ts:19:    cy.visit("/bookings");
+cypress/e2e/bookings.cy.ts:21:    cy.contains("h1", "Bookings").should("be.visible");
+cypress/e2e/bookings.cy.ts:22:    cy.get('input[placeholder*="Search booking"]').should("be.visible");
+cypress/e2e/bookings.cy.ts:23:    cy.contains("button", "New Booking").should("be.visible");
+cypress/e2e/bookings.cy.ts:26:  it("searches bookings", () => {
+cypress/e2e/bookings.cy.ts:27:    cy.visit("/bookings");
+cypress/e2e/bookings.cy.ts:29:    cy.get('input[placeholder*="Search booking"]')
+cypress/e2e/bookings.cy.ts:36:  it("opens the new booking form", () => {
+cypress/e2e/bookings.cy.ts:37:    cy.visit("/bookings");
+cypress/e2e/bookings.cy.ts:39:    cy.contains("button", "New Booking").click();
+cypress/e2e/bookings.cy.ts:41:    cy.contains("h2", "New Booking").should("be.visible");
+cypress/e2e/bookings.cy.ts:42:    cy.contains("Guest").should("be.visible");
+cypress/e2e/bookings.cy.ts:43:    cy.contains("Room").should("be.visible");
+cypress/e2e/bookings.cy.ts:44:    cy.contains("Check-in").should("be.visible");
+cypress/e2e/bookings.cy.ts:45:    cy.contains("Check-out").should("be.visible");
+cypress/e2e/bookings.cy.ts:49:  it("creates a booking", () => {
+cypress/e2e/bookings.cy.ts:50:    cy.visit("/bookings");
+cypress/e2e/bookings.cy.ts:52:    cy.contains("button", "New Booking").click();
+cypress/e2e/bookings.cy.ts:54:    cy.contains("h2", "New Booking").should("be.visible");
+cypress/e2e/bookings.cy.ts:56:    // Guest
+cypress/e2e/bookings.cy.ts:63:    // Room
+cypress/e2e/bookings.cy.ts:96:    cy.contains("button", "Create Booking")
+cypress/e2e/bookings.cy.ts:103:  it("rejects an unavailable room/date combination", () => {
+cypress/e2e/bookings.cy.ts:104:    cy.visit("/bookings");
+cypress/e2e/bookings.cy.ts:106:    cy.contains("button", "New Booking").click();
+cypress/e2e/bookings.cy.ts:136:    cy.contains("button", "Create Booking").click();
+cypress/e2e/bookings.cy.ts:138:    cy.contains("Room is not available for the selected dates.")
+cypress/e2e/bookings.cy.ts:142:  it("checks a confirmed booking in", () => {
+cypress/e2e/bookings.cy.ts:143:    cy.visit("/bookings");
+cypress/e2e/bookings.cy.ts:145:    cy.contains("button", "Check in")
+cypress/e2e/bookings.cy.ts:154:  it("checks an in-house booking out", () => {
+cypress/e2e/bookings.cy.ts:155:    cy.visit("/bookings");
+cypress/e2e/bookings.cy.ts:157:    cy.contains("button", "Check out")
+cypress/e2e/bookings.cy.ts:166:  it("cancels a confirmed booking", () => {
+cypress/e2e/bookings.cy.ts:167:    cy.visit("/bookings");
+cypress/e2e/bookings.cy.ts:175:      expect(text).to.contain("Cancel booking");
+cypress/e2e/bookings.cy.ts:183:  it("searches for a cancelled booking", () => {
+cypress/e2e/bookings.cy.ts:184:    cy.visit("/bookings");
+cypress/e2e/bookings.cy.ts:186:    cy.get('input[placeholder*="Search booking"]')

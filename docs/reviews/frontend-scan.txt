@@ -1,0 +1,361 @@
+frontend/src/components/ui/ErrorBoundary.tsx:38:        <button type="button" onClick={this.handleRetry}>
+frontend/src/components/ui/ErrorBoundary.tsx:40:        </button>
+frontend/src/components/layout/Topbar.tsx:14:    <header className="flex h-16 items-center justify-between border-b bg-white px-4 md:px-6">
+frontend/src/components/layout/Topbar.tsx:15:      <div className="flex items-center gap-3">
+frontend/src/components/layout/Topbar.tsx:16:        <button
+frontend/src/components/layout/Topbar.tsx:17:          type="button"
+frontend/src/components/layout/Topbar.tsx:19:          className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 md:hidden"
+frontend/src/components/layout/Topbar.tsx:23:        </button>
+frontend/src/components/layout/Topbar.tsx:26:          <div className="text-sm font-semibold text-gray-900">
+frontend/src/components/layout/Topbar.tsx:29:          <div className="text-xs text-gray-500">
+frontend/src/components/layout/Topbar.tsx:35:      <div className="flex items-center gap-3">
+frontend/src/components/layout/Topbar.tsx:36:        <UserCircle size={22} className="text-gray-500" />
+frontend/src/components/layout/Topbar.tsx:38:        <div className="hidden text-right sm:block">
+frontend/src/components/layout/Topbar.tsx:39:          <div className="text-sm font-medium text-gray-900">
+frontend/src/components/layout/Topbar.tsx:42:          <div className="text-xs capitalize text-gray-500">
+frontend/src/components/layout/PageContainer.tsx:8:  return <div className="mx-auto w-full max-w-7xl px-4 py-6 md:px-6 lg:px-8">{children}</div>;
+frontend/src/components/layout/Sidebar.tsx:67:        <button
+frontend/src/components/layout/Sidebar.tsx:68:          type="button"
+frontend/src/components/layout/Sidebar.tsx:71:          className="fixed inset-0 z-30 bg-black/30 md:hidden"
+frontend/src/components/layout/Sidebar.tsx:76:        className={[
+frontend/src/components/layout/Sidebar.tsx:82:        <div className="flex h-16 items-center justify-between border-b px-4">
+frontend/src/components/layout/Sidebar.tsx:83:          <div className="min-w-0">
+frontend/src/components/layout/Sidebar.tsx:84:            <div className="flex items-center gap-2">
+frontend/src/components/layout/Sidebar.tsx:85:              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-black text-sm font-semibold text-white">
+frontend/src/components/layout/Sidebar.tsx:90:                <div className="min-w-0">
+frontend/src/components/layout/Sidebar.tsx:91:                  <div className="truncate text-sm font-semibold">
+frontend/src/components/layout/Sidebar.tsx:94:                  <div className="text-xs text-gray-500">Hotel Operations</div>
+frontend/src/components/layout/Sidebar.tsx:100:          <button
+frontend/src/components/layout/Sidebar.tsx:101:            type="button"
+frontend/src/components/layout/Sidebar.tsx:104:            className="rounded p-2 text-gray-500 hover:bg-gray-100 md:hidden"
+frontend/src/components/layout/Sidebar.tsx:107:          </button>
+frontend/src/components/layout/Sidebar.tsx:112:          className="flex-1 space-y-6 overflow-y-auto p-3"
+frontend/src/components/layout/Sidebar.tsx:117:                <div className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+frontend/src/components/layout/Sidebar.tsx:122:              <div className="space-y-1">
+frontend/src/components/layout/Sidebar.tsx:129:                    className={({ isActive }) =>
+frontend/src/components/layout/Sidebar.tsx:148:        <div className="hidden border-t p-3 md:block">
+frontend/src/components/layout/Sidebar.tsx:149:          <button
+frontend/src/components/layout/Sidebar.tsx:150:            type="button"
+frontend/src/components/layout/Sidebar.tsx:152:            className="flex w-full items-center justify-center rounded-lg p-2 text-gray-500 hover:bg-gray-100"
+frontend/src/components/layout/Sidebar.tsx:156:          </button>
+frontend/src/components/layout/Sidebar.tsx:159:        <div className="border-t p-3 md:hidden">
+frontend/src/components/layout/Sidebar.tsx:160:          <button
+frontend/src/components/layout/Sidebar.tsx:161:            type="button"
+frontend/src/components/layout/Sidebar.tsx:163:            className="flex w-full items-center justify-center rounded-lg p-2 text-gray-500 hover:bg-gray-100"
+frontend/src/components/layout/Sidebar.tsx:166:            <span className="ml-2 text-sm">Close menu</span>
+frontend/src/components/layout/Sidebar.tsx:167:          </button>
+frontend/src/layouts/AppLayout.tsx:14:    <div className="min-h-screen bg-gray-50">
+frontend/src/layouts/AppLayout.tsx:15:      <div className="flex min-h-screen">
+frontend/src/layouts/AppLayout.tsx:23:        <div className="min-w-0 flex-1">
+frontend/src/routes/pages/Login.tsx:32:    <main className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
+frontend/src/routes/pages/Login.tsx:33:      <form onSubmit={handleSubmit} className="w-full max-w-md rounded-xl bg-white p-6 shadow">
+frontend/src/routes/pages/Login.tsx:34:        <h1 className="text-2xl font-semibold">Garh Jaisal OS</h1>
+frontend/src/routes/pages/Login.tsx:35:        <p className="mt-1 text-sm text-gray-500">Hotel Operations</p>
+frontend/src/routes/pages/Login.tsx:37:        <div className="mt-6 space-y-4">
+frontend/src/routes/pages/Login.tsx:38:          <input
+frontend/src/routes/pages/Login.tsx:39:            className="w-full rounded border px-3 py-2"
+frontend/src/routes/pages/Login.tsx:42:            placeholder="Username"
+frontend/src/routes/pages/Login.tsx:46:          <input
+frontend/src/routes/pages/Login.tsx:47:            className="w-full rounded border px-3 py-2"
+frontend/src/routes/pages/Login.tsx:51:            placeholder="Password"
+frontend/src/routes/pages/Login.tsx:56:            <div className="rounded bg-red-50 p-3 text-sm text-red-700">
+frontend/src/routes/pages/Login.tsx:61:          <button
+frontend/src/routes/pages/Login.tsx:64:            className="w-full rounded bg-black px-4 py-2 text-white disabled:opacity-50"
+frontend/src/routes/pages/Login.tsx:67:          </button>
+frontend/src/routes/pages/Bookings.tsx:192:        throw new Error("Room is not available for the selected dates.");
+frontend/src/routes/pages/Bookings.tsx:255:    <section className="space-y-6">
+frontend/src/routes/pages/Bookings.tsx:256:      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+frontend/src/routes/pages/Bookings.tsx:258:          <h1 className="text-2xl font-semibold text-gray-950">Bookings</h1>
+frontend/src/routes/pages/Bookings.tsx:259:          <p className="mt-1 text-sm text-gray-500">
+frontend/src/routes/pages/Bookings.tsx:264:        <div className="flex gap-2">
+frontend/src/routes/pages/Bookings.tsx:265:          <button
+frontend/src/routes/pages/Bookings.tsx:266:            type="button"
+frontend/src/routes/pages/Bookings.tsx:269:            className="inline-flex items-center gap-2 rounded-lg border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+frontend/src/routes/pages/Bookings.tsx:273:          </button>
+frontend/src/routes/pages/Bookings.tsx:275:          <button
+frontend/src/routes/pages/Bookings.tsx:276:            type="button"
+frontend/src/routes/pages/Bookings.tsx:278:            className="inline-flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+frontend/src/routes/pages/Bookings.tsx:282:          </button>
+frontend/src/routes/pages/Bookings.tsx:287:        <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+frontend/src/routes/pages/Bookings.tsx:288:          <XCircle size={18} className="mt-0.5 shrink-0" />
+frontend/src/routes/pages/Bookings.tsx:294:        <div className="flex items-start gap-3 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700">
+frontend/src/routes/pages/Bookings.tsx:295:          <Check size={18} className="mt-0.5 shrink-0" />
+frontend/src/routes/pages/Bookings.tsx:300:      <div className="rounded-xl border bg-white p-4">
+frontend/src/routes/pages/Bookings.tsx:301:        <div className="relative">
+frontend/src/routes/pages/Bookings.tsx:304:            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+frontend/src/routes/pages/Bookings.tsx:306:          <input
+frontend/src/routes/pages/Bookings.tsx:309:            placeholder="Search booking, guest, phone, room, source or status..."
+frontend/src/routes/pages/Bookings.tsx:310:            className="w-full rounded-lg border py-2.5 pl-10 pr-3 text-sm outline-none focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+frontend/src/routes/pages/Bookings.tsx:314:        <div className="mt-3 text-xs text-gray-500">
+frontend/src/routes/pages/Bookings.tsx:319:      <div className="overflow-hidden rounded-xl border bg-white">
+frontend/src/routes/pages/Bookings.tsx:320:        <div className="overflow-x-auto">
+frontend/src/routes/pages/Bookings.tsx:321:          <table className="w-full min-w-[1050px] text-left text-sm">
+frontend/src/routes/pages/Bookings.tsx:322:            <thead className="border-b bg-gray-50">
+frontend/src/routes/pages/Bookings.tsx:324:                <th className="px-5 py-3">Booking</th>
+frontend/src/routes/pages/Bookings.tsx:325:                <th className="px-5 py-3">Guest</th>
+frontend/src/routes/pages/Bookings.tsx:326:                <th className="px-5 py-3">Room</th>
+frontend/src/routes/pages/Bookings.tsx:327:                <th className="px-5 py-3">Stay</th>
+frontend/src/routes/pages/Bookings.tsx:328:                <th className="px-5 py-3">Rate</th>
+frontend/src/routes/pages/Bookings.tsx:329:                <th className="px-5 py-3">Status</th>
+frontend/src/routes/pages/Bookings.tsx:330:                <th className="px-5 py-3 text-right">Actions</th>
+frontend/src/routes/pages/Bookings.tsx:344:                      className="border-b last:border-0 hover:bg-gray-50/60"
+frontend/src/routes/pages/Bookings.tsx:346:                      <td className="px-5 py-4">
+frontend/src/routes/pages/Bookings.tsx:347:                        <div className="font-semibold text-gray-900">
+frontend/src/routes/pages/Bookings.tsx:350:                        <div className="mt-0.5 text-xs text-gray-500">
+frontend/src/routes/pages/Bookings.tsx:355:                      <td className="px-5 py-4">
+frontend/src/routes/pages/Bookings.tsx:356:                        <div className="font-medium text-gray-900">
+frontend/src/routes/pages/Bookings.tsx:361:                        <div className="mt-0.5 text-xs text-gray-500">
+frontend/src/routes/pages/Bookings.tsx:366:                      <td className="px-5 py-4">
+frontend/src/routes/pages/Bookings.tsx:367:                        <div className="font-medium">
+frontend/src/routes/pages/Bookings.tsx:370:                        <div className="text-xs text-gray-500">
+frontend/src/routes/pages/Bookings.tsx:375:                      <td className="px-5 py-4">
+frontend/src/routes/pages/Bookings.tsx:379:                        <div className="mt-0.5 text-xs text-gray-500">
+frontend/src/routes/pages/Bookings.tsx:385:                      <td className="px-5 py-4 font-medium">
+frontend/src/routes/pages/Bookings.tsx:387:                        <div className="text-xs font-normal text-gray-500">
+frontend/src/routes/pages/Bookings.tsx:392:                      <td className="px-5 py-4">
+frontend/src/routes/pages/Bookings.tsx:394:                          className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium capitalize ring-1 ring-inset ${STATUS_STYLES[booking.status]}`}
+frontend/src/routes/pages/Bookings.tsx:400:                      <td className="px-5 py-4">
+frontend/src/routes/pages/Bookings.tsx:401:                        <div className="flex justify-end gap-2">
+frontend/src/routes/pages/Bookings.tsx:404:                              <button
+frontend/src/routes/pages/Bookings.tsx:405:                                type="button"
+frontend/src/routes/pages/Bookings.tsx:414:                                className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium hover:bg-green-50 disabled:opacity-50"
+frontend/src/routes/pages/Bookings.tsx:418:                              </button>
+frontend/src/routes/pages/Bookings.tsx:420:                              <button
+frontend/src/routes/pages/Bookings.tsx:421:                                type="button"
+frontend/src/routes/pages/Bookings.tsx:424:                                className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+frontend/src/routes/pages/Bookings.tsx:428:                              </button>
+frontend/src/routes/pages/Bookings.tsx:433:                            <button
+frontend/src/routes/pages/Bookings.tsx:434:                              type="button"
+frontend/src/routes/pages/Bookings.tsx:443:                              className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium hover:bg-gray-100 disabled:opacity-50"
+frontend/src/routes/pages/Bookings.tsx:447:                            </button>
+frontend/src/routes/pages/Bookings.tsx:451:                            <span className="self-center text-xs text-gray-400">
+frontend/src/routes/pages/Bookings.tsx:457:                            <span className="text-xs text-gray-400">
+frontend/src/routes/pages/Bookings.tsx:463:                            <span className="text-xs text-red-500">
+frontend/src/routes/pages/Bookings.tsx:475:                  <td colSpan={7} className="px-5 py-14 text-center">
+frontend/src/routes/pages/Bookings.tsx:476:                    <div className="mx-auto max-w-sm">
+frontend/src/routes/pages/Bookings.tsx:477:                      <CalendarDays className="mx-auto text-gray-300" size={32} />
+frontend/src/routes/pages/Bookings.tsx:478:                      <div className="mt-3 font-medium text-gray-700">
+frontend/src/routes/pages/Bookings.tsx:481:                      <div className="mt-1 text-sm text-gray-500">
+frontend/src/routes/pages/Bookings.tsx:493:                  <td colSpan={7} className="px-5 py-14 text-center text-gray-500">
+frontend/src/routes/pages/Bookings.tsx:499:          </table>
+frontend/src/routes/pages/Bookings.tsx:505:          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+frontend/src/routes/pages/Bookings.tsx:512:          <div className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl">
+frontend/src/routes/pages/Bookings.tsx:513:            <div className="flex items-start justify-between border-b px-6 py-5">
+frontend/src/routes/pages/Bookings.tsx:515:                <h2 className="text-lg font-semibold text-gray-950">
+frontend/src/routes/pages/Bookings.tsx:518:                <p className="mt-1 text-sm text-gray-500">
+frontend/src/routes/pages/Bookings.tsx:523:              <button
+frontend/src/routes/pages/Bookings.tsx:524:                type="button"
+frontend/src/routes/pages/Bookings.tsx:527:                className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 disabled:opacity-50"
+frontend/src/routes/pages/Bookings.tsx:531:              </button>
+frontend/src/routes/pages/Bookings.tsx:534:            <form onSubmit={handleCreate} className="space-y-5 p-6">
+frontend/src/routes/pages/Bookings.tsx:535:              <div className="grid gap-4 md:grid-cols-2">
+frontend/src/routes/pages/Bookings.tsx:536:                <label className="space-y-1.5 text-sm">
+frontend/src/routes/pages/Bookings.tsx:537:                  <span className="font-medium text-gray-800">Guest</span>
+frontend/src/routes/pages/Bookings.tsx:538:                  <select
+frontend/src/routes/pages/Bookings.tsx:542:                    className="w-full rounded-lg border px-3 py-2.5"
+frontend/src/routes/pages/Bookings.tsx:544:                    <option value="">Select guest</option>
+frontend/src/routes/pages/Bookings.tsx:550:                  </select>
+frontend/src/routes/pages/Bookings.tsx:553:                <label className="space-y-1.5 text-sm">
+frontend/src/routes/pages/Bookings.tsx:554:                  <span className="font-medium text-gray-800">Room</span>
+frontend/src/routes/pages/Bookings.tsx:556:                  <select
+frontend/src/routes/pages/Bookings.tsx:560:                    className="w-full rounded-lg border px-3 py-2.5"
+frontend/src/routes/pages/Bookings.tsx:562:                    <option value="">Select room</option>
+frontend/src/routes/pages/Bookings.tsx:577:                  </select>
+frontend/src/routes/pages/Bookings.tsx:580:                <label className="space-y-1.5 text-sm">
+frontend/src/routes/pages/Bookings.tsx:581:                  <span className="font-medium text-gray-800">Check-in</span>
+frontend/src/routes/pages/Bookings.tsx:582:                  <input
+frontend/src/routes/pages/Bookings.tsx:587:                    className="w-full rounded-lg border px-3 py-2.5"
+frontend/src/routes/pages/Bookings.tsx:591:                <label className="space-y-1.5 text-sm">
+frontend/src/routes/pages/Bookings.tsx:592:                  <span className="font-medium text-gray-800">Check-out</span>
+frontend/src/routes/pages/Bookings.tsx:593:                  <input
+frontend/src/routes/pages/Bookings.tsx:598:                    className="w-full rounded-lg border px-3 py-2.5"
+frontend/src/routes/pages/Bookings.tsx:602:                <label className="space-y-1.5 text-sm">
+frontend/src/routes/pages/Bookings.tsx:603:                  <span className="font-medium text-gray-800">
+frontend/src/routes/pages/Bookings.tsx:606:                  <input
+frontend/src/routes/pages/Bookings.tsx:613:                    className="w-full rounded-lg border px-3 py-2.5"
+frontend/src/routes/pages/Bookings.tsx:617:                <label className="space-y-1.5 text-sm">
+frontend/src/routes/pages/Bookings.tsx:618:                  <span className="font-medium text-gray-800">Source</span>
+frontend/src/routes/pages/Bookings.tsx:619:                  <select
+frontend/src/routes/pages/Bookings.tsx:622:                    className="w-full rounded-lg border px-3 py-2.5"
+frontend/src/routes/pages/Bookings.tsx:630:                  </select>
+frontend/src/routes/pages/Bookings.tsx:634:              <label className="block space-y-1.5 text-sm">
+frontend/src/routes/pages/Bookings.tsx:635:                <span className="font-medium text-gray-800">Notes</span>
+frontend/src/routes/pages/Bookings.tsx:640:                  className="w-full rounded-lg border px-3 py-2.5"
+frontend/src/routes/pages/Bookings.tsx:641:                  placeholder="Optional booking notes"
+frontend/src/routes/pages/Bookings.tsx:645:              <div className="flex justify-end gap-2 border-t pt-5">
+frontend/src/routes/pages/Bookings.tsx:646:                <button
+frontend/src/routes/pages/Bookings.tsx:647:                  type="button"
+frontend/src/routes/pages/Bookings.tsx:650:                  className="rounded-lg border px-4 py-2 text-sm font-medium"
+frontend/src/routes/pages/Bookings.tsx:653:                </button>
+frontend/src/routes/pages/Bookings.tsx:655:                <button
+frontend/src/routes/pages/Bookings.tsx:658:                  className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+frontend/src/routes/pages/Bookings.tsx:661:                </button>
+frontend/src/routes/pages/Payments.tsx:119:    <section className="space-y-6">
+frontend/src/routes/pages/Payments.tsx:121:        <h1 className="text-2xl font-semibold">Payments</h1>
+frontend/src/routes/pages/Payments.tsx:122:        <p className="text-sm text-gray-500">
+frontend/src/routes/pages/Payments.tsx:127:      <div className="flex gap-3">
+frontend/src/routes/pages/Payments.tsx:128:        <input
+frontend/src/routes/pages/Payments.tsx:129:          className="rounded border px-3 py-2"
+frontend/src/routes/pages/Payments.tsx:134:          placeholder="Folio ID"
+frontend/src/routes/pages/Payments.tsx:136:        <button
+frontend/src/routes/pages/Payments.tsx:137:          type="button"
+frontend/src/routes/pages/Payments.tsx:140:          className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
+frontend/src/routes/pages/Payments.tsx:143:        </button>
+frontend/src/routes/pages/Payments.tsx:147:        <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+frontend/src/routes/pages/Payments.tsx:153:        <div className="rounded border border-green-200 bg-green-50 p-3 text-sm text-green-700">
+frontend/src/routes/pages/Payments.tsx:158:      <div className="rounded border p-5">
+frontend/src/routes/pages/Payments.tsx:159:        <h2 className="font-semibold">Record Payment</h2>
+frontend/src/routes/pages/Payments.tsx:161:        <form onSubmit={handleSubmit} className="mt-4 grid gap-4 md:grid-cols-2">
+frontend/src/routes/pages/Payments.tsx:162:          <input
+frontend/src/routes/pages/Payments.tsx:163:            className="rounded border px-3 py-2"
+frontend/src/routes/pages/Payments.tsx:169:            placeholder="Amount"
+frontend/src/routes/pages/Payments.tsx:173:          <select
+frontend/src/routes/pages/Payments.tsx:174:            className="rounded border px-3 py-2"
+frontend/src/routes/pages/Payments.tsx:183:          </select>
+frontend/src/routes/pages/Payments.tsx:185:          <input
+frontend/src/routes/pages/Payments.tsx:186:            className="rounded border px-3 py-2"
+frontend/src/routes/pages/Payments.tsx:189:            placeholder="External reference"
+frontend/src/routes/pages/Payments.tsx:192:          <input
+frontend/src/routes/pages/Payments.tsx:193:            className="rounded border px-3 py-2"
+frontend/src/routes/pages/Payments.tsx:196:            placeholder="Notes"
+frontend/src/routes/pages/Payments.tsx:200:            <button
+frontend/src/routes/pages/Payments.tsx:203:              className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
+frontend/src/routes/pages/Payments.tsx:206:            </button>
+frontend/src/routes/pages/Payments.tsx:211:      <div className="rounded border">
+frontend/src/routes/pages/Payments.tsx:212:        <div className="border-b p-4 font-semibold">Payment History</div>
+frontend/src/routes/pages/Payments.tsx:214:        <div className="overflow-x-auto">
+frontend/src/routes/pages/Payments.tsx:215:          <table className="w-full text-left text-sm">
+frontend/src/routes/pages/Payments.tsx:216:            <thead className="border-b bg-gray-50">
+frontend/src/routes/pages/Payments.tsx:218:                <th className="px-4 py-3">Reference</th>
+frontend/src/routes/pages/Payments.tsx:219:                <th className="px-4 py-3">Amount</th>
+frontend/src/routes/pages/Payments.tsx:220:                <th className="px-4 py-3">Method</th>
+frontend/src/routes/pages/Payments.tsx:221:                <th className="px-4 py-3">Status</th>
+frontend/src/routes/pages/Payments.tsx:222:                <th className="px-4 py-3">Received</th>
+frontend/src/routes/pages/Payments.tsx:223:                <th className="px-4 py-3"></th>
+frontend/src/routes/pages/Payments.tsx:228:                <tr key={payment.id} className="border-b last:border-0">
+frontend/src/routes/pages/Payments.tsx:229:                  <td className="px-4 py-3 font-medium">
+frontend/src/routes/pages/Payments.tsx:232:                  <td className="px-4 py-3">{money(payment.amount)}</td>
+frontend/src/routes/pages/Payments.tsx:233:                  <td className="px-4 py-3">
+frontend/src/routes/pages/Payments.tsx:236:                  <td className="px-4 py-3">{payment.status}</td>
+frontend/src/routes/pages/Payments.tsx:237:                  <td className="px-4 py-3">
+frontend/src/routes/pages/Payments.tsx:240:                  <td className="px-4 py-3 text-right">
+frontend/src/routes/pages/Payments.tsx:242:                      <button
+frontend/src/routes/pages/Payments.tsx:243:                        type="button"
+frontend/src/routes/pages/Payments.tsx:245:                        className="rounded border px-3 py-1 text-sm"
+frontend/src/routes/pages/Payments.tsx:248:                      </button>
+frontend/src/routes/pages/Payments.tsx:256:                  <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+frontend/src/routes/pages/Payments.tsx:262:          </table>
+frontend/src/routes/pages/Rooms.tsx:49:    <section className="space-y-6">
+frontend/src/routes/pages/Rooms.tsx:50:      <div className="flex items-end justify-between">
+frontend/src/routes/pages/Rooms.tsx:52:          <h1 className="text-2xl font-semibold">Rooms</h1>
+frontend/src/routes/pages/Rooms.tsx:53:          <p className="mt-1 text-sm text-gray-500">
+frontend/src/routes/pages/Rooms.tsx:58:        <button
+frontend/src/routes/pages/Rooms.tsx:59:          type="button"
+frontend/src/routes/pages/Rooms.tsx:62:          className="inline-flex items-center gap-2 rounded-lg border bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50 disabled:opacity-50"
+frontend/src/routes/pages/Rooms.tsx:66:        </button>
+frontend/src/routes/pages/Rooms.tsx:70:        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+frontend/src/routes/pages/Rooms.tsx:75:      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+frontend/src/routes/pages/Rooms.tsx:77:          <div key={room.id} className="rounded-xl border bg-white p-5">
+frontend/src/routes/pages/Rooms.tsx:78:            <div className="flex items-start justify-between gap-4">
+frontend/src/routes/pages/Rooms.tsx:79:              <div className="flex items-center gap-3">
+frontend/src/routes/pages/Rooms.tsx:80:                <div className="rounded-lg bg-gray-100 p-2">
+frontend/src/routes/pages/Rooms.tsx:85:                  <div className="font-semibold">{room.room_number}</div>
+frontend/src/routes/pages/Rooms.tsx:86:                  <div className="text-sm text-gray-500">{room.room_name}</div>
+frontend/src/routes/pages/Rooms.tsx:91:                className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${STATUS_STYLES[room.status] ?? "bg-gray-100 text-gray-600"}`}
+frontend/src/routes/pages/Rooms.tsx:97:            <div className="mt-5 grid grid-cols-3 gap-3 border-t pt-4 text-sm">
+frontend/src/routes/pages/Rooms.tsx:99:                <div className="text-xs text-gray-500">Type</div>
+frontend/src/routes/pages/Rooms.tsx:100:                <div className="mt-1">{room.room_type}</div>
+frontend/src/routes/pages/Rooms.tsx:103:                <div className="text-xs text-gray-500">Floor</div>
+frontend/src/routes/pages/Rooms.tsx:104:                <div className="mt-1">{room.floor}</div>
+frontend/src/routes/pages/Rooms.tsx:107:                <div className="text-xs text-gray-500">Capacity</div>
+frontend/src/routes/pages/Rooms.tsx:108:                <div className="mt-1">{room.capacity}</div>
+frontend/src/routes/pages/Rooms.tsx:115:          <div className="rounded-xl border bg-white p-10 text-center text-sm text-gray-500 sm:col-span-2 xl:col-span-3">
+frontend/src/routes/pages/Folio.tsx:52:    <section className="space-y-6">
+frontend/src/routes/pages/Folio.tsx:54:        <h1 className="text-2xl font-semibold">Folio</h1>
+frontend/src/routes/pages/Folio.tsx:55:        <p className="text-sm text-gray-500">
+frontend/src/routes/pages/Folio.tsx:60:      <div className="flex gap-3">
+frontend/src/routes/pages/Folio.tsx:61:        <input
+frontend/src/routes/pages/Folio.tsx:64:          className="rounded border px-3 py-2"
+frontend/src/routes/pages/Folio.tsx:67:          placeholder="Folio ID"
+frontend/src/routes/pages/Folio.tsx:69:        <button
+frontend/src/routes/pages/Folio.tsx:70:          type="button"
+frontend/src/routes/pages/Folio.tsx:72:          className="rounded bg-black px-4 py-2 text-white"
+frontend/src/routes/pages/Folio.tsx:76:        </button>
+frontend/src/routes/pages/Folio.tsx:80:        <div className="rounded border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+frontend/src/routes/pages/Folio.tsx:87:          <div className="grid gap-4 md:grid-cols-4">
+frontend/src/routes/pages/Folio.tsx:88:            <div className="rounded border p-4">
+frontend/src/routes/pages/Folio.tsx:89:              <div className="text-sm text-gray-500">Subtotal</div>
+frontend/src/routes/pages/Folio.tsx:90:              <div className="mt-1 text-xl font-semibold">
+frontend/src/routes/pages/Folio.tsx:95:            <div className="rounded border p-4">
+frontend/src/routes/pages/Folio.tsx:96:              <div className="text-sm text-gray-500">Tax</div>
+frontend/src/routes/pages/Folio.tsx:97:              <div className="mt-1 text-xl font-semibold">
+frontend/src/routes/pages/Folio.tsx:102:            <div className="rounded border p-4">
+frontend/src/routes/pages/Folio.tsx:103:              <div className="text-sm text-gray-500">Paid</div>
+frontend/src/routes/pages/Folio.tsx:104:              <div className="mt-1 text-xl font-semibold">
+frontend/src/routes/pages/Folio.tsx:109:            <div className="rounded border p-4">
+frontend/src/routes/pages/Folio.tsx:110:              <div className="text-sm text-gray-500">Balance Due</div>
+frontend/src/routes/pages/Folio.tsx:111:              <div className="mt-1 text-xl font-semibold">
+frontend/src/routes/pages/Folio.tsx:117:          <div className="rounded border">
+frontend/src/routes/pages/Folio.tsx:118:            <div className="border-b p-4">
+frontend/src/routes/pages/Folio.tsx:119:              <div className="font-semibold">{folio.folio_number}</div>
+frontend/src/routes/pages/Folio.tsx:120:              <div className="text-sm text-gray-500">
+frontend/src/routes/pages/Folio.tsx:125:            <div className="overflow-x-auto">
+frontend/src/routes/pages/Folio.tsx:126:              <table className="w-full text-left text-sm">
+frontend/src/routes/pages/Folio.tsx:127:                <thead className="border-b bg-gray-50">
+frontend/src/routes/pages/Folio.tsx:129:                    <th className="px-4 py-3">Description</th>
+frontend/src/routes/pages/Folio.tsx:130:                    <th className="px-4 py-3">Qty</th>
+frontend/src/routes/pages/Folio.tsx:131:                    <th className="px-4 py-3">Unit Price</th>
+frontend/src/routes/pages/Folio.tsx:132:                    <th className="px-4 py-3">Tax</th>
+frontend/src/routes/pages/Folio.tsx:133:                    <th className="px-4 py-3 text-right">Total</th>
+frontend/src/routes/pages/Folio.tsx:138:                    <tr key={item.id} className="border-b last:border-0">
+frontend/src/routes/pages/Folio.tsx:139:                      <td className="px-4 py-3">
+frontend/src/routes/pages/Folio.tsx:141:                        <div className="text-xs text-gray-500">
+frontend/src/routes/pages/Folio.tsx:145:                      <td className="px-4 py-3">{item.quantity}</td>
+frontend/src/routes/pages/Folio.tsx:146:                      <td className="px-4 py-3">
+frontend/src/routes/pages/Folio.tsx:149:                      <td className="px-4 py-3">
+frontend/src/routes/pages/Folio.tsx:152:                      <td className="px-4 py-3 text-right font-medium">
+frontend/src/routes/pages/Folio.tsx:162:                        className="px-4 py-8 text-center text-gray-500"
+frontend/src/routes/pages/Folio.tsx:169:              </table>
+frontend/src/routes/pages/Folio.tsx:172:            <div className="flex justify-end border-t p-4">
+frontend/src/routes/pages/Folio.tsx:173:              <div className="w-64 space-y-2 text-sm">
+frontend/src/routes/pages/Folio.tsx:174:                <div className="flex justify-between">
+frontend/src/routes/pages/Folio.tsx:178:                <div className="flex justify-between">
+frontend/src/routes/pages/Folio.tsx:182:                <div className="flex justify-between border-t pt-2 font-semibold">
+frontend/src/routes/pages/AuditLog.tsx:51:    <section className="space-y-6">
+frontend/src/routes/pages/AuditLog.tsx:52:      <div className="flex items-end justify-between gap-4">
+frontend/src/routes/pages/AuditLog.tsx:54:          <h1 className="text-2xl font-semibold">Audit Log</h1>
+frontend/src/routes/pages/AuditLog.tsx:55:          <p className="mt-1 text-sm text-gray-500">
+frontend/src/routes/pages/AuditLog.tsx:60:        <button
+frontend/src/routes/pages/AuditLog.tsx:61:          type="button"
+frontend/src/routes/pages/AuditLog.tsx:64:          className="inline-flex items-center gap-2 rounded-lg border bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50"
+frontend/src/routes/pages/AuditLog.tsx:68:        </button>
+frontend/src/routes/pages/AuditLog.tsx:72:        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+frontend/src/routes/pages/AuditLog.tsx:77:      <div className="rounded-xl border bg-white p-4">
+frontend/src/routes/pages/AuditLog.tsx:78:        <div className="relative">
+frontend/src/routes/pages/AuditLog.tsx:81:            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+frontend/src/routes/pages/AuditLog.tsx:83:          <input
+frontend/src/routes/pages/AuditLog.tsx:86:            placeholder="Search staff, action, entity..."
+frontend/src/routes/pages/AuditLog.tsx:87:            className="w-full rounded-lg border py-2.5 pl-10 pr-3 text-sm outline-none focus:ring-2 focus:ring-gray-100"
+frontend/src/routes/pages/AuditLog.tsx:91:        <div className="mt-3 text-xs text-gray-500">
+frontend/src/routes/pages/AuditLog.tsx:96:      <div className="overflow-hidden rounded-xl border bg-white">
+frontend/src/routes/pages/AuditLog.tsx:97:        <div className="overflow-x-auto">
+frontend/src/routes/pages/AuditLog.tsx:98:          <table className="w-full min-w-[950px] text-left text-sm">
+frontend/src/routes/pages/AuditLog.tsx:99:            <thead className="border-b bg-gray-50">
+frontend/src/routes/pages/AuditLog.tsx:101:                <th className="px-5 py-3">Time</th>
+frontend/src/routes/pages/AuditLog.tsx:102:                <th className="px-5 py-3">Staff</th>
+frontend/src/routes/pages/AuditLog.tsx:103:                <th className="px-5 py-3">Action</th>
+frontend/src/routes/pages/AuditLog.tsx:104:                <th className="px-5 py-3">Entity</th>
+frontend/src/routes/pages/AuditLog.tsx:105:                <th className="px-5 py-3">Details</th>
+frontend/src/routes/pages/AuditLog.tsx:111:                <tr key={log.id} className="border-b last:border-0">
+frontend/src/routes/pages/AuditLog.tsx:112:                  <td className="whitespace-nowrap px-5 py-4 text-gray-600">
+frontend/src/routes/pages/AuditLog.tsx:116:                  <td className="px-5 py-4">
+frontend/src/routes/pages/AuditLog.tsx:117:                    <div className="font-medium">{log.staff_name}</div>
+frontend/src/routes/pages/AuditLog.tsx:118:                    <div className="text-xs text-gray-500">
+frontend/src/routes/pages/AuditLog.tsx:123:                  <td className="px-5 py-4">
+frontend/src/routes/pages/AuditLog.tsx:124:                    <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium">
+frontend/src/routes/pages/AuditLog.tsx:129:                  <td className="px-5 py-4">
+frontend/src/routes/pages/AuditLog.tsx:134:                  <td className="max-w-md px-5 py-4 text-xs text-gray-500">
+frontend/src/routes/pages/AuditLog.tsx:135:                    <pre className="whitespace-pre-wrap break-words font-sans">
+frontend/src/routes/pages/AuditLog.tsx:146:                    className="px-5 py-12 text-center text-sm text-gray-500"
+frontend/src/routes/pages/AuditLog.tsx:157:                    className="px-5 py-12 text-center text-sm text-gray-500"
+frontend/src/routes/pages/AuditLog.tsx:164:          </table>

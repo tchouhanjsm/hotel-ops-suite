@@ -1,9 +1,10 @@
 from datetime import date
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_db
+from app.core.audit import record_audit
 from app.core.rbac import require_permission
 from app.models.booking import Booking
 from app.models.staff import Staff
@@ -55,8 +56,9 @@ def check_availability(
 )
 def create_booking(
     data: BookingCreate,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("booking:create")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("booking:create")),  # noqa: B008
 ) -> Booking:
     try:
         booking = BookingService(db).create_booking(
@@ -67,6 +69,19 @@ def create_booking(
             rate=data.rate,
             source=data.source,
             notes=data.notes,
+        )
+        record_audit(
+            db,
+            request,
+            current_staff,
+            action="CREATE_BOOKING",
+            entity_type="booking",
+            entity_id=booking.id,
+            details={
+                "booking_reference": booking.booking_reference,
+                "guest_id": booking.guest_id,
+                "room_id": booking.room_id,
+            },
         )
         db.commit()
         return booking
@@ -85,8 +100,9 @@ def create_booking(
 def update_booking(
     booking_id: int,
     data: BookingUpdate,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("booking:update")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("booking:update")),  # noqa: B008
 ) -> Booking:
     try:
         booking = BookingService(db).update_booking(
@@ -105,6 +121,20 @@ def update_booking(
                 detail="Booking not found.",
             )
 
+        record_audit(
+            db,
+            request,
+            current_staff,
+            action="UPDATE_BOOKING",
+            entity_type="booking",
+            entity_id=booking.id,
+            details={
+                "booking_reference": booking.booking_reference,
+                "room_id": booking.room_id,
+                "check_in": booking.check_in.isoformat(),
+                "check_out": booking.check_out.isoformat(),
+            },
+        )
         db.commit()
         return booking
 
@@ -122,8 +152,9 @@ def update_booking(
 )
 def cancel_booking(
     booking_id: int,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("booking:cancel")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("booking:cancel")),  # noqa: B008
 ) -> Booking:
     try:
         booking = BookingService(db).cancel_booking(booking_id)
@@ -140,6 +171,15 @@ def cancel_booking(
             detail="Booking not found.",
         )
 
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="CANCEL_BOOKING",
+        entity_type="booking",
+        entity_id=booking.id,
+        details={"booking_reference": booking.booking_reference},
+    )
     db.commit()
     return booking
 
@@ -150,8 +190,9 @@ def cancel_booking(
 )
 def check_in_booking(
     booking_id: int,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("booking:check_in")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("booking:check_in")),  # noqa: B008
 ) -> Booking:
     try:
         booking = BookingService(db).check_in(booking_id)
@@ -168,6 +209,18 @@ def check_in_booking(
             detail="Booking not found.",
         )
 
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="CHECK_IN",
+        entity_type="booking",
+        entity_id=booking.id,
+        details={
+            "booking_reference": booking.booking_reference,
+            "room_id": booking.room_id,
+        },
+    )
     db.commit()
     return booking
 
@@ -178,8 +231,9 @@ def check_in_booking(
 )
 def check_out_booking(
     booking_id: int,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    _: Staff = Depends(require_permission("booking:check_out")),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("booking:check_out")),  # noqa: B008
 ) -> Booking:
     try:
         booking = BookingService(db).check_out(booking_id)
@@ -196,6 +250,18 @@ def check_out_booking(
             detail="Booking not found.",
         )
 
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="CHECK_OUT",
+        entity_type="booking",
+        entity_id=booking.id,
+        details={
+            "booking_reference": booking.booking_reference,
+            "room_id": booking.room_id,
+        },
+    )
     db.commit()
     return booking
 

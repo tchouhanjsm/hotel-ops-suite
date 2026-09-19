@@ -1,0 +1,161 @@
+frontend/src/components/ui/ErrorBoundary.tsx:1:import { Component, type ErrorInfo, type ReactNode } from "react";
+frontend/src/components/ui/ErrorBoundary.tsx:9:  hasError: boolean;
+frontend/src/components/ui/ErrorBoundary.tsx:12:export default class ErrorBoundary extends Component<Props, State> {
+frontend/src/components/ui/ErrorBoundary.tsx:14:    hasError: false,
+frontend/src/components/ui/ErrorBoundary.tsx:17:  static getDerivedStateFromError(): State {
+frontend/src/components/ui/ErrorBoundary.tsx:18:    return { hasError: true };
+frontend/src/components/ui/ErrorBoundary.tsx:21:  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+frontend/src/components/ui/ErrorBoundary.tsx:22:    console.error("Route error:", error, errorInfo);
+frontend/src/components/ui/ErrorBoundary.tsx:25:  handleRetry = (): void => {
+frontend/src/components/ui/ErrorBoundary.tsx:26:    this.setState({ hasError: false });
+frontend/src/components/ui/ErrorBoundary.tsx:30:    if (!this.state.hasError) {
+frontend/src/components/layout/Topbar.tsx:4:  onMenuClick: () => void;
+frontend/src/components/layout/Sidebar.tsx:21:  onToggle: () => void;
+frontend/src/components/layout/Sidebar.tsx:22:  onCloseMobile: () => void;
+frontend/src/layouts/AppLayout.tsx:4:import ErrorBoundary from "../components/ui/ErrorBoundary";
+frontend/src/layouts/AppLayout.tsx:28:              <ErrorBoundary title="This page is unavailable">
+frontend/src/layouts/AppLayout.tsx:30:              </ErrorBoundary>
+frontend/src/api/folio.ts:21:  status: "open" | "closed" | "void";
+frontend/src/api/client.ts:20:    throw new Error(body?.detail || `Request failed: ${response.status}`);
+frontend/src/api/bookings.ts:4:  | "confirmed"
+frontend/src/api/bookings.ts:7:  | "cancelled"
+frontend/src/api/bookings.ts:82:export function cancelBooking(id: number) {
+frontend/src/api/bookings.ts:83:  return apiFetch<Booking>(`/bookings/${id}/cancel`, {
+frontend/src/api/payments.ts:10:export type PaymentStatus = "completed" | "voided";
+frontend/src/api/payments.ts:44:export function voidPayment(paymentId: number) {
+frontend/src/api/payments.ts:45:  return apiFetch<Payment>(`/payments/${paymentId}/void`, {
+frontend/src/routes/pages/Login.tsx:11:  const [error, setError] = useState("");
+frontend/src/routes/pages/Login.tsx:12:  const [loading, setLoading] = useState(false);
+frontend/src/routes/pages/Login.tsx:16:    setLoading(true);
+frontend/src/routes/pages/Login.tsx:17:    setError("");
+frontend/src/routes/pages/Login.tsx:25:      setError(err instanceof Error ? err.message : "Login failed.");
+frontend/src/routes/pages/Login.tsx:27:      setLoading(false);
+frontend/src/routes/pages/Login.tsx:55:          {error && (
+frontend/src/routes/pages/Login.tsx:57:              {error}
+frontend/src/routes/pages/Login.tsx:63:            disabled={loading}
+frontend/src/routes/pages/Login.tsx:64:            className="w-full rounded bg-black px-4 py-2 text-white disabled:opacity-50"
+frontend/src/routes/pages/Login.tsx:66:            {loading ? "Signing in..." : "Sign in"}
+frontend/src/routes/pages/Bookings.tsx:14:  cancelBooking,
+frontend/src/routes/pages/Bookings.tsx:37:  confirmed: "bg-blue-50 text-blue-700 ring-blue-200",
+frontend/src/routes/pages/Bookings.tsx:40:  cancelled: "bg-red-50 text-red-700 ring-red-200",
+frontend/src/routes/pages/Bookings.tsx:65:  const [loading, setLoading] = useState(true);
+frontend/src/routes/pages/Bookings.tsx:69:  const [error, setError] = useState("");
+frontend/src/routes/pages/Bookings.tsx:73:    setLoading(true);
+frontend/src/routes/pages/Bookings.tsx:74:    setError("");
+frontend/src/routes/pages/Bookings.tsx:87:      setError(
+frontend/src/routes/pages/Bookings.tsx:88:        err instanceof Error ? err.message : "Unable to load booking data.",
+frontend/src/routes/pages/Bookings.tsx:91:      setLoading(false);
+frontend/src/routes/pages/Bookings.tsx:96:    void loadData();
+frontend/src/routes/pages/Bookings.tsx:146:    setError("");
+frontend/src/routes/pages/Bookings.tsx:164:      setError("Guest, room, check-in and check-out are required.");
+frontend/src/routes/pages/Bookings.tsx:169:      setError("Check-out must be after check-in.");
+frontend/src/routes/pages/Bookings.tsx:176:      setError("Enter a valid nightly rate.");
+frontend/src/routes/pages/Bookings.tsx:181:    setError("");
+frontend/src/routes/pages/Bookings.tsx:192:        throw new Error("Room is not available for the selected dates.");
+frontend/src/routes/pages/Bookings.tsx:210:      setError(
+frontend/src/routes/pages/Bookings.tsx:211:        err instanceof Error ? err.message : "Unable to create booking.",
+frontend/src/routes/pages/Bookings.tsx:224:    setError("");
+frontend/src/routes/pages/Bookings.tsx:232:      setError(err instanceof Error ? err.message : "Action failed.");
+frontend/src/routes/pages/Bookings.tsx:238:  async function handleCancel(booking: Booking) {
+frontend/src/routes/pages/Bookings.tsx:239:    const confirmed = window.confirm(
+frontend/src/routes/pages/Bookings.tsx:240:      `Cancel booking ${booking.booking_reference}?`,
+frontend/src/routes/pages/Bookings.tsx:243:    if (!confirmed) {
+frontend/src/routes/pages/Bookings.tsx:249:      () => cancelBooking(booking.id),
+frontend/src/routes/pages/Bookings.tsx:250:      `Booking ${booking.booking_reference} cancelled.`,
+frontend/src/routes/pages/Bookings.tsx:267:            onClick={() => void loadData()}
+frontend/src/routes/pages/Bookings.tsx:268:            disabled={loading}
+frontend/src/routes/pages/Bookings.tsx:269:            className="inline-flex items-center gap-2 rounded-lg border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+frontend/src/routes/pages/Bookings.tsx:286:      {error && (
+frontend/src/routes/pages/Bookings.tsx:289:          <span>{error}</span>
+frontend/src/routes/pages/Bookings.tsx:335:              {!loading &&
+frontend/src/routes/pages/Bookings.tsx:402:                          {booking.status === "confirmed" && (
+frontend/src/routes/pages/Bookings.tsx:406:                                disabled={busy}
+frontend/src/routes/pages/Bookings.tsx:408:                                  void performAction(
+frontend/src/routes/pages/Bookings.tsx:414:                                className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium hover:bg-green-50 disabled:opacity-50"
+frontend/src/routes/pages/Bookings.tsx:422:                                disabled={busy}
+frontend/src/routes/pages/Bookings.tsx:423:                                onClick={() => void handleCancel(booking)}
+frontend/src/routes/pages/Bookings.tsx:424:                                className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+frontend/src/routes/pages/Bookings.tsx:427:                                Cancel
+frontend/src/routes/pages/Bookings.tsx:435:                              disabled={busy}
+frontend/src/routes/pages/Bookings.tsx:437:                                void performAction(
+frontend/src/routes/pages/Bookings.tsx:443:                              className="inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium hover:bg-gray-100 disabled:opacity-50"
+frontend/src/routes/pages/Bookings.tsx:462:                          {booking.status === "cancelled" && (
+frontend/src/routes/pages/Bookings.tsx:464:                              Cancelled
+frontend/src/routes/pages/Bookings.tsx:473:              {!loading && filteredBookings.length === 0 && (
+frontend/src/routes/pages/Bookings.tsx:491:              {loading && (
+frontend/src/routes/pages/Bookings.tsx:494:                    Loading bookings...
+frontend/src/routes/pages/Bookings.tsx:526:                disabled={saving}
+frontend/src/routes/pages/Bookings.tsx:527:                className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 disabled:opacity-50"
+frontend/src/routes/pages/Bookings.tsx:568:                        disabled={
+frontend/src/routes/pages/Bookings.tsx:649:                  disabled={saving}
+frontend/src/routes/pages/Bookings.tsx:652:                  Cancel
+frontend/src/routes/pages/Bookings.tsx:657:                  disabled={saving || !guestId}
+frontend/src/routes/pages/Bookings.tsx:658:                  className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+frontend/src/routes/pages/Payments.tsx:6:  voidPayment,
+frontend/src/routes/pages/Payments.tsx:33:  const [loading, setLoading] = useState(false);
+frontend/src/routes/pages/Payments.tsx:35:  const [error, setError] = useState("");
+frontend/src/routes/pages/Payments.tsx:42:      setError("Enter a valid folio ID.");
+frontend/src/routes/pages/Payments.tsx:46:    setLoading(true);
+frontend/src/routes/pages/Payments.tsx:47:    setError("");
+frontend/src/routes/pages/Payments.tsx:54:      setError(err instanceof Error ? err.message : "Unable to load payments.");
+frontend/src/routes/pages/Payments.tsx:56:      setLoading(false);
+frontend/src/routes/pages/Payments.tsx:67:      setError("Enter a valid folio ID.");
+frontend/src/routes/pages/Payments.tsx:72:      setError("Enter a valid payment amount.");
+frontend/src/routes/pages/Payments.tsx:77:    setError("");
+frontend/src/routes/pages/Payments.tsx:95:      setError(err instanceof Error ? err.message : "Unable to record payment.");
+frontend/src/routes/pages/Payments.tsx:101:  async function handleVoid(paymentId: number) {
+frontend/src/routes/pages/Payments.tsx:102:    setError("");
+frontend/src/routes/pages/Payments.tsx:106:      await voidPayment(paymentId);
+frontend/src/routes/pages/Payments.tsx:107:      setMessage("Payment voided.");
+frontend/src/routes/pages/Payments.tsx:110:      setError(err instanceof Error ? err.message : "Unable to void payment.");
+frontend/src/routes/pages/Payments.tsx:115:    void loadPayments();
+frontend/src/routes/pages/Payments.tsx:138:          onClick={() => void loadPayments()}
+frontend/src/routes/pages/Payments.tsx:139:          disabled={loading}
+frontend/src/routes/pages/Payments.tsx:140:          className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
+frontend/src/routes/pages/Payments.tsx:142:          {loading ? "Loading..." : "Load Payments"}
+frontend/src/routes/pages/Payments.tsx:146:      {error && (
+frontend/src/routes/pages/Payments.tsx:148:          {error}
+frontend/src/routes/pages/Payments.tsx:202:              disabled={saving}
+frontend/src/routes/pages/Payments.tsx:203:              className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
+frontend/src/routes/pages/Payments.tsx:244:                        onClick={() => void handleVoid(payment.id)}
+frontend/src/routes/pages/Payments.tsx:247:                        Void
+frontend/src/routes/pages/Rooms.tsx:28:  const [loading, setLoading] = useState(true);
+frontend/src/routes/pages/Rooms.tsx:29:  const [error, setError] = useState("");
+frontend/src/routes/pages/Rooms.tsx:32:    setLoading(true);
+frontend/src/routes/pages/Rooms.tsx:33:    setError("");
+frontend/src/routes/pages/Rooms.tsx:38:      setError(err instanceof Error ? err.message : "Unable to load rooms.");
+frontend/src/routes/pages/Rooms.tsx:40:      setLoading(false);
+frontend/src/routes/pages/Rooms.tsx:45:    void loadRooms();
+frontend/src/routes/pages/Rooms.tsx:60:          onClick={() => void loadRooms()}
+frontend/src/routes/pages/Rooms.tsx:61:          disabled={loading}
+frontend/src/routes/pages/Rooms.tsx:62:          className="inline-flex items-center gap-2 rounded-lg border bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50 disabled:opacity-50"
+frontend/src/routes/pages/Rooms.tsx:69:      {error && (
+frontend/src/routes/pages/Rooms.tsx:71:          {error}
+frontend/src/routes/pages/Rooms.tsx:114:        {!loading && rooms.length === 0 && (
+frontend/src/routes/pages/Folio.tsx:16:  const [loading, setLoading] = useState(false);
+frontend/src/routes/pages/Folio.tsx:17:  const [error, setError] = useState("");
+frontend/src/routes/pages/Folio.tsx:23:      setError("Enter a valid folio ID.");
+frontend/src/routes/pages/Folio.tsx:27:    setLoading(true);
+frontend/src/routes/pages/Folio.tsx:28:    setError("");
+frontend/src/routes/pages/Folio.tsx:41:      setError(err instanceof Error ? err.message : "Unable to load folio.");
+frontend/src/routes/pages/Folio.tsx:43:      setLoading(false);
+frontend/src/routes/pages/Folio.tsx:48:    void loadFolio();
+frontend/src/routes/pages/Folio.tsx:71:          onClick={() => void loadFolio()}
+frontend/src/routes/pages/Folio.tsx:73:          disabled={loading}
+frontend/src/routes/pages/Folio.tsx:75:          {loading ? "Loading..." : "Load Folio"}
+frontend/src/routes/pages/Folio.tsx:79:      {error && (
+frontend/src/routes/pages/Folio.tsx:81:          {error}
+frontend/src/routes/pages/AuditLog.tsx:9:  const [loading, setLoading] = useState(true);
+frontend/src/routes/pages/AuditLog.tsx:10:  const [error, setError] = useState("");
+frontend/src/routes/pages/AuditLog.tsx:13:    setLoading(true);
+frontend/src/routes/pages/AuditLog.tsx:14:    setError("");
+frontend/src/routes/pages/AuditLog.tsx:19:      setError(err instanceof Error ? err.message : "Unable to load audit log.");
+frontend/src/routes/pages/AuditLog.tsx:21:      setLoading(false);
+frontend/src/routes/pages/AuditLog.tsx:26:    void loadLogs();
+frontend/src/routes/pages/AuditLog.tsx:62:          onClick={() => void loadLogs()}
+frontend/src/routes/pages/AuditLog.tsx:63:          disabled={loading}
+frontend/src/routes/pages/AuditLog.tsx:71:      {error && (
+frontend/src/routes/pages/AuditLog.tsx:73:          {error}
+frontend/src/routes/pages/AuditLog.tsx:142:              {!loading && filtered.length === 0 && (
+frontend/src/routes/pages/AuditLog.tsx:153:              {loading && (
+frontend/src/routes/pages/AuditLog.tsx:159:                    Loading audit log...

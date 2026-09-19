@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_db
+from app.core.audit import record_audit
 from app.core.security import create_access_token
 from app.schemas.auth import AuthenticatedStaff, LoginRequest, LoginResponse
 from app.services.auth import AuthService
@@ -12,6 +13,7 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 @router.post("/login", response_model=LoginResponse)
 def login(
     data: LoginRequest,
+    request: Request,
     db: Session = Depends(get_db),  # noqa: B008
 ) -> LoginResponse:
     staff = AuthService(db).authenticate(
@@ -24,6 +26,17 @@ def login(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password.",
         )
+
+    record_audit(
+        db,
+        request,
+        staff,
+        action="LOGIN",
+        entity_type="staff",
+        entity_id=staff.id,
+        details={"username": staff.username},
+    )
+    db.commit()
 
     token = create_access_token(
         staff_id=staff.id,
