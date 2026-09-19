@@ -1,28 +1,35 @@
-import secrets
-from decimal import ROUND_HALF_UP, Decimal
+from decimal import Decimal
 
-from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
+from app.core.errors import ConflictError, NotFoundError, StateError
+from app.core.identifiers import generate_reference
+from app.core.money import (
+    ZERO_MONEY,
+    calculate_balance,
+    calculate_line_amount,
+    calculate_tax,
+    calculate_total,
+    to_money,
+)
 from app.models.booking import Booking
 from app.models.folio import Folio, FolioItem
-from app.models.payment import Payment
 from app.repositories.booking import BookingRepository
 from app.repositories.folio import FolioRepository
+from app.repositories.payment import PaymentRepository
 
 
 class FolioService:
     def __init__(self, db: Session) -> None:
-        self.db = db
         self.repository = FolioRepository(db)
         self.booking_repository = BookingRepository(db)
+        self.payment_repository = PaymentRepository(db)
 
     def _generate_folio_number(self) -> str:
         while True:
-            number = f"FOL-{secrets.token_hex(4).upper()}"
-            statement = select(Folio).where(Folio.folio_number == number)
-            if self.db.scalar(statement) is None:
+            number = generate_reference("FOL")
+            if self.repository.get_by_number(number) is None:
                 return number
 
     def get_folio(self, folio_id: int) -> Folio | None:
@@ -37,46 +44,47 @@ class FolioService:
     def get_totals(self, folio_id: int) -> tuple[Decimal, Decimal, Decimal]:
         items = self.repository.list_items(folio_id)
 
-        subtotal = sum(
-            (item.amount for item in items),
-            Decimal("0.00"),
+        subtotal = to_money(
+            sum(
+                (item.amount for item in items),
+                ZERO_MONEY,
+            )
         )
-        tax_total = sum(
-            (item.tax_amount for item in items),
-            Decimal("0.00"),
+        tax_total = to_money(
+            sum(
+                (item.tax_amount for item in items),
+                ZERO_MONEY,
+            )
         )
-        grand_total = subtotal + tax_total
+        grand_total = calculate_total(subtotal, tax_total)
 
-        return (
-            subtotal.quantize(Decimal("0.01")),
-            tax_total.quantize(Decimal("0.01")),
-            grand_total.quantize(Decimal("0.01")),
-        )
+        return subtotal, tax_total, grand_total
 
     def get_balance(self, folio_id: int) -> tuple[Decimal, Decimal]:
         folio = self.repository.get_by_id(folio_id)
 
         if folio is None:
-            raise ValueError("Folio not found.")
+            raise NotFoundError("Folio not found.")
 
         _, _, grand_total = self.get_totals(folio_id)
 
-        payments = self.db.scalars(
-            select(Payment).where(
-                Payment.folio_id == folio_id,
-                Payment.status == "completed",
+        payments = self.payment_repository.list_by_folio(folio_id)
+
+        paid_amount = to_money(
+            sum(
+                (
+                    payment.amount
+                    for payment in payments
+                    if payment.status == "completed"
+                ),
+                ZERO_MONEY,
             )
-        ).all()
+        )
 
-        paid_amount = sum(
-            (payment.amount for payment in payments),
-            Decimal("0.00"),
-        ).quantize(Decimal("0.01"))
-
-        balance_due = max(
-            grand_total - paid_amount,
-            Decimal("0.00"),
-        ).quantize(Decimal("0.01"))
+        balance_due = calculate_balance(
+            grand_total,
+            paid_amount,
+        )
 
         return paid_amount, balance_due
 
@@ -89,13 +97,13 @@ class FolioService:
         booking = self.booking_repository.get_by_id(booking_id)
 
         if booking is None:
-            raise ValueError("Booking not found.")
+            raise NotFoundError("Booking not found.")
 
         if booking.status == "cancelled":
-            raise ValueError("Cannot create a folio for a cancelled booking.")
+            raise StateError("Cannot create a folio for a cancelled booking.")
 
         if self.repository.get_by_booking_id(booking_id) is not None:
-            raise ValueError("Folio already exists for this booking.")
+            raise ConflictError("Folio already exists for this booking.")
 
         folio = self.repository.create_folio(
             folio_number=self._generate_folio_number(),
@@ -120,22 +128,14 @@ class FolioService:
         folio = self.repository.get_by_id(folio_id)
 
         if folio is None:
-            raise ValueError("Folio not found.")
+            raise NotFoundError("Folio not found.")
 
         if folio.status != "open":
-            raise ValueError("Folio is not open.")
+            raise StateError("Folio is not open.")
 
-        amount = (quantity * unit_price).quantize(
-            Decimal("0.01"),
-            rounding=ROUND_HALF_UP,
-        )
-
-        tax_amount = (amount * tax_percent / Decimal("100")).quantize(
-            Decimal("0.01"),
-            rounding=ROUND_HALF_UP,
-        )
-
-        total_amount = amount + tax_amount
+        amount = calculate_line_amount(quantity, unit_price)
+        tax_amount = calculate_tax(amount, tax_percent)
+        total_amount = calculate_total(amount, tax_amount)
 
         return self.repository.create_item(
             folio_id=folio_id,
@@ -157,7 +157,7 @@ class FolioService:
         items = self.repository.list_items(folio_id)
 
         if any(item.item_type == "room_charge" for item in items):
-            raise ValueError("Room charge already exists for this folio.")
+            raise ConflictError("Room charge already exists for this folio.")
 
         return self.add_item(
             folio_id=folio_id,
@@ -172,7 +172,7 @@ class FolioService:
         folio = self.repository.get_by_id(folio_id)
 
         if folio is None:
-            raise ValueError("Folio not found.")
+            raise NotFoundError("Folio not found.")
 
         subtotal, tax_total, grand_total = self.get_totals(folio_id)
 

@@ -4,6 +4,7 @@ from decimal import Decimal
 import pytest
 from sqlalchemy.orm import Session
 
+from app.core.errors import ConflictError, StateError
 from app.services.booking import BookingService
 from app.services.folio import FolioService
 
@@ -61,7 +62,7 @@ def test_duplicate_folio_rejected(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        ConflictError,
         match="Folio already exists for this booking.",
     ):
         FolioService(db_session).create_folio(
@@ -146,7 +147,7 @@ def test_closed_folio_cannot_accept_items(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        StateError,
         match="Folio is not open.",
     ):
         FolioService(db_session).add_item(
@@ -170,7 +171,7 @@ def test_cancelled_booking_cannot_create_folio(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        StateError,
         match="Cannot create a folio for a cancelled booking.",
     ):
         FolioService(db_session).create_folio(

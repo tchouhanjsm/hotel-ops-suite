@@ -86,7 +86,4 @@ class GuestService:
         if is_active is not None:
             guest.is_active = is_active
 
-        self.repository.db.flush()
-        self.repository.db.refresh(guest)
-
         return guest

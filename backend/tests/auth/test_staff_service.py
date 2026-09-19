@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 
+from app.core.errors import ConflictError
 from app.db.base import Base
 from app.services.staff import StaffService
 
@@ -50,5 +51,5 @@ def test_duplicate_username_rejected() -> None:
                 role="admin",
             )
             raise AssertionError()
-        except ValueError as exc:
+        except ConflictError as exc:
             assert str(exc) == "Username already exists."

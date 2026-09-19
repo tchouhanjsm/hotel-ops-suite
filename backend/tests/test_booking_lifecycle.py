@@ -3,6 +3,7 @@ from datetime import date
 import pytest
 from sqlalchemy.orm import Session
 
+from app.core.errors import StateError
 from app.services.booking import BookingService
 
 
@@ -70,7 +71,7 @@ def test_checked_in_booking_cannot_be_checked_in_again(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        StateError,
         match="Only confirmed bookings can be checked in.",
     ):
         BookingService(db_session).check_in(booking.id)
@@ -100,7 +101,7 @@ def test_checked_in_booking_cannot_be_cancelled(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        StateError,
         match="Booking cannot be cancelled.",
     ):
         BookingService(db_session).cancel_booking(booking.id)
@@ -115,7 +116,7 @@ def test_maintenance_room_cannot_be_booked(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        StateError,
         match="Room is not available for booking.",
     ):
         BookingService(db_session).create_booking(
@@ -138,7 +139,7 @@ def test_out_of_order_room_cannot_be_booked(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        StateError,
         match="Room is not available for booking.",
     ):
         BookingService(db_session).create_booking(
@@ -165,7 +166,7 @@ def test_maintenance_room_cannot_check_in(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        StateError,
         match="Room is not available for check-in.",
     ):
         BookingService(db_session).check_in(booking.id)
@@ -184,7 +185,7 @@ def test_out_of_order_room_cannot_check_in(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        StateError,
         match="Room is not available for check-in.",
     ):
         BookingService(db_session).check_in(booking.id)

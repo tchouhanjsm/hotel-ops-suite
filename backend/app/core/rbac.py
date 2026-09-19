@@ -28,6 +28,10 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "payment:read",
         "payment:create",
         "payment:void",
+        "invoice:read",
+        "invoice:create",
+        "invoice:finalize",
+        "invoice:void",
     },
     "manager": {
         "staff:read",
@@ -48,6 +52,10 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "payment:read",
         "payment:create",
         "payment:void",
+        "invoice:read",
+        "invoice:create",
+        "invoice:finalize",
+        "invoice:void",
     },
     "front_desk": {
         "staff:read",
@@ -64,6 +72,9 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "payment:read",
         "payment:create",
         "payment:void",
+        "invoice:read",
+        "invoice:create",
+        "invoice:finalize",
     },
 }
 

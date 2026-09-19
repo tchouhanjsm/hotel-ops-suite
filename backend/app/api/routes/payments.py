@@ -21,15 +21,7 @@ def list_payments(
     db: Session = Depends(get_db),  # noqa: B008
     _: Staff = Depends(require_permission("payment:read")),  # noqa: B008
 ) -> list[Payment]:
-    try:
-        return PaymentService(db).list_payments(folio_id)
-    except ValueError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=str(exc),
-        ) from exc
-
-
+    return PaymentService(db).list_payments(folio_id)
 @router.post(
     "",
     response_model=PaymentRead,
@@ -41,39 +33,30 @@ def create_payment(
     current_staff: Staff = Depends(require_permission("payment:create")),  # noqa: B008
     db: Session = Depends(get_db),  # noqa: B008
 ) -> Payment:
-    try:
-        payment = PaymentService(db).create_payment(
-            folio_id=data.folio_id,
-            amount=data.amount,
-            payment_method=data.payment_method.value,
-            received_by=current_staff.id,
-            external_reference=data.external_reference,
-            notes=data.notes,
-        )
-        record_audit(
-            db,
-            request,
-            current_staff,
-            action="CREATE_PAYMENT",
-            entity_type="payment",
-            entity_id=payment.id,
-            details={
-                "payment_reference": payment.payment_reference,
-                "folio_id": payment.folio_id,
-                "amount": str(payment.amount),
-                "payment_method": payment.payment_method,
-            },
-        )
-        db.commit()
-        return payment
-    except ValueError as exc:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=str(exc),
-        ) from exc
-
-
+    payment = PaymentService(db).create_payment(
+        folio_id=data.folio_id,
+        amount=data.amount,
+        payment_method=data.payment_method.value,
+        received_by=current_staff.id,
+        external_reference=data.external_reference,
+        notes=data.notes,
+    )
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="CREATE_PAYMENT",
+        entity_type="payment",
+        entity_id=payment.id,
+        details={
+            "payment_reference": payment.payment_reference,
+            "folio_id": payment.folio_id,
+            "amount": str(payment.amount),
+            "payment_method": payment.payment_method,
+        },
+    )
+    db.commit()
+    return payment
 @router.post(
     "/{payment_id}/void",
     response_model=PaymentRead,
@@ -84,15 +67,7 @@ def void_payment(
     db: Session = Depends(get_db),  # noqa: B008
     current_staff: Staff = Depends(require_permission("payment:void")),  # noqa: B008
 ) -> Payment:
-    try:
-        payment = PaymentService(db).void_payment(payment_id)
-    except ValueError as exc:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=str(exc),
-        ) from exc
-
+    payment = PaymentService(db).void_payment(payment_id)
     if payment is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from app.core.errors import ConflictError, ValidationError
 from app.models.room import Room
 from app.repositories.room import RoomRepository
 
@@ -35,16 +36,16 @@ class RoomService:
         existing = self.repository.get_by_number(room_number)
 
         if existing is not None:
-            raise ValueError("Room number already exists.")
+            raise ConflictError("Room number already exists.")
 
         if floor < 0:
-            raise ValueError("Floor cannot be negative.")
+            raise ValidationError("Floor cannot be negative.")
 
         if capacity < 1:
-            raise ValueError("Capacity must be at least 1.")
+            raise ValidationError("Capacity must be at least 1.")
 
         if status not in VALID_STATUSES:
-            raise ValueError("Invalid room status.")
+            raise ValidationError("Invalid room status.")
 
         return self.repository.create(
             room_number=room_number,
@@ -71,13 +72,13 @@ class RoomService:
             return None
 
         if floor is not None and floor < 0:
-            raise ValueError("Floor cannot be negative.")
+            raise ValidationError("Floor cannot be negative.")
 
         if capacity is not None and capacity < 1:
-            raise ValueError("Capacity must be at least 1.")
+            raise ValidationError("Capacity must be at least 1.")
 
         if status is not None and status not in VALID_STATUSES:
-            raise ValueError("Invalid room status.")
+            raise ValidationError("Invalid room status.")
 
         if room_name is not None:
             room.room_name = room_name
@@ -96,8 +97,5 @@ class RoomService:
 
         if is_active is not None:
             room.is_active = is_active
-
-        self.repository.db.flush()
-        self.repository.db.refresh(room)
 
         return room

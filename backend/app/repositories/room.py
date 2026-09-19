@@ -23,6 +23,11 @@ class RoomRepository:
         statement = select(Room).order_by(Room.room_number)
         return list(self.db.scalars(statement).all())
 
+    def save(self, room: Room) -> Room:
+        self.db.flush()
+        self.db.refresh(room)
+        return room
+
     def create(
         self,
         room_number: str,

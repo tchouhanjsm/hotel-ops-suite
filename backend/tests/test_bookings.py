@@ -3,6 +3,7 @@ from datetime import date
 import pytest
 from sqlalchemy.orm import Session
 
+from app.core.errors import ConflictError, NotFoundError
 from app.services.booking import BookingService
 
 
@@ -45,7 +46,7 @@ def test_overlapping_booking_is_rejected(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        ConflictError,
         match="Room is already booked for the selected dates.",
     ):
         BookingService(db_session).create_booking(
@@ -122,7 +123,7 @@ def test_inactive_guest_cannot_book(
     db_session.commit()
 
     with pytest.raises(
-        ValueError,
+        NotFoundError,
         match="Guest not found or inactive.",
     ):
         BookingService(db_session).create_booking(

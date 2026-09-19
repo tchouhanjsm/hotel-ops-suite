@@ -56,35 +56,26 @@ def create_staff(
     db: Session = Depends(get_db),  # noqa: B008
     current_staff: Staff = Depends(require_permission("staff:create")),  # noqa: B008
 ) -> Staff:
-    try:
-        staff = StaffService(db).create_staff(
-            username=data.username,
-            password=data.password,
-            full_name=data.full_name,
-            role=data.role,
-        )
-        record_audit(
-            db,
-            request,
-            current_staff,
-            action="CREATE_STAFF",
-            entity_type="staff",
-            entity_id=staff.id,
-            details={
-                "username": staff.username,
-                "role": staff.role,
-            },
-        )
-        db.commit()
-        return staff
-    except ValueError as exc:
-        db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=str(exc),
-        ) from exc
-
-
+    staff = StaffService(db).create_staff(
+        username=data.username,
+        password=data.password,
+        full_name=data.full_name,
+        role=data.role,
+    )
+    record_audit(
+        db,
+        request,
+        current_staff,
+        action="CREATE_STAFF",
+        entity_type="staff",
+        entity_id=staff.id,
+        details={
+            "username": staff.username,
+            "role": staff.role,
+        },
+    )
+    db.commit()
+    return staff
 @router.patch(
     "/{staff_id}",
     response_model=StaffRead,
