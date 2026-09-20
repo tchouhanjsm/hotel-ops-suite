@@ -45,6 +45,10 @@ function displayStatus(status: Booking["status"]) {
   return status.replace("_", " ");
 }
 
+async function fetchBookingData(): Promise<[Booking[], Guest[], Room[]]> {
+  return Promise.all([getBookings(), getGuests(), getRooms()]);
+}
+
 export default function Bookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [guests, setGuests] = useState<Guest[]>([]);
@@ -69,20 +73,23 @@ export default function Bookings() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  function applyBookingData(
+    bookingData: Booking[],
+    guestData: Guest[],
+    roomData: Room[],
+  ) {
+    setBookings(bookingData);
+    setGuests(guestData.filter((guest) => guest.is_active));
+    setRooms(roomData.filter((room) => room.is_active));
+  }
+
   async function loadData() {
     setLoading(true);
     setError("");
 
     try {
-      const [bookingData, guestData, roomData] = await Promise.all([
-        getBookings(),
-        getGuests(),
-        getRooms(),
-      ]);
-
-      setBookings(bookingData);
-      setGuests(guestData.filter((guest) => guest.is_active));
-      setRooms(roomData.filter((room) => room.is_active));
+      const [bookingData, guestData, roomData] = await fetchBookingData();
+      applyBookingData(bookingData, guestData, roomData);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Unable to load booking data.",
@@ -95,15 +102,13 @@ export default function Bookings() {
   useEffect(() => {
     let cancelled = false;
 
-    Promise.all([getBookings(), getGuests(), getRooms()])
+    void fetchBookingData()
       .then(([bookingData, guestData, roomData]) => {
         if (cancelled) {
           return;
         }
 
-        setBookings(bookingData);
-        setGuests(guestData.filter((guest) => guest.is_active));
-        setRooms(roomData.filter((room) => room.is_active));
+        applyBookingData(bookingData, guestData, roomData);
       })
       .catch((err) => {
         if (!cancelled) {
@@ -291,6 +296,7 @@ export default function Bookings() {
         <div className="flex gap-2">
           <button
             type="button"
+            data-testid="bookings-refresh"
             onClick={() => void loadData()}
             disabled={loading}
             className="inline-flex items-center gap-2 rounded-lg border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
@@ -301,6 +307,7 @@ export default function Bookings() {
 
           <button
             type="button"
+            data-testid="new-booking"
             onClick={openCreate}
             className="inline-flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
           >
@@ -331,6 +338,7 @@ export default function Bookings() {
             className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
           />
           <input
+            data-testid="bookings-search"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search booking, guest, phone, room, source or status..."
@@ -368,6 +376,7 @@ export default function Bookings() {
                   return (
                     <tr
                       key={booking.id}
+                      data-testid={`booking-row-${booking.id}`}
                       className="border-b last:border-0 hover:bg-gray-50/60"
                     >
                       <td className="px-5 py-4">
@@ -570,6 +579,8 @@ export default function Bookings() {
                   <span className="font-medium text-gray-800">Guest</span>
                   <select
                     required
+                    data-testid="booking-guest"
+                    name="guestId"
                     value={guestId}
                     onChange={(event) => setGuestId(event.target.value)}
                     className="w-full rounded-lg border px-3 py-2.5"
@@ -588,6 +599,8 @@ export default function Bookings() {
 
                   <select
                     required
+                    data-testid="booking-room"
+                    name="roomId"
                     value={roomId}
                     onChange={(event) => setRoomId(event.target.value)}
                     className="w-full rounded-lg border px-3 py-2.5"
@@ -614,6 +627,8 @@ export default function Bookings() {
                   <span className="font-medium text-gray-800">Check-in</span>
                   <input
                     required
+                    data-testid="booking-check-in"
+                    name="checkIn"
                     type="date"
                     value={checkIn}
                     onChange={(event) => setCheckIn(event.target.value)}
@@ -625,6 +640,8 @@ export default function Bookings() {
                   <span className="font-medium text-gray-800">Check-out</span>
                   <input
                     required
+                    data-testid="booking-check-out"
+                    name="checkOut"
                     type="date"
                     value={checkOut}
                     onChange={(event) => setCheckOut(event.target.value)}
@@ -638,6 +655,8 @@ export default function Bookings() {
                   </span>
                   <input
                     required
+                    data-testid="booking-rate"
+                    name="rate"
                     min="0.01"
                     step="0.01"
                     type="number"
@@ -650,6 +669,8 @@ export default function Bookings() {
                 <label className="space-y-1.5 text-sm">
                   <span className="font-medium text-gray-800">Source</span>
                   <select
+                    data-testid="booking-source"
+                    name="source"
                     value={source}
                     onChange={(event) => setSource(event.target.value)}
                     className="w-full rounded-lg border px-3 py-2.5"
@@ -687,6 +708,7 @@ export default function Bookings() {
 
                 <button
                   type="submit"
+                  data-testid="create-booking"
                   disabled={saving || !guestId}
                   className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
                 >
