@@ -1,14 +1,13 @@
-import { Menu, UserCircle } from "lucide-react";
+import { LogOut, Menu, UserCircle } from "lucide-react";
+
+import { useAuth } from "../../auth/useAuth";
 
 type Props = {
   onMenuClick: () => void;
 };
 
 export default function Topbar({ onMenuClick }: Props) {
-  const staff = JSON.parse(localStorage.getItem("staff") || "null") as {
-    full_name?: string;
-    role?: string;
-  } | null;
+  const { staff, logout } = useAuth();
 
   return (
     <header className="flex h-16 items-center justify-between border-b bg-white px-4 md:px-6">
@@ -26,9 +25,7 @@ export default function Topbar({ onMenuClick }: Props) {
           <div className="text-sm font-semibold text-gray-900">
             Hotel Operations
           </div>
-          <div className="text-xs text-gray-500">
-            Garh Jaisal Haveli
-          </div>
+          <div className="text-xs text-gray-500">Garh Jaisal Haveli</div>
         </div>
       </div>
 
@@ -43,6 +40,16 @@ export default function Topbar({ onMenuClick }: Props) {
             {staff?.role || "admin"}
           </div>
         </div>
+
+        <button
+          type="button"
+          onClick={logout}
+          className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
+          aria-label="Sign out"
+          title="Sign out"
+        >
+          <LogOut size={18} />
+        </button>
       </div>
     </header>
   );
