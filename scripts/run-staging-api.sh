@@ -40,4 +40,4 @@ if [ "${STAGING_API_RELOAD:-1}" = "1" ]; then
   UVICORN_ARGS+=(--reload)
 fi
 
-exec .venv/bin/python "${UVICORN_ARGS[@]}"
+exec "$ROOT/backend/.venv/bin/python" "${UVICORN_ARGS[@]}"

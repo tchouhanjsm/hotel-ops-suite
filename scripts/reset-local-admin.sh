@@ -1,27 +1,26 @@
-#!/bin/bash
-set -euo pipefail
+#!/usr/bin/env bash
+
+set -u
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$ROOT/backend"
+PYTHON_BIN="$ROOT/backend/.venv/bin/python"
 
-if [[ -x "$ROOT/backend/.venv/bin/python" ]]; then
-  PYTHON_BIN="$ROOT/backend/.venv/bin/python"
-elif [[ -x "$ROOT/.venv/bin/python" ]]; then
-  PYTHON_BIN="$ROOT/.venv/bin/python"
-elif command -v python3 >/dev/null 2>&1; then
-  PYTHON_BIN="$(command -v python3)"
-else
-  echo "ERROR: No Python interpreter found."
+if [[ ! -x "$PYTHON_BIN" ]]; then
+  echo "ERROR: Canonical backend Python environment not found:"
+  echo "       $PYTHON_BIN"
+  echo "Run: npm run backend:bootstrap"
   exit 1
 fi
 
-"$PYTHON_BIN" -c "import sqlalchemy" 2>/dev/null || {
-  echo "ERROR: Selected Python does not have SQLAlchemy installed:"
+"$PYTHON_BIN" -c "import sqlalchemy" 2>/dev/null
+if [[ $? -ne 0 ]]; then
+  echo "ERROR: Backend environment is missing SQLAlchemy:"
   echo "       $PYTHON_BIN"
+  echo "Run: npm run backend:bootstrap"
   exit 1
-}
+fi
 
-"$PYTHON_BIN" - <<'PY'
+PYTHONPATH="$ROOT/backend" "$PYTHON_BIN" - <<'PY'
 from sqlalchemy.engine import make_url
 
 from app.core.config import settings
@@ -75,3 +74,5 @@ try:
 finally:
     db.close()
 PY
+
+echo "Local admin reset completed."

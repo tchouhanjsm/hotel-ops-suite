@@ -28,7 +28,7 @@ echo "[1/3] Database migration"
 (
   cd "$ROOT/backend"
   DATABASE_URL="$STAGING_DATABASE_URL" \
-    .venv/bin/python -m alembic upgrade head
+    "$ROOT/backend/.venv/bin/python" -m alembic upgrade head
 )
 
 echo "[2/3] Staging admin bootstrap"
