@@ -2,12 +2,14 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { login } from "../../api/auth";
+import { useAuth } from "../../auth/useAuth";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("login_admin");
-  const [password, setPassword] = useState("StrongPassword123!");
+  const { login } = useAuth();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -17,9 +19,7 @@ export default function Login() {
     setError("");
 
     try {
-      const data = await login(username, password);
-      localStorage.setItem("access_token", data.access_token);
-      localStorage.setItem("staff", JSON.stringify(data.staff));
+      await login(username, password);
       navigate("/dashboard", { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed.");
@@ -30,7 +30,10 @@ export default function Login() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
-      <form onSubmit={handleSubmit} className="w-full max-w-md rounded-xl bg-white p-6 shadow">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md rounded-xl bg-white p-6 shadow"
+      >
         <h1 className="text-2xl font-semibold">Garh Jaisal OS</h1>
         <p className="mt-1 text-sm text-gray-500">Hotel Operations</p>
 

@@ -3,16 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "backend:test": "cd backend && pytest",
-    "backend:coverage": "cd backend && pytest --cov=app",
-    "backend:lint": "cd backend && ruff check .",
-    "backend:typecheck": "cd backend && mypy app",
+    "backend:test": "bash scripts/dev/backend-python.sh -m pytest",
+    "backend:coverage": "bash scripts/dev/backend-python.sh -m pytest --cov=app",
+    "backend:lint": "bash scripts/dev/backend-python.sh -m ruff check .",
+    "backend:typecheck": "bash scripts/dev/backend-python.sh -m mypy app",
     "frontend:build": "cd frontend && npm run build",
-    "check": "npm run backend:test && npm run backend:lint && npm run backend:typecheck && npm run frontend:build",
+    "check": "npm run backend:test && npm run backend:lint && npm run backend:typecheck && npm run frontend:lint && npm run frontend:build",
     "diagnose": "bash scripts/diagnostics/diagnose.sh",
     "api:staging": "bash scripts/run-staging-api.sh",
     "staging:preflight": "bash scripts/preflight-staging.sh",
-    "uat:staging": "bash scripts/run-staging-uat.sh"
+    "uat:staging": "bash scripts/run-staging-uat.sh",
+    "frontend:lint": "cd frontend && npm run lint",
+    "local:reset-admin": "bash scripts/reset-local-admin.sh",
+    "backend:dev": "bash scripts/dev/backend-python.sh -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000",
+    "backend:bootstrap": "bash scripts/dev/bootstrap-backend.sh",
+    "backend:migrate": "bash scripts/dev/backend-python.sh -m alembic upgrade head"
   },
   "repository": {
     "type": "git",

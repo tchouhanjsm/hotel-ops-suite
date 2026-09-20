@@ -6,10 +6,7 @@ import {
   createUatRoom,
 } from "../support/uatFactory";
 
-import {
-  establishUatSession,
-  loginUatAdmin,
-} from "../support/uatApi";
+import { establishUatSession, loginUatAdmin } from "../support/uatApi";
 
 type UatContext = {
   token: string;
@@ -74,10 +71,8 @@ describe("Bookings UAT", () => {
     cy.visit("/bookings");
 
     cy.contains("h1", "Bookings").should("be.visible");
-    cy.get('input[placeholder*="Search booking"]')
-      .should("be.visible");
-    cy.contains("button", "New Booking")
-      .should("be.visible");
+    cy.get('input[placeholder*="Search booking"]').should("be.visible");
+    cy.contains("button", "New Booking").should("be.visible");
   });
 
   it("searches bookings", () => {
@@ -94,8 +89,7 @@ describe("Bookings UAT", () => {
     cy.visit("/bookings");
 
     cy.contains("button", "New Booking").click();
-    cy.contains("h2", "New Booking")
-      .should("be.visible");
+    cy.contains("h2", "New Booking").should("be.visible");
   });
 
   it("creates a booking", () => {
@@ -103,15 +97,9 @@ describe("Bookings UAT", () => {
       cy.visit("/bookings");
       cy.contains("button", "New Booking").click();
 
-      cy.get("select")
-        .filter(":visible")
-        .first()
-        .select(String(ctx.guestId));
+      cy.get("select").filter(":visible").first().select(String(ctx.guestId));
 
-      cy.get("select")
-        .filter(":visible")
-        .eq(1)
-        .select(String(ctx.roomId));
+      cy.get("select").filter(":visible").eq(1).select(String(ctx.roomId));
 
       cy.get('input[type="date"]')
         .filter(":visible")
@@ -131,10 +119,7 @@ describe("Bookings UAT", () => {
         .clear()
         .type("4900");
 
-      cy.get("select")
-        .filter(":visible")
-        .eq(2)
-        .select("direct");
+      cy.get("select").filter(":visible").eq(2).select("direct");
 
       cy.contains("button", "Create Booking").click();
 
@@ -154,15 +139,9 @@ describe("Bookings UAT", () => {
         cy.visit("/bookings");
         cy.contains("button", "New Booking").click();
 
-        cy.get("select")
-          .filter(":visible")
-          .first()
-          .select(String(ctx.guestId));
+        cy.get("select").filter(":visible").first().select(String(ctx.guestId));
 
-        cy.get("select")
-          .filter(":visible")
-          .eq(1)
-          .select(String(ctx.roomId));
+        cy.get("select").filter(":visible").eq(1).select(String(ctx.roomId));
 
         cy.get('input[type="date"]')
           .filter(":visible")
@@ -184,9 +163,9 @@ describe("Bookings UAT", () => {
 
         cy.contains("button", "Create Booking").click();
 
-        cy.contains(
-          "Room is not available for the selected dates.",
-        ).should("be.visible");
+        cy.contains("Room is not available for the selected dates.").should(
+          "be.visible",
+        );
       });
     });
   });
@@ -206,15 +185,11 @@ describe("Bookings UAT", () => {
           .clear()
           .type(booking.booking_reference);
 
-        cy.contains(booking.booking_reference)
-          .should("be.visible");
+        cy.contains(booking.booking_reference).should("be.visible");
 
-        cy.contains("button", "Check in")
-          .should("be.visible")
-          .click();
+        cy.contains("button", "Check in").should("be.visible").click();
 
-        cy.contains("checked in.")
-          .should("be.visible");
+        cy.contains("checked in.").should("be.visible");
       });
     });
   });
@@ -228,25 +203,18 @@ describe("Bookings UAT", () => {
         ctx.checkIn,
         ctx.checkOut,
       ).then((booking) => {
-        checkInUatBooking(
-          ctx.token,
-          booking.id,
-        ).then(() => {
+        checkInUatBooking(ctx.token, booking.id).then(() => {
           cy.visit("/bookings");
 
           cy.get('input[placeholder*="Search booking"]')
             .clear()
             .type(booking.booking_reference);
 
-          cy.contains(booking.booking_reference)
-            .should("be.visible");
+          cy.contains(booking.booking_reference).should("be.visible");
 
-          cy.contains("button", "Check out")
-            .should("be.visible")
-            .click();
+          cy.contains("button", "Check out").should("be.visible").click();
 
-          cy.contains("checked out.")
-            .should("be.visible");
+          cy.contains("checked out.").should("be.visible");
         });
       });
     });
@@ -267,17 +235,13 @@ describe("Bookings UAT", () => {
           .clear()
           .type(booking.booking_reference);
 
-        cy.contains(booking.booking_reference)
-          .should("be.visible");
+        cy.contains(booking.booking_reference).should("be.visible");
 
         cy.on("window:confirm", () => true);
 
-        cy.contains("button", "Cancel")
-          .should("be.visible")
-          .click();
+        cy.contains("button", "Cancel").should("be.visible").click();
 
-        cy.contains("cancelled.")
-          .should("be.visible");
+        cy.contains("cancelled.").should("be.visible");
       });
     });
   });
@@ -291,21 +255,16 @@ describe("Bookings UAT", () => {
         ctx.checkIn,
         ctx.checkOut,
       ).then((booking) => {
-        cancelUatBooking(
-          ctx.token,
-          booking.id,
-        ).then(() => {
+        cancelUatBooking(ctx.token, booking.id).then(() => {
           cy.visit("/bookings");
 
           cy.get('input[placeholder*="Search booking"]')
             .clear()
             .type(booking.booking_reference);
 
-          cy.contains(booking.booking_reference)
-            .should("be.visible");
+          cy.contains(booking.booking_reference).should("be.visible");
 
-          cy.contains("cancelled")
-            .should("be.visible");
+          cy.contains("cancelled").should("be.visible");
         });
       });
     });

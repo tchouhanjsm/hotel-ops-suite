@@ -19,3 +19,7 @@ export function login(username: string, password: string) {
     body: JSON.stringify({ username, password }),
   });
 }
+
+export function getCurrentStaff() {
+  return apiFetch<Staff>("/staff/me");
+}

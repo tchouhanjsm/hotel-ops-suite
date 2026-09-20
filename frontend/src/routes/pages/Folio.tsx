@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 
-import { getFolio, getFolioItems, type Folio as FolioData, type FolioItem } from "../../api/folio";
+import {
+  getFolio,
+  getFolioItems,
+  type Folio as FolioData,
+  type FolioItem,
+} from "../../api/folio";
+
+const DEFAULT_FOLIO_ID = 1;
 
 const money = (value: string, currency: string) =>
   new Intl.NumberFormat("en-IN", {
@@ -10,7 +17,7 @@ const money = (value: string, currency: string) =>
   }).format(Number(value));
 
 export default function Folio() {
-  const [folioId, setFolioId] = useState("1");
+  const [folioId, setFolioId] = useState(String(DEFAULT_FOLIO_ID));
   const [folio, setFolio] = useState<FolioData | null>(null);
   const [items, setItems] = useState<FolioItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -45,7 +52,36 @@ export default function Folio() {
   }
 
   useEffect(() => {
-    void loadFolio();
+    const id = DEFAULT_FOLIO_ID;
+    let cancelled = false;
+
+    Promise.all([getFolio(id), getFolioItems(id)])
+      .then(([folioData, itemData]) => {
+        if (cancelled) {
+          return;
+        }
+
+        setFolio(folioData);
+        setItems(itemData);
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setFolio(null);
+          setItems([]);
+          setError(
+            err instanceof Error ? err.message : "Unable to load folio.",
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
@@ -146,9 +182,7 @@ export default function Folio() {
                       <td className="px-4 py-3">
                         {money(item.unit_price, folio.currency)}
                       </td>
-                      <td className="px-4 py-3">
-                        {item.tax_percent}%
-                      </td>
+                      <td className="px-4 py-3">{item.tax_percent}%</td>
                       <td className="px-4 py-3 text-right font-medium">
                         {money(item.total_amount, folio.currency)}
                       </td>

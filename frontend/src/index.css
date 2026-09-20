@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@plugin "daisyui" {
+  themes: light --default;
+  include:
+    button, card, input, select, textarea, badge, alert, table, modal, drawer,
+    loading;
+  logs: false;
+}
+
 html,
 body,
 #root {
