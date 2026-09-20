@@ -18,9 +18,7 @@ export type Booking = {
   status: string;
 };
 
-export function createUatGuest(
-  token: string,
-): Cypress.Chainable<Guest> {
+export function createUatGuest(token: string): Cypress.Chainable<Guest> {
   const unique = Date.now();
 
   return uatRequest<Guest>({
@@ -39,9 +37,7 @@ export function createUatGuest(
   }).then((response) => response.body);
 }
 
-export function createUatRoom(
-  token: string,
-): Cypress.Chainable<Room> {
+export function createUatRoom(token: string): Cypress.Chainable<Room> {
   const unique = Date.now();
 
   return uatRequest<Room>({
@@ -102,5 +98,72 @@ export function cancelUatBooking(
     method: "POST",
     path: `/bookings/${bookingId}/cancel`,
     token,
+  }).then((response) => response.body);
+}
+
+export type UatFolio = {
+  id: number;
+  folio_number: string;
+  booking_id: number;
+  status: string;
+  currency: string;
+  subtotal: string;
+  tax_total: string;
+  grand_total: string;
+  paid_amount: string;
+  balance_due: string;
+};
+
+export type UatPayment = {
+  id: number;
+  payment_reference: string;
+  folio_id: number;
+  amount: string;
+  payment_method: string;
+  status: string;
+};
+
+export function createUatFolio(
+  token: string,
+  bookingId: number,
+): Cypress.Chainable<UatFolio> {
+  return uatRequest<UatFolio>({
+    method: "POST",
+    path: "/folios",
+    token,
+    body: {
+      booking_id: bookingId,
+      currency: "INR",
+      notes: "CYPRESS UAT FOLIO",
+    },
+  }).then((response) => response.body);
+}
+
+export function getUatFolio(
+  token: string,
+  folioId: number,
+): Cypress.Chainable<UatFolio> {
+  return uatRequest<UatFolio>({
+    method: "GET",
+    path: `/folios/${folioId}`,
+    token,
+  }).then((response) => response.body);
+}
+
+export function createUatPayment(
+  token: string,
+  folioId: number,
+  amount = 1000,
+): Cypress.Chainable<UatPayment> {
+  return uatRequest<UatPayment>({
+    method: "POST",
+    path: "/payments",
+    token,
+    body: {
+      folio_id: folioId,
+      amount,
+      payment_method: "cash",
+      notes: "CYPRESS UAT PAYMENT",
+    },
   }).then((response) => response.body);
 }
