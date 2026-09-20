@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   createPayment,
@@ -7,8 +7,6 @@ import {
   type Payment,
   type PaymentMethod,
 } from "../../api/payments";
-
-const DEFAULT_FOLIO_ID = 1;
 
 const money = (value: string | number) =>
   new Intl.NumberFormat("en-IN", {
@@ -26,7 +24,7 @@ const methods: PaymentMethod[] = [
 ];
 
 export default function Payments() {
-  const [folioId, setFolioId] = useState(String(DEFAULT_FOLIO_ID));
+  const [folioId, setFolioId] = useState("");
   const [payments, setPayments] = useState<Payment[]>([]);
   const [amount, setAmount] = useState("");
   const [method, setMethod] = useState<PaymentMethod>("cash");
@@ -37,7 +35,7 @@ export default function Payments() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  async function loadPayments() {
+  async function loadPayments(preserveMessage = false) {
     const id = Number(folioId);
 
     if (!Number.isInteger(id) || id <= 0) {
@@ -47,7 +45,10 @@ export default function Payments() {
 
     setLoading(true);
     setError("");
-    setMessage("");
+
+    if (!preserveMessage) {
+      setMessage("");
+    }
 
     try {
       setPayments(await getPayments(id));
@@ -92,7 +93,7 @@ export default function Payments() {
       setExternalReference("");
       setNotes("");
       setMessage("Payment recorded.");
-      await loadPayments();
+      await loadPayments(true);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Unable to record payment.",
@@ -109,40 +110,11 @@ export default function Payments() {
     try {
       await voidPayment(paymentId);
       setMessage("Payment voided.");
-      await loadPayments();
+      await loadPayments(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to void payment.");
     }
   }
-
-  useEffect(() => {
-    const id = DEFAULT_FOLIO_ID;
-    let cancelled = false;
-
-    getPayments(id)
-      .then((data) => {
-        if (!cancelled) {
-          setPayments(data);
-        }
-      })
-      .catch((err) => {
-        if (!cancelled) {
-          setPayments([]);
-          setError(
-            err instanceof Error ? err.message : "Unable to load payments.",
-          );
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   return (
     <section className="space-y-6">
@@ -155,6 +127,7 @@ export default function Payments() {
 
       <div className="flex gap-3">
         <input
+          data-testid="payments-folio-id"
           className="rounded border px-3 py-2"
           type="number"
           min="1"
@@ -164,6 +137,7 @@ export default function Payments() {
         />
         <button
           type="button"
+          data-testid="load-payments"
           onClick={() => void loadPayments()}
           disabled={loading}
           className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
@@ -192,6 +166,7 @@ export default function Payments() {
           className="mt-4 grid gap-4 md:grid-cols-2"
         >
           <input
+            data-testid="payment-amount"
             className="rounded border px-3 py-2"
             type="number"
             min="0.01"
@@ -203,6 +178,7 @@ export default function Payments() {
           />
 
           <select
+            data-testid="payment-method"
             className="rounded border px-3 py-2"
             value={method}
             onChange={(event) => setMethod(event.target.value as PaymentMethod)}
@@ -231,6 +207,7 @@ export default function Payments() {
           <div>
             <button
               type="submit"
+              data-testid="record-payment"
               disabled={saving}
               className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
             >
@@ -257,7 +234,11 @@ export default function Payments() {
             </thead>
             <tbody>
               {payments.map((payment) => (
-                <tr key={payment.id} className="border-b last:border-0">
+                <tr
+                  key={payment.id}
+                  data-testid={`payment-row-${payment.id}`}
+                  className="border-b last:border-0"
+                >
                   <td className="px-4 py-3 font-medium">
                     {payment.payment_reference}
                   </td>
@@ -273,6 +254,7 @@ export default function Payments() {
                     {payment.status === "completed" && (
                       <button
                         type="button"
+                        data-testid={`void-payment-${payment.id}`}
                         onClick={() => void handleVoid(payment.id)}
                         className="rounded border px-3 py-1 text-sm"
                       >

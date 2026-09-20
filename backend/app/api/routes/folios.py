@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.api.dependencies import get_db
 from app.core.audit import record_audit
 from app.core.rbac import require_permission
-from app.models.folio import Folio, FolioItem
+from app.models.folio import FolioItem
 from app.models.staff import Staff
 from app.schemas.folio import (
     FolioCreate,
@@ -29,12 +29,15 @@ def create_folio(
     request: Request,
     db: Session = Depends(get_db),  # noqa: B008
     current_staff: Staff = Depends(require_permission("booking:update")),  # noqa: B008
-) -> Folio:
-    folio = FolioService(db).create_folio(
+) -> FolioRead:
+    service = FolioService(db)
+    folio = service.create_folio(
         booking_id=data.booking_id,
         currency=data.currency,
         notes=data.notes,
     )
+    subtotal, tax_total, grand_total = service.get_totals(folio.id)
+
     record_audit(
         db,
         request,
@@ -48,7 +51,19 @@ def create_folio(
         },
     )
     db.commit()
-    return folio
+
+    return FolioRead(
+        id=folio.id,
+        folio_number=folio.folio_number,
+        booking_id=folio.booking_id,
+        status=FolioStatus(folio.status),
+        currency=folio.currency,
+        notes=folio.notes,
+        created_at=folio.created_at,
+        subtotal=subtotal,
+        tax_total=tax_total,
+        grand_total=grand_total,
+    )
 @router.get("/{folio_id}", response_model=FolioSummary)
 def get_folio(
     folio_id: int,
