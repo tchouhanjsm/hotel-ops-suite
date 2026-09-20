@@ -42,7 +42,30 @@ export default function Rooms() {
   }
 
   useEffect(() => {
-    void loadRooms();
+    let cancelled = false;
+
+    apiFetch<Room[]>("/rooms")
+      .then((data) => {
+        if (!cancelled) {
+          setRooms(data);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(
+            err instanceof Error ? err.message : "Unable to load rooms.",
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (

@@ -16,14 +16,39 @@ export default function AuditLog() {
     try {
       setLogs(await getAuditLogs());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to load audit log.");
+      setError(
+        err instanceof Error ? err.message : "Unable to load audit log.",
+      );
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    void loadLogs();
+    let cancelled = false;
+
+    getAuditLogs()
+      .then((data) => {
+        if (!cancelled) {
+          setLogs(data);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(
+            err instanceof Error ? err.message : "Unable to load audit log.",
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const filtered = useMemo(() => {

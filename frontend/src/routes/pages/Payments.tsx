@@ -8,6 +8,8 @@ import {
   type PaymentMethod,
 } from "../../api/payments";
 
+const DEFAULT_FOLIO_ID = 1;
+
 const money = (value: string | number) =>
   new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -24,7 +26,7 @@ const methods: PaymentMethod[] = [
 ];
 
 export default function Payments() {
-  const [folioId, setFolioId] = useState("1");
+  const [folioId, setFolioId] = useState(String(DEFAULT_FOLIO_ID));
   const [payments, setPayments] = useState<Payment[]>([]);
   const [amount, setAmount] = useState("");
   const [method, setMethod] = useState<PaymentMethod>("cash");
@@ -92,7 +94,9 @@ export default function Payments() {
       setMessage("Payment recorded.");
       await loadPayments();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to record payment.");
+      setError(
+        err instanceof Error ? err.message : "Unable to record payment.",
+      );
     } finally {
       setSaving(false);
     }
@@ -112,7 +116,32 @@ export default function Payments() {
   }
 
   useEffect(() => {
-    void loadPayments();
+    const id = DEFAULT_FOLIO_ID;
+    let cancelled = false;
+
+    getPayments(id)
+      .then((data) => {
+        if (!cancelled) {
+          setPayments(data);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setPayments([]);
+          setError(
+            err instanceof Error ? err.message : "Unable to load payments.",
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
@@ -158,7 +187,10 @@ export default function Payments() {
       <div className="rounded border p-5">
         <h2 className="font-semibold">Record Payment</h2>
 
-        <form onSubmit={handleSubmit} className="mt-4 grid gap-4 md:grid-cols-2">
+        <form
+          onSubmit={handleSubmit}
+          className="mt-4 grid gap-4 md:grid-cols-2"
+        >
           <input
             className="rounded border px-3 py-2"
             type="number"
@@ -253,7 +285,10 @@ export default function Payments() {
 
               {payments.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                  <td
+                    colSpan={6}
+                    className="px-4 py-8 text-center text-gray-500"
+                  >
                     No payments found.
                   </td>
                 </tr>

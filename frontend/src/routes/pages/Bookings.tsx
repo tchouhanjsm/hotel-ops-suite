@@ -93,7 +93,34 @@ export default function Bookings() {
   }
 
   useEffect(() => {
-    void loadData();
+    let cancelled = false;
+
+    Promise.all([getBookings(), getGuests(), getRooms()])
+      .then(([bookingData, guestData, roomData]) => {
+        if (cancelled) {
+          return;
+        }
+
+        setBookings(bookingData);
+        setGuests(guestData.filter((guest) => guest.is_active));
+        setRooms(roomData.filter((room) => room.is_active));
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(
+            err instanceof Error ? err.message : "Unable to load booking data.",
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const guestMap = useMemo(
@@ -474,7 +501,10 @@ export default function Bookings() {
                 <tr>
                   <td colSpan={7} className="px-5 py-14 text-center">
                     <div className="mx-auto max-w-sm">
-                      <CalendarDays className="mx-auto text-gray-300" size={32} />
+                      <CalendarDays
+                        className="mx-auto text-gray-300"
+                        size={32}
+                      />
                       <div className="mt-3 font-medium text-gray-700">
                         No bookings found
                       </div>
@@ -490,7 +520,10 @@ export default function Bookings() {
 
               {loading && (
                 <tr>
-                  <td colSpan={7} className="px-5 py-14 text-center text-gray-500">
+                  <td
+                    colSpan={7}
+                    className="px-5 py-14 text-center text-gray-500"
+                  >
                     Loading bookings...
                   </td>
                 </tr>
