@@ -95,6 +95,7 @@ export default function Folio() {
 
       <div className="flex gap-3">
         <input
+          data-testid="folio-id"
           value={folioId}
           onChange={(event) => setFolioId(event.target.value)}
           className="rounded border px-3 py-2"
@@ -104,6 +105,7 @@ export default function Folio() {
         />
         <button
           type="button"
+          data-testid="load-folio"
           onClick={() => void loadFolio()}
           className="rounded bg-black px-4 py-2 text-white"
           disabled={loading}
@@ -152,7 +154,9 @@ export default function Folio() {
 
           <div className="rounded border">
             <div className="border-b p-4">
-              <div className="font-semibold">{folio.folio_number}</div>
+              <div data-testid="folio-number" className="font-semibold">
+                {folio.folio_number}
+              </div>
               <div className="text-sm text-gray-500">
                 Booking #{folio.booking_id} · {folio.status}
               </div>
