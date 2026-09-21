@@ -25,9 +25,7 @@ type Props = {
 const groups = [
   {
     label: "Overview",
-    items: [
-      { label: "Dashboard", path: "/dashboard", icon: Gauge },
-    ],
+    items: [{ label: "Dashboard", path: "/dashboard", icon: Gauge }],
   },
   {
     label: "Operations",
@@ -79,10 +77,10 @@ export default function Sidebar({
           mobileOpen ? "translate-x-0" : "-translate-x-full",
         ].join(" ")}
       >
-        <div className="flex h-16 items-center justify-between border-b px-4">
+        <div className="hos-sidebar-header flex h-16 items-center justify-between border-b px-4">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-black text-sm font-semibold text-white">
+              <div className="hos-logo flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-semibold text-white">
                 GJ
               </div>
 
@@ -114,7 +112,7 @@ export default function Sidebar({
           {groups.map((group) => (
             <div key={group.label}>
               {!collapsed && (
-                <div className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                <div className="mb-2 px-3 hos-nav-section text-[11px] font-semibold uppercase tracking-[0.12em]">
                   {group.label}
                 </div>
               )}
@@ -130,9 +128,7 @@ export default function Sidebar({
                       [
                         "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition",
                         collapsed ? "justify-center" : "",
-                        isActive
-                          ? "bg-gray-100 text-gray-950"
-                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-950",
+                        isActive ? "hos-nav-active" : "hos-nav-link",
                       ].join(" ")
                     }
                   >

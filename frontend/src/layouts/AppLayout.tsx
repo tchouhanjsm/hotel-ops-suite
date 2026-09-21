@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
-import ErrorBoundary from "../components/ui/ErrorBoundary";
 import PageContainer from "../components/layout/PageContainer";
 import Sidebar from "../components/layout/Sidebar";
 import Topbar from "../components/layout/Topbar";
+import ErrorBoundary from "../components/ui/ErrorBoundary";
 
 export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="hos-app-bg min-h-screen">
       <div className="flex min-h-screen">
         <Sidebar
           collapsed={collapsed}

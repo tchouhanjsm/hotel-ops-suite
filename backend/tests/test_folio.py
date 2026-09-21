@@ -179,3 +179,23 @@ def test_cancelled_booking_cannot_create_folio(
             currency="INR",
             notes=None,
         )
+
+
+def test_get_folio_by_booking(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    booking = create_booking(db_session, booking_test_data)
+    db_session.commit()
+
+    folio = FolioService(db_session).create_folio(
+        booking_id=booking.id,
+        currency="INR",
+        notes=None,
+    )
+
+    found = FolioService(db_session).get_folio_by_booking(booking.id)
+
+    assert found is not None
+    assert found.id == folio.id
+    assert found.booking_id == booking.id

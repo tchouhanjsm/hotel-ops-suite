@@ -3,11 +3,16 @@ import type { ReactNode } from "react";
 type Props = {
   children: ReactNode;
   className?: string;
+  solid?: boolean;
 };
 
-export default function Card({ children, className = "" }: Props) {
+export default function Card({
+  children,
+  className = "",
+  solid = false,
+}: Props) {
   return (
-    <div className={`card border bg-base-100 shadow-sm ${className}`}>
+    <div className={`${solid ? "hos-card-solid" : "hos-card"} ${className}`}>
       {children}
     </div>
   );

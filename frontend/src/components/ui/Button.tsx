@@ -14,12 +14,12 @@ export default function Button({
   ...props
 }: Props) {
   const classes = [
-    "btn",
-    variant === "primary" && "btn-neutral",
-    variant === "secondary" && "btn-outline",
-    variant === "ghost" && "btn-ghost",
-    variant === "danger" && "btn-error",
-    size === "sm" && "btn-sm",
+    "hos-btn",
+    size === "sm" ? "hos-btn-sm" : "hos-btn-md",
+    variant === "primary" && "hos-btn-primary",
+    variant === "secondary" && "hos-btn-secondary",
+    variant === "ghost" && "hos-btn-ghost",
+    variant === "danger" && "hos-btn-danger",
     className,
   ]
     .filter(Boolean)
