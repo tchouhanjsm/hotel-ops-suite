@@ -89,10 +89,10 @@ export default function Invoices() {
   const [tab, setTab] = useState<Tab>("all");
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
-  const [detailLoading, setDetailLoading] = useState(false);
+  const [loadedItemsForInvoiceId, setLoadedItemsForInvoiceId] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
-  const [folioId, setFolioId] = useState(folioIdParam);
+  const [folioId, setFolioId] = useState("");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -102,7 +102,7 @@ export default function Invoices() {
     [invoices, selectedId],
   );
 
-  async function loadData(selectFirst = false) {
+  async function loadData() {
     setLoading(true);
     setError("");
 
@@ -110,13 +110,13 @@ export default function Invoices() {
       const data = await getInvoices();
       setInvoices(data);
 
-      if (
-        selectFirst ||
-        selectedId === null ||
-        !data.some((invoice) => invoice.id === selectedId)
-      ) {
-        setSelectedId(data[0]?.id ?? null);
-      }
+      setSelectedId((current) => {
+        if (current !== null && data.some((invoice) => invoice.id === current)) {
+          return current;
+        }
+
+        return data[0]?.id ?? null;
+      });
     } catch (err) {
       setInvoices([]);
       setSelectedId(null);
@@ -129,37 +129,60 @@ export default function Invoices() {
   }
 
   useEffect(() => {
-    void loadData(true);
-  }, []);
-
-  useEffect(() => {
-    if (!selectedInvoice) {
-      setItems([]);
-      return;
-    }
-
     let cancelled = false;
-    setDetailLoading(true);
 
-    getInvoiceItems(selectedInvoice.id)
+    getInvoices()
       .then((data) => {
-        if (!cancelled) {
-          setItems(data);
+        if (cancelled) {
+          return;
         }
+
+        setInvoices(data);
+        setSelectedId(data[0]?.id ?? null);
       })
       .catch((err) => {
         if (!cancelled) {
-          setItems([]);
+          setInvoices([]);
+          setSelectedId(null);
           setError(
-            err instanceof Error
-              ? err.message
-              : "Unable to load invoice items.",
+            err instanceof Error ? err.message : "Unable to load invoices.",
           );
         }
       })
       .finally(() => {
         if (!cancelled) {
-          setDetailLoading(false);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!selectedInvoice) {
+      return;
+    }
+
+    let cancelled = false;
+
+    getInvoiceItems(selectedInvoice.id)
+      .then((data) => {
+        if (!cancelled) {
+          setItems(data);
+          setLoadedItemsForInvoiceId(selectedInvoice.id);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setItems([]);
+          setLoadedItemsForInvoiceId(selectedInvoice.id);
+          setError(
+            err instanceof Error
+              ? err.message
+              : "Unable to load invoice items.",
+          );
         }
       });
 
@@ -168,12 +191,6 @@ export default function Invoices() {
     };
   }, [selectedInvoice]);
 
-  useEffect(() => {
-    if (folioIdParam.trim()) {
-      setFolioId(folioIdParam);
-      setShowCreate(true);
-    }
-  }, [folioIdParam]);
 
   const filteredInvoices = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -231,6 +248,7 @@ export default function Invoices() {
     }
 
     setShowCreate(false);
+    setFolioId("");
 
     if (folioIdParam) {
       setSearchParams(
@@ -246,7 +264,7 @@ export default function Invoices() {
   async function handleCreate(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const numericFolioId = Number(folioId);
+    const numericFolioId = Number(folioId || folioIdParam);
 
     if (!Number.isInteger(numericFolioId) || numericFolioId <= 0) {
       setError("Enter a valid folio ID.");
@@ -343,6 +361,9 @@ export default function Invoices() {
       setSaving(false);
     }
   }
+
+  const detailLoading =
+    selectedInvoice !== null && loadedItemsForInvoiceId !== selectedInvoice.id;
 
   return (
     <section className="space-y-6">
@@ -822,7 +843,7 @@ export default function Invoices() {
         </Card>
       )}
 
-      {showCreate && (
+      {(showCreate || Boolean(folioIdParam.trim())) && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 p-4 backdrop-blur-[2px]"
           onMouseDown={(event) => {
@@ -850,7 +871,7 @@ export default function Invoices() {
                   required
                   data-testid="invoice-folio-id"
                   inputMode="numeric"
-                  value={folioId}
+                        value={folioId || folioIdParam}
                   onChange={(event) => setFolioId(event.target.value)}
                   placeholder="e.g. 12"
                   className="hos-search min-h-11 w-full rounded-xl px-4 outline-none"
