@@ -36,3 +36,18 @@ export function getFolio(folioId: number) {
 export function getFolioItems(folioId: number) {
   return apiFetch<FolioItem[]>(`/folios/${folioId}/items`);
 }
+
+export function getFolioByBooking(bookingId: number) {
+  return apiFetch<Folio>(`/folios/booking/${bookingId}`);
+}
+
+export function createFolio(data: {
+  booking_id: number;
+  currency?: string;
+  notes?: string | null;
+}) {
+  return apiFetch<Folio>("/folios", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}

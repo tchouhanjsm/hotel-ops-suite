@@ -322,3 +322,67 @@ Migrate Booking from ValueError to typed DomainError classes and remove duplicat
 - Room status / housekeeping states
 - Room validation
 - Room API tests
+
+## Batch 7.1 - Hotel Ops Suite SaaS Design System
+
+### Approved Visual Direction
+
+- [x] Approved light, airy SaaS visual language
+- [x] Approved soft pastel / glass-like surfaces
+- [x] Approved deep navy / charcoal primary typography
+- [x] Approved sandstone / gold brand accent
+- [x] Approved restrained Jaisalmer heritage imagery
+- [x] Approved soft semantic status colors
+- [x] Approved consistent rounded controls, spacing and surfaces
+- [x] Approved shared visual language across all portal pages
+
+### Design System Foundation
+
+- [ ] Establish global color tokens
+- [ ] Establish typography scale
+- [ ] Establish spacing scale
+- [ ] Establish border-radius scale
+- [ ] Establish shadow / elevation system
+- [ ] Establish shared button variants
+- [ ] Establish shared input / filter styles
+- [ ] Establish shared card / surface styles
+- [ ] Establish shared status badges
+- [ ] Establish shared page-header pattern
+- [ ] Establish shared application shell
+
+### SaaS Consistency Rule
+
+Every portal page must use the same:
+
+- App shell
+- Navigation
+- Topbar
+- Page-header structure
+- Typography
+- Spacing
+- Surface treatment
+- Button language
+- Status language
+- Responsive behavior
+
+Pages should differ through their content and workflows, not through unrelated visual systems.
+
+## Batch 7.2 - Booking -> Folio -> Payments Workflow
+
+- [ ] Add Booking -> Folio navigation
+- [ ] Resolve existing folio by booking
+- [ ] Explicitly create folio when none exists
+- [ ] Remove default/manual folio loading from normal workflow
+- [ ] Pass folio context into Payments
+- [ ] Remove default/manual payment loading from normal workflow
+- [ ] Add end-to-end Booking -> Folio -> Payment UAT
+- [ ] Protect workflow with CI
+
+### Local Runtime Topology
+
+- Canonical browser entrypoint: `https://hotel-ops.localhost`
+- Caddy terminates local HTTPS and routes traffic.
+- `/api/*` is proxied to FastAPI at `127.0.0.1:8000`.
+- All other requests are proxied to Vite at `127.0.0.1:5173`.
+- Direct Vite access is not the canonical application entrypoint for UAT.
+- Frontend functional testing should use `https://hotel-ops.localhost`.

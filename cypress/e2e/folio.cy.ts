@@ -9,6 +9,7 @@ import { establishUatSession, loginUatAdmin } from "../support/uatApi";
 
 type UatContext = {
   folioId: number;
+  bookingId: number;
   roomId: number;
   guestId: number;
   token: string;
@@ -53,6 +54,7 @@ function prepareFolio(): Cypress.Chainable<UatContext> {
             createUatFolio(token, booking.id).then((folio) => ({
               token,
               folioId: folio.id,
+              bookingId: booking.id,
               roomId: room.id,
               guestId: guest.id,
             })),
@@ -67,13 +69,9 @@ describe("Folio UAT", () => {
     establishUatSession();
   });
 
-  it("loads a booking folio and shows its room charge", () => {
+  it("opens a booking folio through booking context", () => {
     prepareFolio().then((ctx) => {
-      cy.visit("/folio");
-
-      cy.get('[data-testid="folio-id"]').clear().type(String(ctx.folioId));
-
-      cy.get('[data-testid="load-folio"]').click();
+      cy.visit(`/folio?bookingId=${ctx.bookingId}`);
 
       cy.get('[data-testid="folio-number"]').should("be.visible");
       cy.contains(`Room ${ctx.roomId} - 2 night(s)`).should("be.visible");

@@ -64,6 +64,45 @@ def create_folio(
         tax_total=tax_total,
         grand_total=grand_total,
     )
+
+
+@router.get(
+    "/booking/{booking_id}",
+    response_model=FolioSummary,
+)
+def get_folio_by_booking(
+    booking_id: int,
+    db: Session = Depends(get_db),  # noqa: B008
+    _: Staff = Depends(require_permission("booking:read")),  # noqa: B008
+) -> FolioSummary:
+    service = FolioService(db)
+    folio = service.get_folio_by_booking(booking_id)
+
+    if folio is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Folio not found.",
+        )
+
+    subtotal, tax_total, grand_total = service.get_totals(folio.id)
+    paid_amount, balance_due = service.get_balance(folio.id)
+
+    return FolioSummary(
+        id=folio.id,
+        folio_number=folio.folio_number,
+        booking_id=folio.booking_id,
+        status=FolioStatus(folio.status),
+        currency=folio.currency,
+        notes=folio.notes,
+        created_at=folio.created_at,
+        subtotal=subtotal,
+        tax_total=tax_total,
+        grand_total=grand_total,
+        paid_amount=paid_amount,
+        balance_due=balance_due,
+    )
+
+
 @router.get("/{folio_id}", response_model=FolioSummary)
 def get_folio(
     folio_id: int,
