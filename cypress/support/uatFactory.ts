@@ -167,3 +167,51 @@ export function createUatPayment(
     },
   }).then((response) => response.body);
 }
+
+
+export type UatInvoice = {
+  id: number;
+  invoice_number: string;
+  folio_id: number;
+  status: string;
+  grand_total: string;
+  paid_amount: string;
+  balance_due: string;
+};
+
+export function createUatInvoice(
+  token: string,
+  folioId: number,
+): Cypress.Chainable<UatInvoice> {
+  return uatRequest<UatInvoice>({
+    method: "POST",
+    path: "/invoices",
+    token,
+    body: {
+      folio_id: folioId,
+      notes: "CYPRESS UAT INVOICE",
+    },
+  }).then((response) => response.body);
+}
+
+export function finalizeUatInvoice(
+  token: string,
+  invoiceId: number,
+): Cypress.Chainable<UatInvoice> {
+  return uatRequest<UatInvoice>({
+    method: "POST",
+    path: `/invoices/${invoiceId}/finalize`,
+    token,
+  }).then((response) => response.body);
+}
+
+export function voidUatInvoice(
+  token: string,
+  invoiceId: number,
+): Cypress.Chainable<UatInvoice> {
+  return uatRequest<UatInvoice>({
+    method: "POST",
+    path: `/invoices/${invoiceId}/void`,
+    token,
+  }).then((response) => response.body);
+}
