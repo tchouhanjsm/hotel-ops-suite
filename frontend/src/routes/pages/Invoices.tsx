@@ -60,7 +60,7 @@ const dateLabel = (value: string) =>
     day: "2-digit",
     month: "short",
     year: "numeric",
-  }).format(new Date(\`\${value}T00:00:00\`));
+  }).format(new Date(`${value}T00:00:00`));
 
 const initials = (name: string) =>
   name
@@ -269,7 +269,7 @@ export default function Invoices() {
       setSearch("");
       setItems([]);
       setShowCreate(false);
-      setMessage(\`Invoice \${created.invoice_number} created as draft.\`);
+      setMessage(`Invoice ${created.invoice_number} created as draft.`);
       setFolioId("");
       setNotes("");
 
@@ -295,7 +295,7 @@ export default function Invoices() {
   }
 
   async function handleFinalize(invoice: Invoice) {
-    if (!window.confirm(\`Finalize \${invoice.invoice_number}?\`)) {
+    if (!window.confirm(`Finalize ${invoice.invoice_number}?`)) {
       return;
     }
 
@@ -310,7 +310,7 @@ export default function Invoices() {
         current.map((item) => (item.id === updated.id ? updated : item)),
       );
       setSelectedId(updated.id);
-      setMessage(\`Invoice \${updated.invoice_number} finalized.\`);
+      setMessage(`Invoice ${updated.invoice_number} finalized.`);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Unable to finalize invoice.",
@@ -321,7 +321,7 @@ export default function Invoices() {
   }
 
   async function handleVoid(invoice: Invoice) {
-    if (!window.confirm(\`Void \${invoice.invoice_number}?\`)) {
+    if (!window.confirm(`Void ${invoice.invoice_number}?`)) {
       return;
     }
 
@@ -336,7 +336,7 @@ export default function Invoices() {
         current.map((item) => (item.id === updated.id ? updated : item)),
       );
       setSelectedId(updated.id);
-      setMessage(\`Invoice \${updated.invoice_number} voided.\`);
+      setMessage(`Invoice ${updated.invoice_number} voided.`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to void invoice.");
     } finally {
@@ -523,7 +523,7 @@ export default function Invoices() {
                   return (
                     <tr
                       key={invoice.id}
-                      data-testid={\`invoice-row-\${invoice.id}\`}
+                      data-testid={`invoice-row-${invoice.id}`}
                       className={[
                         "border-b border-[var(--hos-border)] last:border-0",
                         active ? "bg-[var(--hos-brand-soft)]/35" : "",
@@ -636,7 +636,7 @@ export default function Invoices() {
                   size="sm"
                   onClick={() =>
                     window.open(
-                      \`/folio?folioId=\${selectedInvoice.folio_id}\`,
+                      `/folio?folioId=${selectedInvoice.folio_id}`,
                       "_self",
                     )
                   }
