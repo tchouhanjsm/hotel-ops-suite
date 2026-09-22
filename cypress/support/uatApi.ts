@@ -106,7 +106,7 @@ export function establishUatSession(): Cypress.Chainable<null> {
   return cy.session(
     ["uat-admin", baseUrl],
     () => {
-      loginUatAdmin().then((auth) => {
+      return loginUatAdmin().then((auth) => {
         window.localStorage.setItem(
           "access_token",
           auth.access_token,

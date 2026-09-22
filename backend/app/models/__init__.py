@@ -1,6 +1,7 @@
 from app.db.base import Base
 from app.models.audit_log import AuditLog
 from app.models.booking import Booking
+from app.models.cash_voucher import CashVoucher
 from app.models.folio import Folio, FolioItem
 from app.models.guest import Guest
 from app.models.invoice import Invoice, InvoiceItem
@@ -12,6 +13,7 @@ __all__ = [
     "AuditLog",
     "Base",
     "Booking",
+    "CashVoucher",
     "Folio",
     "FolioItem",
     "Invoice",
