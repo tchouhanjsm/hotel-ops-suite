@@ -61,6 +61,23 @@ def create_invoice(
     return invoice
 
 
+@router.get("/folio/{folio_id}", response_model=InvoiceRead)
+def get_invoice_by_folio(
+    folio_id: int,
+    db: Session = Depends(get_db),  # noqa: B008
+    _: Staff = Depends(require_permission("invoice:read")),  # noqa: B008
+) -> Invoice:
+    invoice = InvoiceService(db).get_invoice_by_folio(folio_id)
+
+    if invoice is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Invoice not found.",
+        )
+
+    return invoice
+
+
 @router.get("/{invoice_id}", response_model=InvoiceRead)
 def get_invoice(
     invoice_id: int,

@@ -1,6 +1,7 @@
 import {
   createUatBooking,
   createUatFolio,
+  createUatInvoice,
   createUatGuest,
   createUatRoom,
 } from "../support/uatFactory";
@@ -67,6 +68,32 @@ function prepareFolio(): Cypress.Chainable<UatContext> {
 describe("Folio UAT", () => {
   beforeEach(() => {
     establishUatSession();
+  });
+
+  it("creates an invoice from the folio when none exists", () => {
+    prepareFolio().then((ctx) => {
+      cy.visit(`/folio?bookingId=${ctx.bookingId}`);
+
+      cy.contains("button", "Create Invoice").should("be.visible").click();
+
+      cy.url().should("include", `/invoices?folioId=${ctx.folioId}`);
+      cy.get('[data-testid="invoice-folio-id"]')
+        .should("be.visible")
+        .and("have.value", String(ctx.folioId));
+    });
+  });
+
+  it("opens an existing invoice from the folio", () => {
+    prepareFolio().then((ctx) => {
+      createUatInvoice(ctx.token, ctx.folioId).then((invoice) => {
+        cy.visit(`/folio?bookingId=${ctx.bookingId}`);
+
+        cy.contains("button", "Open Invoice").should("be.visible").click();
+
+        cy.url().should("include", `/invoices?invoiceId=${invoice.id}`);
+        cy.contains(invoice.invoice_number).should("be.visible");
+      });
+    });
   });
 
   it("opens a booking folio through booking context", () => {

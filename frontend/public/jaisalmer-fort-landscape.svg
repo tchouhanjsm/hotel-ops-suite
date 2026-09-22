@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" fill="none">
+  <defs>
+    <linearGradient id="sand" x1="170" y1="80" x2="1030" y2="310" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D7B27A"/>
+      <stop offset="1" stop-color="#9B7138"/>
+    </linearGradient>
+  </defs>
+  <path d="M0 315C140 290 250 278 370 286C500 294 610 282 730 280C870 278 1005 291 1200 270V360H0V315Z" fill="#D7C29E" opacity=".32"/>
+  <path d="M130 292V200L170 168L210 200V292H254V184L294 150L334 184V292H390V170L430 133L470 170V292H530V203L568 171L606 203V292H676V181L716 145L756 181V292H824V196L864 162L904 196V292H970V211L1010 178L1050 211V292H1090V230L1124 202L1158 230V292H1190V315H130V292Z" fill="url(#sand)" opacity=".62"/>
+  <path d="M108 220H1172M150 198H1130M208 174H1090" stroke="#FFF8ED" stroke-width="5" stroke-linecap="round" opacity=".45"/>
+  <path d="M168 230V292M294 198V292M430 182V292M570 209V292M718 194V292M866 203V292M1010 221V292M1124 243V292" stroke="#FFF8ED" stroke-width="7" stroke-linecap="round" opacity=".34"/>
+</svg>

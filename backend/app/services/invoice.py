@@ -121,6 +121,9 @@ class InvoiceService:
     def get_invoice(self, invoice_id: int) -> Invoice | None:
         return self.repository.get_by_id(invoice_id)
 
+    def get_invoice_by_folio(self, folio_id: int) -> Invoice | None:
+        return self.repository.get_active_by_folio(folio_id)
+
     def list_items(self, invoice_id: int) -> list[InvoiceItem]:
         if self.repository.get_by_id(invoice_id) is None:
             raise NotFoundError("Invoice not found.")

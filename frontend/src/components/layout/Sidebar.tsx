@@ -80,9 +80,11 @@ export default function Sidebar({
         <div className="hos-sidebar-header flex h-16 items-center justify-between border-b px-4">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <div className="hos-logo flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-semibold text-white">
-                GJ
-              </div>
+              <img
+                src="/hotel-fort-mark.svg"
+                alt="Hotel Ops Suite"
+                className="h-10 w-10 shrink-0 rounded-2xl"
+              />
 
               {!collapsed && (
                 <div className="min-w-0">
