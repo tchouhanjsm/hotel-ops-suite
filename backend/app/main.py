@@ -5,6 +5,7 @@ from app.api.error_handlers import domain_error_handler
 from app.api.routes.audit_logs import router as audit_logs_router
 from app.api.routes.auth import router as auth_router
 from app.api.routes.bookings import router as bookings_router
+from app.api.routes.cash_vouchers import router as cash_vouchers_router
 from app.api.routes.folios import router as folios_router
 from app.api.routes.guests import router as guests_router
 from app.api.routes.invoices import router as invoices_router
@@ -34,13 +35,12 @@ app.include_router(staff_router)
 app.include_router(rooms_router)
 app.include_router(guests_router)
 app.include_router(bookings_router)
+app.include_router(folios_router)
+app.include_router(invoices_router)
+app.include_router(payments_router)
+app.include_router(cash_vouchers_router)
 
 
 @app.get("/health")
 def health_check() -> dict[str, str]:
     return {"status": "ok"}
-
-
-app.include_router(folios_router)
-app.include_router(invoices_router)
-app.include_router(payments_router)
