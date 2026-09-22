@@ -37,9 +37,7 @@ def create_cash_voucher(
     data: CashVoucherCreate,
     request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    current_staff: Staff = Depends(
-        require_permission("cash_voucher:create"),
-    ),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("cash_voucher:create")),  # noqa: B008
 ) -> CashVoucher:
     voucher = CashVoucherService(db).create_voucher(
         voucher_date=data.voucher_date,
@@ -95,9 +93,7 @@ def update_cash_voucher(
     data: CashVoucherUpdate,
     request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    current_staff: Staff = Depends(
-        require_permission("cash_voucher:update"),
-    ),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("cash_voucher:update")),  # noqa: B008
 ) -> CashVoucher:
     voucher = CashVoucherService(db).update_voucher(
         voucher_id,
@@ -123,9 +119,7 @@ def cancel_cash_voucher(
     voucher_id: int,
     request: Request,
     db: Session = Depends(get_db),  # noqa: B008
-    current_staff: Staff = Depends(
-        require_permission("cash_voucher:void"),
-    ),  # noqa: B008
+    current_staff: Staff = Depends(require_permission("cash_voucher:void")),  # noqa: B008
 ) -> CashVoucher:
     voucher = CashVoucherService(db).cancel_voucher(
         voucher_id,
