@@ -59,6 +59,53 @@ def test_create_invoice_draft_snapshots_folio(
     assert len(items) == 1
 
 
+def test_get_invoice_by_folio_returns_active_invoice(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    folio = create_folio(db_session, booking_test_data)
+    db_session.commit()
+
+    invoice = InvoiceService(db_session).create_draft(
+        folio_id=folio.id,
+        notes=None,
+    )
+    db_session.commit()
+
+    found = InvoiceService(db_session).get_invoice_by_folio(folio.id)
+
+    assert found is not None
+    assert found.id == invoice.id
+    assert found.folio_id == folio.id
+
+
+def test_get_invoice_by_folio_ignores_void_invoice(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    folio = create_folio(db_session, booking_test_data)
+    db_session.commit()
+
+    invoice = InvoiceService(db_session).create_draft(
+        folio_id=folio.id,
+        notes=None,
+    )
+    db_session.commit()
+
+    InvoiceService(db_session).finalize_invoice(
+        invoice_id=invoice.id,
+        finalized_by=1,
+    )
+    db_session.commit()
+
+    InvoiceService(db_session).void_invoice(invoice.id)
+    db_session.commit()
+
+    found = InvoiceService(db_session).get_invoice_by_folio(folio.id)
+
+    assert found is None
+
+
 def test_duplicate_active_invoice_rejected(
     db_session: Session,
     booking_test_data,
