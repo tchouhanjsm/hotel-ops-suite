@@ -30,31 +30,32 @@ function prepareInvoice(): Cypress.Chainable<{
   token: string;
   invoiceId: number;
   invoiceNumber: string;
+  folioId: number;
 }> {
-  return loginUatAdmin()
-    .then((auth) => {
-      const { checkIn, checkOut } = futureDates();
+  return loginUatAdmin().then((auth) => {
+    const { checkIn, checkOut } = futureDates();
 
-      return createUatGuest(auth.access_token).then((guest) =>
-        createUatRoom(auth.access_token).then((room) =>
-          createUatBooking(
-            auth.access_token,
-            guest.id,
-            room.id,
-            checkIn,
-            checkOut,
-          ).then((booking) =>
-            createUatFolio(auth.access_token, booking.id).then((folio) =>
-              createUatInvoice(auth.access_token, folio.id).then((invoice) => ({
-                token: auth.access_token,
-                invoiceId: invoice.id,
-                invoiceNumber: invoice.invoice_number,
-              })),
-            ),
+    return createUatGuest(auth.access_token).then((guest) =>
+      createUatRoom(auth.access_token).then((room) =>
+        createUatBooking(
+          auth.access_token,
+          guest.id,
+          room.id,
+          checkIn,
+          checkOut,
+        ).then((booking) =>
+          createUatFolio(auth.access_token, booking.id).then((folio) =>
+            createUatInvoice(auth.access_token, folio.id).then((invoice) => ({
+              token: auth.access_token,
+              invoiceId: invoice.id,
+              invoiceNumber: invoice.invoice_number,
+              folioId: folio.id,
+            })),
           ),
         ),
-      );
-    });
+      ),
+    );
+  });
 }
 
 describe("Invoices UAT", () => {
@@ -132,8 +133,8 @@ describe("Invoices UAT", () => {
   });
 
   it("supports folio context for invoice creation", () => {
-    prepareInvoice().then(() => {
-      cy.visit("/invoices?folioId=1");
+    prepareInvoice().then((ctx) => {
+      cy.visit(`/invoices?folioId=${ctx.folioId}`);
       cy.contains("New Invoice").should("be.visible");
       cy.get('[data-testid="invoice-folio-id"]').should("be.visible");
     });
