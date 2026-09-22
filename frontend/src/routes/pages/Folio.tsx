@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, CreditCard, Plus, WalletCards } from "lucide-react";
+import {
+  ArrowLeft,
+  CreditCard,
+  FileText,
+  Plus,
+  WalletCards,
+} from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import {
@@ -10,6 +16,10 @@ import {
   type Folio as FolioData,
   type FolioItem,
 } from "../../api/folio";
+import {
+  getInvoiceByFolio,
+  type Invoice,
+} from "../../api/invoices";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import PageHeader from "../../components/ui/PageHeader";
@@ -38,6 +48,7 @@ export default function Folio() {
 
   const [folio, setFolio] = useState<FolioData | null>(null);
   const [items, setItems] = useState<FolioItem[]>([]);
+  const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState("");
@@ -58,7 +69,18 @@ export default function Folio() {
 
     request
       .then(async (folioData) => {
-        const itemData = await getFolioItems(folioData.id);
+        const invoiceRequest = getInvoiceByFolio(folioData.id).catch((err) => {
+          if (err instanceof Error && err.message === "Invoice not found.") {
+            return null;
+          }
+
+          throw err;
+        });
+
+        const [itemData, invoiceData] = await Promise.all([
+          getFolioItems(folioData.id),
+          invoiceRequest,
+        ]);
 
         if (cancelled) {
           return;
@@ -66,6 +88,7 @@ export default function Folio() {
 
         setFolio(folioData);
         setItems(itemData);
+        setInvoice(invoiceData);
         setNeedsCreate(false);
         setError("");
       })
@@ -81,6 +104,7 @@ export default function Folio() {
         ) {
           setFolio(null);
           setItems([]);
+          setInvoice(null);
           setNeedsCreate(true);
           setError("");
           return;
@@ -88,6 +112,7 @@ export default function Folio() {
 
         setFolio(null);
         setItems([]);
+        setInvoice(null);
         setNeedsCreate(false);
         setError(err instanceof Error ? err.message : "Unable to load folio.");
       })
@@ -120,6 +145,7 @@ export default function Folio() {
 
       setFolio(created);
       setItems(itemData);
+      setInvoice(null);
       setNeedsCreate(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to create folio.");
@@ -145,10 +171,34 @@ export default function Folio() {
             </Button>
 
             {folio && (
-              <Button onClick={() => navigate(`/payments?folioId=${folio.id}`)}>
-                <CreditCard size={16} />
-                Payments
-              </Button>
+              <>
+                {invoice ? (
+                  <Button
+                    variant="secondary"
+                    onClick={() =>
+                      navigate(`/invoices?invoiceId=${invoice.id}`)
+                    }
+                  >
+                    <FileText size={16} />
+                    Open Invoice
+                  </Button>
+                ) : (
+                  <Button
+                    variant="secondary"
+                    onClick={() =>
+                      navigate(`/invoices?folioId=${folio.id}`)
+                    }
+                  >
+                    <FileText size={16} />
+                    Create Invoice
+                  </Button>
+                )}
+
+                <Button onClick={() => navigate(`/payments?folioId=${folio.id}`)}>
+                  <CreditCard size={16} />
+                  Payments
+                </Button>
+              </>
             )}
           </>
         }
