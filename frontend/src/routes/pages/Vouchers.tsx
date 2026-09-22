@@ -468,11 +468,9 @@ export default function Vouchers() {
         </Card>
 
         {selectedVoucher ? (
-          <Card
-            className="h-fit overflow-hidden"
-            data-testid="cash-voucher-detail"
-          >
-            <div className="border-b border-[var(--hos-border)] px-5 py-5">
+          <Card className="h-fit overflow-hidden">
+            <div data-testid="cash-voucher-detail">
+              <div className="border-b border-[var(--hos-border)] px-5 py-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <div className="flex items-center gap-2">
@@ -573,6 +571,7 @@ export default function Vouchers() {
                   </Button>
                 </div>
               )}
+              </div>
             </div>
           </Card>
         ) : (
