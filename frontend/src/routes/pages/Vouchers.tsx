@@ -332,22 +332,22 @@ export default function Vouchers() {
           label="Active Expenses"
           value={money(activeTotal)}
           detail={activeVouchers.length + " active vouchers"}
-          icon={<WalletCards size={18} />}
-          tone="gold"
+          icon={WalletCards}
+          tone="warning"
         />
         <StatCard
           label="Today's Cash Out"
           value={money(todayTotal)}
           detail={today}
-          icon={<CircleDollarSign size={18} />}
-          tone="green"
+          icon={CircleDollarSign}
+          tone="success"
         />
         <StatCard
           label="Cancelled"
           value={money(cancelledTotal)}
           detail={cancelledVouchers.length + " retained for history"}
-          icon={<CalendarDays size={18} />}
-          tone="blue"
+          icon={CalendarDays}
+          tone="info"
         />
       </div>
 
