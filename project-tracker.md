@@ -408,3 +408,16 @@ Pages should differ through their content and workflows, not through unrelated v
 - [x] Add backend lifecycle tests
 - [x] Add Cash Voucher workspace UI
 - [x] Add create, edit and cancel UAT
+## Batch 7.4B - Service Voucher Foundation
+
+- [x] Establish Service Voucher domain boundary and architecture blueprint
+- [ ] Add Service Voucher data model and PostgreSQL migration
+- [ ] Add repository and service lifecycle rules
+- [ ] Add explicit Service Voucher -> FolioItem linkage
+- [ ] Add non-destructive FolioItem lifecycle support required for cancellation
+- [ ] Add API endpoints and RBAC permissions
+- [ ] Add audit events
+- [ ] Add backend lifecycle and financial integration tests
+- [ ] Add Service Voucher workspace UI
+- [ ] Add create, edit, issue, cancel and folio integration UAT
+- [ ] Run full project gate and prepare PR
