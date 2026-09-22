@@ -8,6 +8,7 @@ from sqlalchemy.pool import StaticPool
 
 from app.db.base import Base
 from app.models.booking import Booking
+from app.models.cash_voucher import CashVoucher
 from app.models.folio import Folio, FolioItem
 from app.models.guest import Guest
 from app.models.invoice import Invoice, InvoiceItem
@@ -49,6 +50,7 @@ def db_session() -> Generator[Session]:
 @pytest.fixture(autouse=True)
 def clean_database() -> None:
     with Session(engine) as db:
+        db.execute(delete(CashVoucher))
         db.execute(delete(InvoiceItem))
         db.execute(delete(Invoice))
         db.execute(delete(Payment))
