@@ -215,3 +215,53 @@ export function voidUatInvoice(
     token,
   }).then((response) => response.body);
 }
+
+
+export type UatCashVoucher = {
+  id: number;
+  voucher_number: string;
+  status: string;
+  amount: string;
+  payee_name: string;
+};
+
+export function createUatCashVoucher(
+  token: string,
+  amount: number,
+): Cypress.Chainable<UatCashVoucher> {
+  return uatRequest<UatCashVoucher>({
+    method: "POST",
+    path: "/cash-vouchers",
+    token,
+    body: {
+      voucher_date: new Date().toISOString().slice(0, 10),
+      payee_name: "UAT Payee " + Date.now(),
+      expense_category: "UAT",
+      description: "CYPRESS UAT CASH VOUCHER",
+      amount,
+      currency: "INR",
+    },
+  }).then((response) => response.body);
+}
+
+export function getUatCashVoucher(
+  token: string,
+  voucherId: number,
+): Cypress.Chainable<UatCashVoucher> {
+  return uatRequest<UatCashVoucher>({
+    method: "GET",
+    path: "/cash-vouchers/" + voucherId,
+    token,
+  }).then((response) => response.body);
+}
+
+export function cancelUatCashVoucher(
+  token: string,
+  voucherId: number,
+): Cypress.Chainable<UatCashVoucher> {
+  return uatRequest<UatCashVoucher>({
+    method: "POST",
+    path: "/cash-vouchers/" + voucherId + "/cancel",
+    token,
+  }).then((response) => response.body);
+}
