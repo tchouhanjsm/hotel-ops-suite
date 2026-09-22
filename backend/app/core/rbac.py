@@ -32,6 +32,10 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "invoice:create",
         "invoice:finalize",
         "invoice:void",
+        "cash_voucher:read",
+        "cash_voucher:create",
+        "cash_voucher:update",
+        "cash_voucher:void",
     },
     "manager": {
         "staff:read",
@@ -56,6 +60,10 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "invoice:create",
         "invoice:finalize",
         "invoice:void",
+        "cash_voucher:read",
+        "cash_voucher:create",
+        "cash_voucher:update",
+        "cash_voucher:void",
     },
     "front_desk": {
         "staff:read",
@@ -75,6 +83,7 @@ ROLE_PERMISSIONS: dict[str, set[str]] = {
         "invoice:read",
         "invoice:create",
         "invoice:finalize",
+        "cash_voucher:read",
     },
 }
 
