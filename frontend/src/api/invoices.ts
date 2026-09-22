@@ -52,6 +52,10 @@ export function getInvoice(invoiceId: number) {
   return apiFetch<Invoice>(`/invoices/${invoiceId}`);
 }
 
+export function getInvoiceByFolio(folioId: number) {
+  return apiFetch<Invoice>(`/invoices/folio/${folioId}`);
+}
+
 export function getInvoiceItems(invoiceId: number) {
   return apiFetch<InvoiceItem[]>(`/invoices/${invoiceId}/items`);
 }
