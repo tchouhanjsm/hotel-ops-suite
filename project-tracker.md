@@ -386,3 +386,25 @@ Pages should differ through their content and workflows, not through unrelated v
 - All other requests are proxied to Vite at `127.0.0.1:5173`.
 - Direct Vite access is not the canonical application entrypoint for UAT.
 - Frontend functional testing should use `https://hotel-ops.localhost`.
+## Batch 7.3 - Invoice Foundation + Billing Workspace
+
+- [x] Expose active invoice lookup by folio
+- [x] Connect Folio -> Invoice workflow
+- [x] Support invoice creation from folio context
+- [x] Support invoice deep-link context
+- [x] Build invoice workspace with draft/finalized/void states
+- [x] Add invoice finalize and void workflows
+- [x] Add invoice API client and regression tests
+- [x] Add invoice Cypress UAT
+
+## Batch 7.4A - Cash Voucher Foundation
+
+- [x] Add cash voucher domain model
+- [x] Add PostgreSQL migration
+- [x] Add schema, repository and service
+- [x] Add CRUD/cancellation API
+- [x] Add RBAC permissions
+- [x] Add audit events
+- [x] Add backend lifecycle tests
+- [x] Add Cash Voucher workspace UI
+- [x] Add create, edit and cancel UAT
