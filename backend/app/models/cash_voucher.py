@@ -22,9 +22,15 @@ class CashVoucher(Base):
     external_reference: Mapped[str | None] = mapped_column(String(100), nullable=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_by: Mapped[int] = mapped_column(ForeignKey("staff.id"))
-    updated_by: Mapped[int | None] = mapped_column(ForeignKey("staff.id"), nullable=True)
-    cancelled_by: Mapped[int | None] = mapped_column(ForeignKey("staff.id"), nullable=True)
-    cancelled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    updated_by: Mapped[int | None] = mapped_column(
+        ForeignKey("staff.id"), nullable=True
+    )
+    cancelled_by: Mapped[int | None] = mapped_column(
+        ForeignKey("staff.id"), nullable=True
+    )
+    cancelled_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
