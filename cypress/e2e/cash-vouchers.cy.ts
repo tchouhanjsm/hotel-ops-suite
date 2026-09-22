@@ -1,5 +1,4 @@
 import {
-  cancelUatCashVoucher,
   createUatCashVoucher,
   getUatCashVoucher,
 } from "../support/uatFactory";
@@ -62,7 +61,6 @@ describe("Cash Vouchers UAT", () => {
           expect(Number(after.amount)).to.eq(900);
         });
 
-        cancelUatCashVoucher(auth.access_token, voucher.id);
       });
     });
   });
