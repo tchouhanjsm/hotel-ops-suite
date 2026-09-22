@@ -82,6 +82,8 @@ function statusLabel(status: InvoiceStatus) {
 export default function Invoices() {
   const [searchParams, setSearchParams] = useSearchParams();
   const folioIdParam = searchParams.get("folioId") ?? "";
+  const invoiceIdParam = searchParams.get("invoiceId") ?? "";
+  const requestedInvoiceId = Number(invoiceIdParam);
 
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -115,7 +117,11 @@ export default function Invoices() {
           return current;
         }
 
-        return data[0]?.id ?? null;
+        const requested = Number.isInteger(requestedInvoiceId)
+          ? data.find((invoice) => invoice.id === requestedInvoiceId)
+          : null;
+
+        return requested?.id ?? data[0]?.id ?? null;
       });
     } catch (err) {
       setInvoices([]);
@@ -138,7 +144,12 @@ export default function Invoices() {
         }
 
         setInvoices(data);
-        setSelectedId(data[0]?.id ?? null);
+
+        const requested = Number.isInteger(requestedInvoiceId)
+          ? data.find((invoice) => invoice.id === requestedInvoiceId)
+          : null;
+
+        setSelectedId(requested?.id ?? data[0]?.id ?? null);
       })
       .catch((err) => {
         if (!cancelled) {
