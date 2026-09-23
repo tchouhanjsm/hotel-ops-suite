@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   ArrowUpRight,
   BedDouble,
@@ -8,6 +8,7 @@ import {
   Clock3,
   LogIn,
   LogOut,
+  RefreshCw,
   Sparkles,
   Users,
 } from "lucide-react";
@@ -71,32 +72,48 @@ export default function Dashboard() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [activeView, setActiveView] = useState<View>("arrivals");
 
-  const loadData = useCallback(async () => {
-    setError("");
-    setLoading(true);
+  const loadData = useCallback(
+    async (mode: "initial" | "refresh" = "initial") => {
+      setError("");
 
-    try {
-      const [roomData, guestData, bookingData] = await Promise.all([
-        getRooms(),
-        getGuests(),
-        getBookings(),
-      ]);
+      if (mode === "refresh") {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
 
-      setRooms(roomData);
-      setGuests(guestData);
-      setBookings(bookingData);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Unable to load dashboard data.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      try {
+        const [roomData, guestData, bookingData] = await Promise.all([
+          getRooms(),
+          getGuests(),
+          getBookings(),
+        ]);
+
+        setRooms(roomData);
+        setGuests(guestData);
+        setBookings(bookingData);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Unable to load dashboard data.",
+        );
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    },
+    [],
+  );
+
+  useEffect(() => {
+    void loadData();
+  }, [loadData]);
 
 
   const today = todayKey();
