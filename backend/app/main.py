@@ -11,6 +11,7 @@ from app.api.routes.guests import router as guests_router
 from app.api.routes.invoices import router as invoices_router
 from app.api.routes.payments import router as payments_router
 from app.api.routes.rooms import router as rooms_router
+from app.api.routes.service_vouchers import router as service_vouchers_router
 from app.api.routes.staff import router as staff_router
 from app.core.errors import DomainError
 
@@ -39,6 +40,7 @@ app.include_router(folios_router)
 app.include_router(invoices_router)
 app.include_router(payments_router)
 app.include_router(cash_vouchers_router)
+app.include_router(service_vouchers_router)
 
 
 @app.get("/health")
