@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   ArrowUpRight,
   BedDouble,
@@ -71,13 +71,12 @@ export default function Dashboard() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [activeView, setActiveView] = useState<View>("arrivals");
 
   const loadData = useCallback(async () => {
     setError("");
-
     setLoading(true);
 
     try {
@@ -99,9 +98,6 @@ export default function Dashboard() {
     }
   }, []);
 
-  useEffect(() => {
-    void loadData();
-  }, [loadData]);
 
   const today = todayKey();
   const now = new Date();
@@ -118,44 +114,27 @@ export default function Dashboard() {
     ? Math.round((occupiedRooms / activeRooms.length) * 100)
     : 0;
 
-  const arrivals = useMemo(
-    () =>
-      bookings.filter(
-        (booking) =>
-          booking.check_in === today && booking.status === "confirmed",
-      ),
-    [bookings, today],
+  const arrivals = bookings.filter(
+    (booking) =>
+      booking.check_in === today && booking.status === "confirmed",
   );
 
-  const departures = useMemo(
-    () =>
-      bookings.filter(
-        (booking) =>
-          booking.check_out === today && booking.status === "checked_in",
-      ),
-    [bookings, today],
+  const departures = bookings.filter(
+    (booking) =>
+      booking.check_out === today && booking.status === "checked_in",
   );
 
-  const inHouse = useMemo(
-    () => bookings.filter((booking) => booking.status === "checked_in"),
-    [bookings],
-  );
+  const inHouse = bookings.filter((booking) => booking.status === "checked_in");
 
-  const visibleBookings = useMemo(() => {
-    if (activeView === "arrivals") return arrivals;
-    if (activeView === "departures") return departures;
-    return inHouse;
-  }, [activeView, arrivals, departures, inHouse]);
+  const visibleBookings =
+    activeView === "arrivals"
+      ? arrivals
+      : activeView === "departures"
+        ? departures
+        : inHouse;
 
-  const guestMap = useMemo(
-    () => new Map(guests.map((guest) => [guest.id, guest])),
-    [guests],
-  );
-
-  const roomMap = useMemo(
-    () => new Map(rooms.map((room) => [room.id, room])),
-    [rooms],
-  );
+  const guestMap = new Map(guests.map((guest) => [guest.id, guest]));
+  const roomMap = new Map(rooms.map((room) => [room.id, room]));
 
   const cards = [
     {
