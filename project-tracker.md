@@ -411,13 +411,13 @@ Pages should differ through their content and workflows, not through unrelated v
 ## Batch 7.4B - Service Voucher Foundation
 
 - [x] Establish Service Voucher domain boundary and architecture blueprint
-- [ ] Add Service Voucher data model and PostgreSQL migration
-- [ ] Add repository and service lifecycle rules
-- [ ] Add explicit Service Voucher -> FolioItem linkage
-- [ ] Add non-destructive FolioItem lifecycle support required for cancellation
-- [ ] Add API endpoints and RBAC permissions
-- [ ] Add audit events
-- [ ] Add backend lifecycle and financial integration tests
+- [x] Add Service Voucher data model and PostgreSQL migration
+- [x] Add repository and service lifecycle rules
+- [x] Add explicit Service Voucher -> FolioItem linkage
+- [x] Add non-destructive FolioItem lifecycle support required for cancellation
+- [x] Add API endpoints and RBAC permissions
+- [x] Add audit events
+- [x] Add backend lifecycle and financial integration tests
 - [ ] Add Service Voucher workspace UI
 - [ ] Add create, edit, issue, cancel and folio integration UAT
-- [ ] Run full project gate and prepare PR
+- [x] Run full project gate and prepare PR
