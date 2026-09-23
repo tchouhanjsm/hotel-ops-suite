@@ -194,6 +194,18 @@ export default function Folio() {
                   </Button>
                 )}
 
+                <Button
+                  variant="secondary"
+                  onClick={() =>
+                    navigate(
+                      `/vouchers?tab=service&folioId=${folio.id}&action=create`,
+                    )
+                  }
+                >
+                  <Plus size={16} />
+                  Add Service
+                </Button>
+
                 <Button onClick={() => navigate(`/payments?folioId=${folio.id}`)}>
                   <CreditCard size={16} />
                   Payments

@@ -141,11 +141,10 @@ bash "$ROOT/scripts/preflight-staging.sh"
 
 echo "[5/5] Running Cypress"
 
-export CYPRESS_UAT_ADMIN_USERNAME="$STAGING_ADMIN_USERNAME"
-export CYPRESS_UAT_ADMIN_PASSWORD="$STAGING_ADMIN_PASSWORD"
-
 cd "$ROOT"
+
+UAT_SPEC="${UAT_SPEC:-cypress/e2e/*.cy.ts}"
 
 npx cypress run \
   --browser chrome \
-  --spec cypress/e2e/bookings.cy.ts
+  --spec "$UAT_SPEC"
