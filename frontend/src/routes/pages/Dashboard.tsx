@@ -1,9 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  ArrowUpRight,
   BedDouble,
-  CalendarCheck,
+  CalendarCheck2,
   CalendarDays,
+  ChevronRight,
+  Clock3,
+  LogIn,
+  LogOut,
   RefreshCw,
+  Sparkles,
   Users,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +26,6 @@ import Alert from "../../components/ui/Alert";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Card";
 import Loading from "../../components/ui/Loading";
-import PageHeader from "../../components/ui/PageHeader";
 import StatCard from "../../components/ui/StatCard";
 
 const todayKey = () => {
@@ -33,7 +38,16 @@ const todayKey = () => {
   ].join("-");
 };
 
-const statusLabel = (status: Booking["status"]) => status.replace("_", " ");
+const dateLabel = (value: Date) =>
+  new Intl.DateTimeFormat("en-IN", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(value);
+
+const statusLabel = (status: Booking["status"]) =>
+  status.replace("_", " ");
 
 const statusClass: Record<Booking["status"], string> = {
   confirmed: "hos-badge hos-badge-info",
@@ -109,14 +123,11 @@ export default function Dashboard() {
   }, []);
 
   const today = todayKey();
-
   const activeRooms = rooms.filter((room) => room.is_active);
   const activeGuests = guests.filter((guest) => guest.is_active);
-
   const availableRooms = activeRooms.filter(
     (room) => room.status === "available",
   ).length;
-
   const occupiedRooms = activeRooms.filter(
     (room) => room.status === "occupied",
   ).length;
@@ -139,6 +150,11 @@ export default function Dashboard() {
     [bookings, today],
   );
 
+  const inHouse = useMemo(
+    () => bookings.filter((booking) => booking.status === "checked_in"),
+    [bookings],
+  );
+
   const guestMap = useMemo(
     () => new Map(guests.map((guest) => [guest.id, guest])),
     [guests],
@@ -151,55 +167,97 @@ export default function Dashboard() {
 
   const cards = [
     {
-      label: "Active Rooms",
-      value: activeRooms.length,
-      detail: `${availableRooms} available · ${occupiedRooms} occupied`,
-      icon: BedDouble,
-      tone: "success" as const,
-    },
-    {
-      label: "Active Guests",
-      value: activeGuests.length,
-      detail: "Guest profiles",
-      icon: Users,
+      label: "Arrivals today",
+      value: arrivals.length,
+      detail: "Guests expected",
+      icon: CalendarCheck2,
       tone: "info" as const,
     },
     {
-      label: "Today's Arrivals",
-      value: arrivals.length,
-      detail: "Confirmed bookings",
-      icon: CalendarCheck,
+      label: "In-house guests",
+      value: inHouse.length,
+      detail: "Currently staying",
+      icon: Users,
+      tone: "success" as const,
+    },
+    {
+      label: "Departures today",
+      value: departures.length,
+      detail: "Ready for checkout",
+      icon: CalendarDays,
       tone: "warning" as const,
     },
     {
-      label: "Today's Departures",
-      value: departures.length,
-      detail: "Checked-in bookings",
-      icon: CalendarDays,
+      label: "Rooms available",
+      value: availableRooms,
+      detail: `${occupiedRooms} currently occupied`,
+      icon: BedDouble,
       tone: "neutral" as const,
     },
   ];
 
+  const renderGuestName = (booking: Booking) => {
+    const guest = guestMap.get(booking.guest_id);
+    return guest
+      ? `${guest.first_name} ${guest.last_name}`
+      : `Guest #${booking.guest_id}`;
+  };
+
+  const renderRoom = (booking: Booking) =>
+    roomMap.get(booking.room_id)?.room_number ?? booking.room_id;
+
   return (
     <section className="space-y-6">
-      <PageHeader
-        title="Dashboard"
-        description="Your property's operational picture at a glance."
-        actions={
-          <>
-            <Button
-              variant="secondary"
-              onClick={() => void loadData()}
-              disabled={loading}
-            >
-              <RefreshCw size={16} />
-              Refresh
-            </Button>
+      <div className="hos-glass relative overflow-hidden rounded-[28px] px-5 py-6 sm:px-7 sm:py-7 lg:px-8 lg:py-8">
+        <img
+          src="/jaisalmer-fort-landscape.svg"
+          alt=""
+          aria-hidden="true"
+          className="hos-fort-art pointer-events-none absolute bottom-0 right-0 h-36 w-[58%] object-contain object-bottom opacity-[0.20] sm:h-44 lg:h-52"
+        />
 
-            <Button onClick={() => navigate("/bookings")}>View bookings</Button>
-          </>
-        }
-      />
+        <div className="relative z-10">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="max-w-3xl">
+              <div className="text-xs font-medium uppercase tracking-[0.16em] text-[var(--hos-subtle)]">
+                Garh Jaisal Haveli · Jaisalmer
+              </div>
+
+              <h1 className="mt-3 text-4xl font-semibold tracking-[-0.055em] text-[var(--hos-ink)] sm:text-5xl">
+                Good morning.
+                <br />
+                Here is today's picture.
+              </h1>
+
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-[var(--hos-muted)] sm:text-[15px]">
+                Keep arrivals moving, rooms ready and the front desk focused on
+                the guest.
+              </p>
+            </div>
+
+            <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+              <div className="rounded-2xl border border-white/80 bg-white/75 px-4 py-3 text-sm text-[var(--hos-text)] shadow-sm backdrop-blur">
+                <div className="flex items-center gap-2">
+                  <Clock3 size={16} className="text-[var(--hos-brand)]" />
+                  {dateLabel(new Date())}
+                </div>
+              </div>
+
+              <Button onClick={() => navigate("/bookings")}>
+                <CalendarCheck2 size={16} />
+                New booking
+              </Button>
+            </div>
+          </div>
+
+          <div className="mt-7 flex items-center gap-3">
+            <div className="font-[cursive] text-xl italic text-[var(--hos-brand-dark)]">
+              More than a stay, a story...
+            </div>
+            <div className="hidden h-px w-14 bg-[var(--hos-brand)]/40 sm:block" />
+          </div>
+        </div>
+      </div>
 
       {error && <Alert>{error}</Alert>}
 
@@ -222,106 +280,139 @@ export default function Dashboard() {
             ))}
           </div>
 
-          <div className="grid gap-5 xl:grid-cols-[1.35fr_1fr]">
+          <div className="grid gap-5 xl:grid-cols-[1.35fr_.75fr]">
             <Card className="overflow-hidden">
-              <div className="flex items-center justify-between border-b border-[var(--hos-border)] px-5 py-4">
-                <div>
-                  <div className="hos-section-title">Today's arrivals</div>
-                  <div className="hos-section-description">
-                    Guests expected to check in today.
-                  </div>
+              <div className="border-b border-[var(--hos-border)] px-5 pt-4 sm:px-6">
+                <div className="flex flex-wrap gap-1">
+                  {[
+                    { label: "Arrivals", count: arrivals.length },
+                    { label: "In-house", count: inHouse.length },
+                    { label: "Departures", count: departures.length },
+                  ].map((item, index) => (
+                    <button
+                      key={item.label}
+                      type="button"
+                      className={[
+                        "rounded-xl px-3.5 py-2.5 text-sm font-medium transition",
+                        index === 0
+                          ? "bg-[var(--hos-brand-soft)] text-[var(--hos-brand-dark)]"
+                          : "text-[var(--hos-muted)] hover:bg-gray-50",
+                      ].join(" ")}
+                    >
+                      {item.label}
+                      <span className="ml-1.5 text-xs opacity-70">
+                        {item.count}
+                      </span>
+                    </button>
+                  ))}
                 </div>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate("/bookings")}
-                >
-                  View all
-                </Button>
               </div>
 
-              {arrivals.length === 0 ? (
-                <div className="px-5 py-10 text-center text-sm text-gray-500">
-                  No arrivals scheduled today.
-                </div>
-              ) : (
-                <div className="divide-y divide-[var(--hos-border)]">
-                  {arrivals.slice(0, 5).map((booking) => {
-                    const guest = guestMap.get(booking.guest_id);
-                    const room = roomMap.get(booking.room_id);
+              <div className="px-5 py-4 sm:px-6">
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <div className="hos-section-title">Today's arrivals</div>
+                    <div className="hos-section-description">
+                      Guests expected to check in today.
+                    </div>
+                  </div>
 
-                    return (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate("/bookings")}
+                  >
+                    View all
+                    <ArrowUpRight size={14} />
+                  </Button>
+                </div>
+
+                {arrivals.length === 0 ? (
+                  <div className="rounded-2xl bg-[var(--hos-surface-soft)] px-5 py-10 text-center">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--hos-blue-soft)] text-[var(--hos-blue)]">
+                      <LogIn size={20} />
+                    </div>
+                    <div className="mt-3 text-sm font-semibold text-[var(--hos-ink)]">
+                      No arrivals scheduled
+                    </div>
+                    <div className="mt-1 text-xs text-[var(--hos-muted)]">
+                      The front desk has a quieter start today.
+                    </div>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-[var(--hos-border)]">
+                    {arrivals.slice(0, 6).map((booking) => (
                       <button
                         type="button"
                         key={booking.id}
                         onClick={() => navigate("/bookings")}
-                        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition hover:bg-gray-50/70"
+                        className="flex w-full items-center justify-between gap-4 py-4 text-left transition hover:bg-white/65"
                       >
-                        <div className="min-w-0">
-                          <div className="truncate text-sm font-semibold text-[var(--hos-ink)]">
-                            {guest
-                              ? `${guest.first_name} ${guest.last_name}`
-                              : `Guest #${booking.guest_id}`}
+                        <div className="flex min-w-0 items-center gap-3">
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--hos-blue-soft)] text-xs font-semibold text-[var(--hos-blue)]">
+                            {renderGuestName(booking)
+                              .split(" ")
+                              .map((part) => part[0])
+                              .join("")
+                              .slice(0, 2)
+                              .toUpperCase()}
                           </div>
-                          <div className="mt-1 text-xs text-gray-500">
-                            {booking.booking_reference} · Room{" "}
-                            {room?.room_number ?? booking.room_id}
+
+                          <div className="min-w-0">
+                            <div className="truncate text-sm font-semibold text-[var(--hos-ink)]">
+                              {renderGuestName(booking)}
+                            </div>
+                            <div className="mt-1 text-xs text-[var(--hos-muted)]">
+                              {booking.booking_reference} · Room{" "}
+                              {renderRoom(booking)}
+                            </div>
                           </div>
                         </div>
 
-                        <span className={statusClass[booking.status]}>
-                          {statusLabel(booking.status)}
-                        </span>
+                        <div className="flex shrink-0 items-center gap-2">
+                          <span className={statusClass[booking.status]}>
+                            {statusLabel(booking.status)}
+                          </span>
+                          <ChevronRight
+                            size={16}
+                            className="text-[var(--hos-subtle)]"
+                          />
+                        </div>
                       </button>
-                    );
-                  })}
-                </div>
-              )}
+                    ))}
+                  </div>
+                )}
+              </div>
             </Card>
 
             <Card className="overflow-hidden">
-              <div className="border-b border-[var(--hos-border)] px-5 py-4">
+              <div className="border-b border-[var(--hos-border)] px-5 py-4 sm:px-6">
                 <div className="hos-section-title">Room pulse</div>
                 <div className="hos-section-description">
-                  Current room availability across active inventory.
+                  A simple picture of today's inventory.
                 </div>
               </div>
 
-              <div className="space-y-5 p-5">
-                <div>
-                  <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Available</span>
-                    <span className="font-semibold text-[var(--hos-ink)]">
-                      {availableRooms}
-                    </span>
-                  </div>
-
-                  <div className="h-2 overflow-hidden rounded-full bg-gray-100">
-                    <div
-                      className="h-full rounded-full bg-[var(--hos-green)]"
-                      style={{
-                        width: `${
-                          activeRooms.length
-                            ? (availableRooms / activeRooms.length) * 100
-                            : 0
-                        }%`,
-                      }}
+              <div className="space-y-5 p-5 sm:p-6">
+                <div className="rounded-2xl bg-gradient-to-br from-[#f1f5ff] to-[#f6f2ff] p-5">
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <div className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--hos-subtle)]">
+                        Active rooms
+                      </div>
+                      <div className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-[var(--hos-ink)]">
+                        {activeRooms.length}
+                      </div>
+                    </div>
+                    <BedDouble
+                      size={23}
+                      className="text-[var(--hos-lilac)]"
                     />
                   </div>
-                </div>
 
-                <div>
-                  <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="text-gray-500">Occupied</span>
-                    <span className="font-semibold text-[var(--hos-ink)]">
-                      {occupiedRooms}
-                    </span>
-                  </div>
-
-                  <div className="h-2 overflow-hidden rounded-full bg-gray-100">
+                  <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/80">
                     <div
-                      className="h-full rounded-full bg-[var(--hos-blue)]"
+                      className="h-full rounded-full bg-[var(--hos-lilac)]"
                       style={{
                         width: `${
                           activeRooms.length
@@ -331,6 +422,35 @@ export default function Dashboard() {
                       }}
                     />
                   </div>
+
+                  <div className="mt-3 flex justify-between text-xs">
+                    <span className="text-[var(--hos-muted)]">
+                      {occupiedRooms} occupied
+                    </span>
+                    <span className="font-medium text-[var(--hos-text)]">
+                      {availableRooms} available
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl bg-[var(--hos-mint-soft)] p-4">
+                    <div className="text-xs text-[var(--hos-muted)]">
+                      Guests
+                    </div>
+                    <div className="mt-2 text-xl font-semibold text-[var(--hos-ink)]">
+                      {activeGuests.length}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl bg-[var(--hos-peach-soft)] p-4">
+                    <div className="text-xs text-[var(--hos-muted)]">
+                      In-house
+                    </div>
+                    <div className="mt-2 text-xl font-semibold text-[var(--hos-ink)]">
+                      {inHouse.length}
+                    </div>
+                  </div>
                 </div>
 
                 <Button
@@ -339,62 +459,122 @@ export default function Dashboard() {
                   onClick={() => navigate("/rooms")}
                 >
                   Manage rooms
+                  <ArrowUpRight size={14} />
                 </Button>
               </div>
             </Card>
           </div>
 
-          <Card className="overflow-hidden">
-            <div className="flex items-center justify-between border-b border-[var(--hos-border)] px-5 py-4">
-              <div>
-                <div className="hos-section-title">Today's departures</div>
-                <div className="hos-section-description">
-                  Guests scheduled to check out today.
+          <div className="grid gap-5 xl:grid-cols-[1fr_1fr_.9fr]">
+            <Card className="overflow-hidden">
+              <div className="flex items-center justify-between border-b border-[var(--hos-border)] px-5 py-4 sm:px-6">
+                <div>
+                  <div className="hos-section-title">Departures today</div>
+                  <div className="hos-section-description">
+                    Guests scheduled to check out.
+                  </div>
                 </div>
+                <LogOut size={18} className="text-[var(--hos-blue)]" />
               </div>
 
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate("/bookings")}
-              >
-                View bookings
-              </Button>
-            </div>
-
-            {departures.length === 0 ? (
-              <div className="px-5 py-10 text-center text-sm text-gray-500">
-                No departures scheduled today.
-              </div>
-            ) : (
-              <div className="grid gap-px bg-[var(--hos-border)] md:grid-cols-2 xl:grid-cols-3">
-                {departures.slice(0, 6).map((booking) => {
-                  const guest = guestMap.get(booking.guest_id);
-                  const room = roomMap.get(booking.room_id);
-
-                  return (
+              {departures.length === 0 ? (
+                <div className="px-5 py-8 text-sm text-[var(--hos-muted)]">
+                  No departures scheduled today.
+                </div>
+              ) : (
+                <div className="divide-y divide-[var(--hos-border)]">
+                  {departures.slice(0, 4).map((booking) => (
                     <button
                       type="button"
                       key={booking.id}
                       onClick={() => navigate("/bookings")}
-                      className="bg-white px-5 py-4 text-left transition hover:bg-gray-50/70"
+                      className="flex w-full items-center justify-between gap-3 px-5 py-3.5 text-left transition hover:bg-white/65"
                     >
-                      <div className="text-sm font-semibold text-[var(--hos-ink)]">
-                        {guest
-                          ? `${guest.first_name} ${guest.last_name}`
-                          : `Guest #${booking.guest_id}`}
+                      <div className="min-w-0">
+                        <div className="truncate text-sm font-medium text-[var(--hos-ink)]">
+                          {renderGuestName(booking)}
+                        </div>
+                        <div className="mt-0.5 text-xs text-[var(--hos-muted)]">
+                          Room {renderRoom(booking)}
+                        </div>
                       </div>
-
-                      <div className="mt-1 text-xs text-gray-500">
-                        Room {room?.room_number ?? booking.room_id} ·{" "}
-                        {booking.booking_reference}
-                      </div>
+                      <ChevronRight
+                        size={16}
+                        className="shrink-0 text-[var(--hos-subtle)]"
+                      />
                     </button>
-                  );
-                })}
+                  ))}
+                </div>
+              )}
+            </Card>
+
+            <Card className="overflow-hidden">
+              <div className="flex items-center justify-between border-b border-[var(--hos-border)] px-5 py-4 sm:px-6">
+                <div>
+                  <div className="hos-section-title">Quick actions</div>
+                  <div className="hos-section-description">
+                    The jobs you reach for most often.
+                  </div>
+                </div>
+                <Sparkles size={18} className="text-[var(--hos-lilac)]" />
               </div>
-            )}
-          </Card>
+
+              <div className="grid gap-3 p-5 sm:grid-cols-2">
+                <Button
+                  variant="secondary"
+                  className="justify-between"
+                  onClick={() => navigate("/bookings")}
+                >
+                  New booking
+                  <ArrowUpRight size={14} />
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="justify-between"
+                  onClick={() => navigate("/rooms")}
+                >
+                  Check rooms
+                  <ArrowUpRight size={14} />
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="justify-between"
+                  onClick={() => navigate("/folio")}
+                >
+                  Open folio
+                  <ArrowUpRight size={14} />
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="justify-between"
+                  onClick={() => navigate("/payments")}
+                >
+                  Record payment
+                  <ArrowUpRight size={14} />
+                </Button>
+              </div>
+            </Card>
+
+            <Card className="relative overflow-hidden border-[#eeeafb] bg-gradient-to-br from-[#f4f0ff] via-[#f5f8ff] to-[#fff5ee] p-5 sm:p-6">
+              <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/70 blur-2xl" />
+              <div className="relative">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/80 text-[var(--hos-lilac)] shadow-sm">
+                  <Sparkles size={18} />
+                </div>
+                <div className="mt-5 text-sm font-semibold text-[var(--hos-ink)]">
+                  AI workspace
+                </div>
+                <div className="mt-2 text-xs leading-5 text-[var(--hos-muted)]">
+                  A natural-language layer for finding records, summarising the
+                  day and spotting operational follow-ups.
+                </div>
+                <Button variant="secondary" size="sm" className="mt-5" disabled>
+                  Coming next
+                  <ArrowUpRight size={13} />
+                </Button>
+              </div>
+            </Card>
+          </div>
         </>
       )}
     </section>

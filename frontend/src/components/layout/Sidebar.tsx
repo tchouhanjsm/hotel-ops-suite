@@ -31,8 +31,8 @@ const groups = [
     label: "Operations",
     items: [
       { label: "Bookings", path: "/bookings", icon: BookOpen },
-      { label: "Rooms", path: "/rooms", icon: BedDouble },
       { label: "Guests", path: "/guests", icon: Users },
+      { label: "Rooms", path: "/rooms", icon: BedDouble },
     ],
   },
   {
@@ -80,11 +80,11 @@ export default function Sidebar({
         <div className="hos-sidebar-header flex h-[72px] items-center justify-between border-b px-4">
           <div className="min-w-0">
             <div className="flex items-center gap-3">
-              <div className="hos-logo flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl p-1.5">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#fff8eb] shadow-sm">
                 <img
                   src="/hotel-fort-mark.svg"
                   alt="Hotel Ops Suite"
-                  className="h-full w-full rounded-xl"
+                  className="h-9 w-9"
                 />
               </div>
 
@@ -94,7 +94,7 @@ export default function Sidebar({
                     Hotel Ops Suite
                   </div>
                   <div className="text-[11px] text-[var(--hos-muted)]">
-                    Hotel Operations
+                    Jaisalmer · Rajasthan
                   </div>
                 </div>
               )}
@@ -146,6 +146,31 @@ export default function Sidebar({
             </div>
           ))}
         </nav>
+
+        {!collapsed && (
+          <div className="relative hidden h-44 overflow-hidden border-t border-[var(--hos-border)] md:block">
+            <img
+              src="/jaisalmer-fort-landscape.svg"
+              alt=""
+              aria-hidden="true"
+              className="hos-fort-art absolute bottom-0 left-0 h-36 w-[145%] max-w-none object-cover object-left-bottom opacity-[0.30]"
+            />
+
+            <div className="absolute bottom-5 left-5 right-5">
+              <div className="font-[cursive] text-xl leading-tight italic text-[var(--hos-brand-dark)]">
+                Heritage
+                <br />
+                Hospitality
+                <br />
+                Simplified
+              </div>
+              <div className="mt-3 h-px w-12 bg-[var(--hos-brand)]/45" />
+              <div className="mt-3 text-[9px] font-medium uppercase tracking-[0.24em] text-[var(--hos-subtle)]">
+                Jaisalmer · India
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="hidden border-t border-[var(--hos-border)] p-3 md:block">
           <button
