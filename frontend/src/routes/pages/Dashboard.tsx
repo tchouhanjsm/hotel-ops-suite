@@ -28,6 +28,8 @@ import Card from "../../components/ui/Card";
 import Loading from "../../components/ui/Loading";
 import StatCard from "../../components/ui/StatCard";
 
+type View = "arrivals" | "in-house" | "departures";
+
 const todayKey = () => {
   const date = new Date();
 
@@ -46,8 +48,15 @@ const dateLabel = (value: Date) =>
     year: "numeric",
   }).format(value);
 
-const statusLabel = (status: Booking["status"]) =>
-  status.replace("_", " ");
+const greetingLabel = (value: Date) => {
+  const hour = value.getHours();
+
+  if (hour < 12) return "Good morning.";
+  if (hour < 18) return "Good afternoon.";
+  return "Good evening.";
+};
+
+const statusLabel = (status: Booking["status"]) => status.replace("_", " ");
 
 const statusClass: Record<Booking["status"], string> = {
   confirmed: "hos-badge hos-badge-info",
@@ -64,11 +73,18 @@ export default function Dashboard() {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
+  const [activeView, setActiveView] = useState<View>("arrivals");
 
-  async function loadData() {
-    setLoading(true);
+  async function loadData(mode: "initial" | "refresh" = "initial") {
     setError("");
+
+    if (mode === "refresh") {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
 
     try {
       const [roomData, guestData, bookingData] = await Promise.all([
@@ -86,51 +102,28 @@ export default function Dashboard() {
       );
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   }
 
   useEffect(() => {
-    let cancelled = false;
-
-    Promise.all([getRooms(), getGuests(), getBookings()])
-      .then(([roomData, guestData, bookingData]) => {
-        if (cancelled) {
-          return;
-        }
-
-        setRooms(roomData);
-        setGuests(guestData);
-        setBookings(bookingData);
-      })
-      .catch((err) => {
-        if (!cancelled) {
-          setError(
-            err instanceof Error
-              ? err.message
-              : "Unable to load dashboard data.",
-          );
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
+    void loadData();
   }, []);
 
   const today = todayKey();
+  const now = new Date();
   const activeRooms = rooms.filter((room) => room.is_active);
   const activeGuests = guests.filter((guest) => guest.is_active);
+
   const availableRooms = activeRooms.filter(
     (room) => room.status === "available",
   ).length;
   const occupiedRooms = activeRooms.filter(
     (room) => room.status === "occupied",
   ).length;
+  const occupancyRate = activeRooms.length
+    ? Math.round((occupiedRooms / activeRooms.length) * 100)
+    : 0;
 
   const arrivals = useMemo(
     () =>
@@ -154,6 +147,12 @@ export default function Dashboard() {
     () => bookings.filter((booking) => booking.status === "checked_in"),
     [bookings],
   );
+
+  const visibleBookings = useMemo(() => {
+    if (activeView === "arrivals") return arrivals;
+    if (activeView === "departures") return departures;
+    return inHouse;
+  }, [activeView, arrivals, departures, inHouse]);
 
   const guestMap = useMemo(
     () => new Map(guests.map((guest) => [guest.id, guest])),
@@ -190,7 +189,7 @@ export default function Dashboard() {
     {
       label: "Rooms available",
       value: availableRooms,
-      detail: `${occupiedRooms} currently occupied`,
+      detail: occupancyRate + "% occupied",
       icon: BedDouble,
       tone: "neutral" as const,
     },
@@ -199,32 +198,38 @@ export default function Dashboard() {
   const renderGuestName = (booking: Booking) => {
     const guest = guestMap.get(booking.guest_id);
     return guest
-      ? `${guest.first_name} ${guest.last_name}`
-      : `Guest #${booking.guest_id}`;
+      ? guest.first_name + " " + guest.last_name
+      : "Guest #" + booking.guest_id;
   };
 
   const renderRoom = (booking: Booking) =>
     roomMap.get(booking.room_id)?.room_number ?? booking.room_id;
 
+  const viewMeta: Record<View, { label: string; count: number }> = {
+    arrivals: { label: "Arrivals", count: arrivals.length },
+    "in-house": { label: "In-house", count: inHouse.length },
+    departures: { label: "Departures", count: departures.length },
+  };
+
   return (
     <section className="space-y-6">
-      <div className="hos-glass relative overflow-hidden rounded-[28px] px-5 py-6 sm:px-7 sm:py-7 lg:px-8 lg:py-8">
+      <div className="hos-glass relative overflow-hidden rounded-[30px] px-5 py-6 sm:px-7 sm:py-7 lg:px-8 lg:py-8">
         <img
           src="/jaisalmer-fort-landscape.svg"
           alt=""
           aria-hidden="true"
-          className="hos-fort-art pointer-events-none absolute bottom-0 right-0 h-36 w-[58%] object-contain object-bottom opacity-[0.20] sm:h-44 lg:h-52"
+          className="hos-fort-art pointer-events-none absolute bottom-0 right-0 h-36 w-[58%] object-contain object-bottom opacity-[0.18] sm:h-44 lg:h-52"
         />
 
         <div className="relative z-10">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
             <div className="max-w-3xl">
               <div className="text-xs font-medium uppercase tracking-[0.16em] text-[var(--hos-subtle)]">
                 Garh Jaisal Haveli · Jaisalmer
               </div>
 
               <h1 className="mt-3 text-4xl font-semibold tracking-[-0.055em] text-[var(--hos-ink)] sm:text-5xl">
-                Good morning.
+                {greetingLabel(now)}
                 <br />
                 Here is today's picture.
               </h1>
@@ -236,10 +241,10 @@ export default function Dashboard() {
             </div>
 
             <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
-              <div className="rounded-2xl border border-white/80 bg-white/75 px-4 py-3 text-sm text-[var(--hos-text)] shadow-sm backdrop-blur">
+              <div className="rounded-2xl border border-white/80 bg-white/76 px-4 py-3 text-sm text-[var(--hos-text)] shadow-sm backdrop-blur">
                 <div className="flex items-center gap-2">
-                  <Clock3 size={16} className="text-[var(--hos-brand)]" />
-                  {dateLabel(new Date())}
+                  <Clock3 size={16} className="text-[var(--hos-blue)]" />
+                  {dateLabel(now)}
                 </div>
               </div>
 
@@ -247,6 +252,20 @@ export default function Dashboard() {
                 <CalendarCheck2 size={16} />
                 New booking
               </Button>
+
+              <button
+                type="button"
+                onClick={() => void loadData("refresh")}
+                disabled={refreshing}
+                className="inline-flex min-h-[42px] items-center justify-center gap-2 rounded-xl border border-white/80 bg-white/72 px-3.5 text-sm font-medium text-[var(--hos-text)] shadow-sm backdrop-blur transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                aria-label="Refresh dashboard"
+                title="Refresh dashboard"
+              >
+                <RefreshCw
+                  size={16}
+                  className={refreshing ? "animate-spin" : ""}
+                />
+              </button>
             </div>
           </div>
 
@@ -284,36 +303,45 @@ export default function Dashboard() {
             <Card className="overflow-hidden">
               <div className="border-b border-[var(--hos-border)] px-5 pt-4 sm:px-6">
                 <div className="flex flex-wrap gap-1">
-                  {[
-                    { label: "Arrivals", count: arrivals.length },
-                    { label: "In-house", count: inHouse.length },
-                    { label: "Departures", count: departures.length },
-                  ].map((item, index) => (
-                    <button
-                      key={item.label}
-                      type="button"
-                      className={[
-                        "rounded-xl px-3.5 py-2.5 text-sm font-medium transition",
-                        index === 0
-                          ? "bg-[var(--hos-brand-soft)] text-[var(--hos-brand-dark)]"
-                          : "text-[var(--hos-muted)] hover:bg-gray-50",
-                      ].join(" ")}
-                    >
-                      {item.label}
-                      <span className="ml-1.5 text-xs opacity-70">
-                        {item.count}
-                      </span>
-                    </button>
-                  ))}
+                  {(Object.keys(viewMeta) as View[]).map((view) => {
+                    const item = viewMeta[view];
+                    const active = activeView === view;
+
+                    return (
+                      <button
+                        key={view}
+                        type="button"
+                        onClick={() => setActiveView(view)}
+                        className={[
+                          "rounded-xl px-3.5 py-2.5 text-sm font-medium transition",
+                          active
+                            ? "bg-[var(--hos-lilac-soft)] text-[#5d57a4]"
+                            : "text-[var(--hos-muted)] hover:bg-gray-50",
+                        ].join(" ")}
+                        aria-pressed={active}
+                      >
+                        {item.label}
+                        <span className="ml-1.5 text-xs opacity-70">
+                          {item.count}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
               <div className="px-5 py-4 sm:px-6">
-                <div className="mb-4 flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between gap-3">
                   <div>
-                    <div className="hos-section-title">Today's arrivals</div>
+                    <div className="hos-section-title">
+                      {viewMeta[activeView].label} today
+                    </div>
                     <div className="hos-section-description">
-                      Guests expected to check in today.
+                      {activeView === "arrivals"
+                        ? "Guests expected to check in today."
+                        : activeView === "in-house"
+                          ? "Guests currently staying at the hotel."
+                          : "Guests scheduled to check out today."}
                     </div>
                   </div>
 
@@ -327,21 +355,27 @@ export default function Dashboard() {
                   </Button>
                 </div>
 
-                {arrivals.length === 0 ? (
+                {visibleBookings.length === 0 ? (
                   <div className="rounded-2xl bg-[var(--hos-surface-soft)] px-5 py-10 text-center">
                     <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--hos-blue-soft)] text-[var(--hos-blue)]">
-                      <LogIn size={20} />
+                      {activeView === "departures" ? (
+                        <LogOut size={20} />
+                      ) : activeView === "in-house" ? (
+                        <Users size={20} />
+                      ) : (
+                        <LogIn size={20} />
+                      )}
                     </div>
                     <div className="mt-3 text-sm font-semibold text-[var(--hos-ink)]">
-                      No arrivals scheduled
+                      Nothing to show here
                     </div>
                     <div className="mt-1 text-xs text-[var(--hos-muted)]">
-                      The front desk has a quieter start today.
+                      This part of the day is currently clear.
                     </div>
                   </div>
                 ) : (
                   <div className="divide-y divide-[var(--hos-border)]">
-                    {arrivals.slice(0, 6).map((booking) => (
+                    {visibleBookings.slice(0, 6).map((booking) => (
                       <button
                         type="button"
                         key={booking.id}
@@ -394,14 +428,19 @@ export default function Dashboard() {
               </div>
 
               <div className="space-y-5 p-5 sm:p-6">
-                <div className="rounded-2xl bg-gradient-to-br from-[#f1f5ff] to-[#f6f2ff] p-5">
+                <div className="rounded-2xl bg-gradient-to-br from-[#eef4ff] via-[#f4f1ff] to-[#fff7f1] p-5">
                   <div className="flex items-end justify-between">
                     <div>
                       <div className="text-xs font-medium uppercase tracking-[0.14em] text-[var(--hos-subtle)]">
-                        Active rooms
+                        Occupancy
                       </div>
-                      <div className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-[var(--hos-ink)]">
-                        {activeRooms.length}
+                      <div className="mt-2 flex items-end gap-1">
+                        <span className="text-3xl font-semibold tracking-[-0.04em] text-[var(--hos-ink)]">
+                          {occupancyRate}
+                        </span>
+                        <span className="mb-1 text-sm font-medium text-[var(--hos-muted)]">
+                          %
+                        </span>
                       </div>
                     </div>
                     <BedDouble
@@ -412,14 +451,8 @@ export default function Dashboard() {
 
                   <div className="mt-5 h-2 overflow-hidden rounded-full bg-white/80">
                     <div
-                      className="h-full rounded-full bg-[var(--hos-lilac)]"
-                      style={{
-                        width: `${
-                          activeRooms.length
-                            ? (occupiedRooms / activeRooms.length) * 100
-                            : 0
-                        }%`,
-                      }}
+                      className="h-full rounded-full bg-[var(--hos-lilac)] transition-[width] duration-500"
+                      style={{ width: String(occupancyRate) + "%" }}
                     />
                   </div>
 
@@ -436,7 +469,7 @@ export default function Dashboard() {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="rounded-2xl bg-[var(--hos-mint-soft)] p-4">
                     <div className="text-xs text-[var(--hos-muted)]">
-                      Guests
+                      Active guests
                     </div>
                     <div className="mt-2 text-xl font-semibold text-[var(--hos-ink)]">
                       {activeGuests.length}
@@ -445,10 +478,10 @@ export default function Dashboard() {
 
                   <div className="rounded-2xl bg-[var(--hos-peach-soft)] p-4">
                     <div className="text-xs text-[var(--hos-muted)]">
-                      In-house
+                      Active rooms
                     </div>
                     <div className="mt-2 text-xl font-semibold text-[var(--hos-ink)]">
-                      {inHouse.length}
+                      {activeRooms.length}
                     </div>
                   </div>
                 </div>
@@ -469,9 +502,9 @@ export default function Dashboard() {
             <Card className="overflow-hidden">
               <div className="flex items-center justify-between border-b border-[var(--hos-border)] px-5 py-4 sm:px-6">
                 <div>
-                  <div className="hos-section-title">Departures today</div>
+                  <div className="hos-section-title">Departure flow</div>
                   <div className="hos-section-description">
-                    Guests scheduled to check out.
+                    Keep today's checkouts visible.
                   </div>
                 </div>
                 <LogOut size={18} className="text-[var(--hos-blue)]" />
