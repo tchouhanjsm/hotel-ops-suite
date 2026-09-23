@@ -1,8 +1,7 @@
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 
-type Props = {
+type Props = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
-  className?: string;
   solid?: boolean;
 };
 
@@ -10,9 +9,13 @@ export default function Card({
   children,
   className = "",
   solid = false,
+  ...props
 }: Props) {
   return (
-    <div className={`${solid ? "hos-card-solid" : "hos-card"} ${className}`}>
+    <div
+      {...props}
+      className={`${solid ? "hos-card-solid" : "hos-card"} ${className}`}
+    >
       {children}
     </div>
   );

@@ -265,3 +265,25 @@ export function cancelUatCashVoucher(
     token,
   }).then((response) => response.body);
 }
+
+
+export type UatServiceVoucher = {
+  id: number;
+  voucher_number: string;
+  folio_id: number;
+  status: string;
+  amount: string;
+  tax_amount: string;
+  total_amount: string;
+  service_name: string;
+};
+
+export function getUatServiceVouchers(
+  token: string,
+): Cypress.Chainable<UatServiceVoucher[]> {
+  return uatRequest<UatServiceVoucher[]>({
+    method: "GET",
+    path: "/service-vouchers",
+    token,
+  }).then((response) => response.body);
+}

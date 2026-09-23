@@ -7,7 +7,7 @@ describe("Authentication UAT", () => {
     cy.visit("/dashboard");
 
     cy.url().should("include", "/login");
-    cy.contains("h1", "Garh Jaisal OS").should("be.visible");
+    cy.contains("h2", "Welcome back").should("be.visible");
     cy.get('input[autocomplete="username"]').should("be.visible");
     cy.get('input[autocomplete="current-password"]').should("be.visible");
   });
