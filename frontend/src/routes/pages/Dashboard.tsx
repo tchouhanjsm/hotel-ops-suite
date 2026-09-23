@@ -72,7 +72,6 @@ export default function Dashboard() {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [activeView, setActiveView] = useState<View>("arrivals");
 
@@ -97,7 +96,6 @@ export default function Dashboard() {
       );
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, []);
 
