@@ -8,7 +8,6 @@ import {
   Clock3,
   LogIn,
   LogOut,
-  RefreshCw,
   Sparkles,
   Users,
 } from "lucide-react";
@@ -77,14 +76,10 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [activeView, setActiveView] = useState<View>("arrivals");
 
-  const loadData = useCallback(async (mode: "initial" | "refresh" = "initial") => {
+  const loadData = useCallback(async () => {
     setError("");
 
-    if (mode === "refresh") {
-      setRefreshing(true);
-    } else {
-      setLoading(true);
-    }
+    setLoading(true);
 
     try {
       const [roomData, guestData, bookingData] = await Promise.all([
