@@ -7,6 +7,7 @@ from app.models.guest import Guest
 from app.models.invoice import Invoice, InvoiceItem
 from app.models.payment import Payment
 from app.models.room import Room
+from app.models.service_voucher import ServiceVoucher
 from app.models.staff import Staff
 
 __all__ = [
@@ -21,5 +22,6 @@ __all__ = [
     "Guest",
     "Payment",
     "Room",
+    "ServiceVoucher",
     "Staff",
 ]

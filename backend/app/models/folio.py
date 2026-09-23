@@ -55,6 +55,17 @@ class FolioItem(Base):
         default=Decimal("0.00"),
     )
     total_amount: Mapped[Decimal] = mapped_column(Numeric(12, 2))
+    status: Mapped[str] = mapped_column(
+    String(20),
+    default="active",
+    index=True,
+)
+    voided_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    voided_by: Mapped[int | None] = mapped_column(
+        ForeignKey("staff.id"), nullable=True
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),

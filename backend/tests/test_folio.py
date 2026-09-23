@@ -199,3 +199,84 @@ def test_get_folio_by_booking(
     assert found is not None
     assert found.id == folio.id
     assert found.booking_id == booking.id
+
+
+def test_voided_folio_item_remains_in_history_but_is_excluded_from_totals(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    booking = create_booking(db_session, booking_test_data)
+    db_session.commit()
+
+    folio = FolioService(db_session).create_folio(
+        booking_id=booking.id,
+        currency="INR",
+        notes=None,
+    )
+
+    food_item = FolioService(db_session).add_item(
+        folio_id=folio.id,
+        item_type="food",
+        description="Dinner",
+        quantity=Decimal("1.00"),
+        unit_price=Decimal("1000.00"),
+        tax_percent=Decimal("5.00"),
+    )
+    db_session.commit()
+
+    voided = FolioService(db_session).void_item(
+        food_item.id,
+        voided_by=1,
+    )
+
+    assert voided.status == "voided"
+    assert voided.voided_at is not None
+    assert voided.voided_by == 1
+
+    all_items = FolioService(db_session).list_items(folio.id)
+    active_items = FolioService(db_session).list_active_items(folio.id)
+
+    assert len(all_items) == 2
+    assert len(active_items) == 1
+    assert active_items[0].item_type == "room_charge"
+
+    subtotal, tax_total, grand_total = FolioService(db_session).get_totals(
+        folio.id
+    )
+
+    assert subtotal == Decimal("9800.00")
+    assert tax_total == Decimal("490.00")
+    assert grand_total == Decimal("10290.00")
+
+
+def test_voided_folio_item_cannot_be_voided_twice(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    booking = create_booking(db_session, booking_test_data)
+    db_session.commit()
+
+    folio = FolioService(db_session).create_folio(
+        booking_id=booking.id,
+        currency="INR",
+        notes=None,
+    )
+
+    item = FolioService(db_session).add_item(
+        folio_id=folio.id,
+        item_type="food",
+        description="Dinner",
+        quantity=Decimal("1.00"),
+        unit_price=Decimal("1000.00"),
+        tax_percent=Decimal("5.00"),
+    )
+    db_session.commit()
+
+    FolioService(db_session).void_item(item.id, voided_by=1)
+    db_session.commit()
+
+    with pytest.raises(
+        StateError,
+        match="Folio item is already voided.",
+    ):
+        FolioService(db_session).void_item(item.id, voided_by=1)

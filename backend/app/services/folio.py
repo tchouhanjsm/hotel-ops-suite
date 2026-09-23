@@ -41,8 +41,11 @@ class FolioService:
     def list_items(self, folio_id: int) -> list[FolioItem]:
         return self.repository.list_items(folio_id)
 
+    def list_active_items(self, folio_id: int) -> list[FolioItem]:
+        return self.repository.list_active_items(folio_id)
+
     def get_totals(self, folio_id: int) -> tuple[Decimal, Decimal, Decimal]:
-        items = self.repository.list_items(folio_id)
+        items = self.repository.list_active_items(folio_id)
 
         subtotal = to_money(
             sum(
@@ -182,3 +185,23 @@ class FolioService:
             "tax_total": tax_total,
             "grand_total": grand_total,
         }
+
+
+    def void_item(self, folio_item_id: int, voided_by: int) -> FolioItem:
+        item = self.repository.get_item_by_id(folio_item_id)
+
+        if item is None:
+            raise NotFoundError("Folio item not found.")
+
+        folio = self.repository.get_by_id(item.folio_id)
+
+        if folio is None:
+            raise NotFoundError("Folio not found.")
+
+        if folio.status != "open":
+            raise StateError("Folio is not open.")
+
+        if item.status != "active":
+            raise StateError("Folio item is already voided.")
+
+        return self.repository.void_item(item, voided_by)

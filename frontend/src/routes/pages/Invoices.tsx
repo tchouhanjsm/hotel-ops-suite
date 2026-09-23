@@ -169,7 +169,7 @@ export default function Invoices() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [requestedInvoiceId]);
 
   useEffect(() => {
     if (!selectedInvoice) {
