@@ -225,7 +225,8 @@ body {
 }
 
 .hos-avatar {
-  background: linear-gradient(135deg, #9e7746, #685033);
+  background: linear-gradient(135deg, #536f9f, #7d73bf);
+  box-shadow: 0 8px 18px rgb(83 111 159 / 18%);
 }
 
 button,
@@ -345,7 +346,7 @@ textarea {
 
 .hos-btn-primary {
   color: white;
-  background: linear-gradient(135deg, #b48645, #9b7138);
+  background: linear-gradient(135deg, #b48645, #a4773f);
   box-shadow: 0 8px 20px rgb(180 134 69 / 18%);
 }
 
