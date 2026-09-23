@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowUpRight,
   BedDouble,
@@ -77,7 +77,7 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [activeView, setActiveView] = useState<View>("arrivals");
 
-  async function loadData(mode: "initial" | "refresh" = "initial") {
+  const loadData = useCallback(async (mode: "initial" | "refresh" = "initial") => {
     setError("");
 
     if (mode === "refresh") {
@@ -104,11 +104,11 @@ export default function Dashboard() {
       setLoading(false);
       setRefreshing(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
     void loadData();
-  }, []);
+  }, [loadData]);
 
   const today = todayKey();
   const now = new Date();
