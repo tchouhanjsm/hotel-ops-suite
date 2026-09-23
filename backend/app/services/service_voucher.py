@@ -4,19 +4,25 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from app.core.errors import NotFoundError, StateError
+from app.core.errors import ConflictError, NotFoundError, StateError
 from app.core.identifiers import generate_reference
 from app.core.money import calculate_line_amount, calculate_tax, calculate_total
 from app.models.folio import Folio
 from app.models.service_voucher import ServiceVoucher
 from app.repositories.folio import FolioRepository
+from app.repositories.invoice import InvoiceRepository
+from app.repositories.payment import PaymentRepository
 from app.repositories.service_voucher import ServiceVoucherRepository
+from app.services.folio import FolioService
 
 
 class ServiceVoucherService:
     def __init__(self, db: Session) -> None:
         self.repository = ServiceVoucherRepository(db)
         self.folio_repository = FolioRepository(db)
+        self.invoice_repository = InvoiceRepository(db)
+        self.payment_repository = PaymentRepository(db)
+        self.folio_service = FolioService(db)
 
     def _generate_number(self) -> str:
         while True:
@@ -28,8 +34,17 @@ class ServiceVoucherService:
     def _clean(value: str) -> str:
         return value.strip()
 
-    def _get_open_folio(self, folio_id: int) -> Folio:
-        folio = self.folio_repository.get_by_id(folio_id)
+    def _get_open_folio(
+        self,
+        folio_id: int,
+        *,
+        lock: bool = False,
+    ) -> Folio:
+        folio = (
+            self.folio_repository.get_by_id_for_update(folio_id)
+            if lock
+            else self.folio_repository.get_by_id(folio_id)
+        )
 
         if folio is None:
             raise NotFoundError("Folio not found.")
@@ -38,6 +53,14 @@ class ServiceVoucherService:
             raise StateError("Folio is not open.")
 
         return folio
+
+    def _ensure_no_finalized_invoice(self, folio_id: int) -> None:
+        invoice = self.invoice_repository.get_active_by_folio(folio_id)
+
+        if invoice is not None and invoice.status == "finalized":
+            raise StateError(
+                "Cannot modify the folio because its invoice is finalized.",
+            )
 
     @staticmethod
     def _calculate(
@@ -100,7 +123,7 @@ class ServiceVoucherService:
         voucher_id: int,
         updates: dict[str, Any],
     ) -> ServiceVoucher:
-        voucher = self.repository.get_by_id(voucher_id)
+        voucher = self.repository.get_by_id_for_update(voucher_id)
 
         if voucher is None:
             raise NotFoundError("Service voucher not found.")
@@ -108,7 +131,7 @@ class ServiceVoucherService:
         if voucher.status != "draft":
             raise StateError("Only draft service vouchers can be updated.")
 
-        self._get_open_folio(voucher.folio_id)
+        self._get_open_folio(voucher.folio_id, lock=True)
 
         cleaned = dict(updates)
 
@@ -145,7 +168,7 @@ class ServiceVoucherService:
         *,
         issued_by: int,
     ) -> ServiceVoucher:
-        voucher = self.repository.get_by_id(voucher_id)
+        voucher = self.repository.get_by_id_for_update(voucher_id)
 
         if voucher is None:
             raise NotFoundError("Service voucher not found.")
@@ -153,11 +176,10 @@ class ServiceVoucherService:
         if voucher.status != "draft":
             raise StateError("Only draft service vouchers can be issued.")
 
-        folio = self._get_open_folio(voucher.folio_id)
+        folio = self._get_open_folio(voucher.folio_id, lock=True)
+        self._ensure_no_finalized_invoice(folio.id)
 
-        from app.services.folio import FolioService
-
-        item = FolioService(self.folio_repository.db).add_item(
+        item = self.folio_service.add_item(
             folio_id=folio.id,
             item_type="service",
             description=f"{voucher.service_name} - {voucher.description}",
@@ -181,14 +203,43 @@ class ServiceVoucherService:
         *,
         cancelled_by: int,
     ) -> ServiceVoucher:
-        voucher = self.repository.get_by_id(voucher_id)
+        voucher = self.repository.get_by_id_for_update(voucher_id)
 
         if voucher is None:
             raise NotFoundError("Service voucher not found.")
 
-        if voucher.status != "draft":
+        if voucher.status == "draft":
+            return self.repository.mark_cancelled(voucher, cancelled_by)
+
+        if voucher.status != "issued":
             raise StateError(
-                "Only draft service vouchers can be cancelled.",
+                "Only draft or issued service vouchers can be cancelled.",
             )
 
-        return self.repository.cancel_draft(voucher, cancelled_by)
+        folio = self._get_open_folio(voucher.folio_id, lock=True)
+        self._ensure_no_finalized_invoice(folio.id)
+
+        payments = self.payment_repository.list_by_folio(folio.id)
+        if any(payment.status == "completed" for payment in payments):
+            raise ConflictError(
+                "Issued service voucher cannot be cancelled after payment "
+                "has been received.",
+            )
+
+        if voucher.folio_item_id is None:
+            raise StateError("Issued service voucher has no folio item.")
+
+        item = self.folio_repository.get_item_by_id(voucher.folio_item_id)
+
+        if item is None:
+            raise NotFoundError("Linked folio item not found.")
+
+        if item.folio_id != folio.id:
+            raise StateError("Service voucher folio item linkage is invalid.")
+
+        self.folio_service.void_item(
+            voucher.folio_item_id,
+            voided_by=cancelled_by,
+        )
+
+        return self.repository.mark_cancelled(voucher, cancelled_by)

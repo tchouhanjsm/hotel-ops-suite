@@ -15,6 +15,14 @@ class ServiceVoucherRepository:
     def get_by_id(self, voucher_id: int) -> ServiceVoucher | None:
         return self.db.get(ServiceVoucher, voucher_id)
 
+    def get_by_id_for_update(self, voucher_id: int) -> ServiceVoucher | None:
+        statement = (
+            select(ServiceVoucher)
+            .where(ServiceVoucher.id == voucher_id)
+            .with_for_update()
+        )
+        return self.db.scalar(statement)
+
     def get_by_number(self, voucher_number: str) -> ServiceVoucher | None:
         statement = select(ServiceVoucher).where(
             ServiceVoucher.voucher_number == voucher_number,
@@ -122,7 +130,7 @@ class ServiceVoucherRepository:
         self.db.refresh(voucher)
         return voucher
 
-    def cancel_draft(
+    def mark_cancelled(
         self,
         voucher: ServiceVoucher,
         cancelled_by: int,

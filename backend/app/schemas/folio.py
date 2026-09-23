@@ -11,6 +11,11 @@ class FolioStatus(StrEnum):
     VOID = "void"
 
 
+class FolioItemStatus(StrEnum):
+    ACTIVE = "active"
+    VOIDED = "voided"
+
+
 class FolioItemType(StrEnum):
     ROOM_CHARGE = "room_charge"
     FOOD = "food"
@@ -45,6 +50,9 @@ class FolioItemRead(FolioItemCreate):
     amount: Decimal
     tax_amount: Decimal
     total_amount: Decimal
+    status: FolioItemStatus
+    voided_at: datetime | None
+    voided_by: int | None
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)

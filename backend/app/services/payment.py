@@ -37,7 +37,7 @@ class PaymentService:
         external_reference: str | None,
         notes: str | None,
     ) -> Payment:
-        folio = self.folio_repository.get_by_id(folio_id)
+        folio = self.folio_repository.get_by_id_for_update(folio_id)
 
         if folio is None:
             raise NotFoundError("Folio not found.")

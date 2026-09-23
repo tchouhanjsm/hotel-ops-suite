@@ -4,9 +4,11 @@ from decimal import Decimal
 import pytest
 from sqlalchemy.orm import Session
 
-from app.core.errors import StateError
+from app.core.errors import ConflictError, StateError
 from app.services.booking import BookingService
 from app.services.folio import FolioService
+from app.services.invoice import InvoiceService
+from app.services.payment import PaymentService
 from app.services.service_voucher import ServiceVoucherService
 
 
@@ -123,18 +125,141 @@ def test_issued_service_voucher_cannot_be_updated(
         )
 
 
-def test_issued_service_voucher_cannot_be_cancelled(
+def test_cancel_issued_service_voucher_voids_folio_item(
     db_session: Session,
     booking_test_data,
 ) -> None:
     voucher = create_voucher(db_session, booking_test_data)
-    ServiceVoucherService(db_session).issue_voucher(voucher.id, issued_by=1)
+    issued = ServiceVoucherService(db_session).issue_voucher(
+        voucher.id,
+        issued_by=1,
+    )
+
+    cancelled = ServiceVoucherService(db_session).cancel_voucher(
+        issued.id,
+        cancelled_by=1,
+    )
+
+    assert cancelled.status == "cancelled"
+    assert cancelled.folio_item_id == issued.folio_item_id
+
+    item = FolioService(db_session).repository.get_item_by_id(
+        cancelled.folio_item_id,
+    )
+    assert item is not None
+    assert item.status == "voided"
+
+    _, _, grand_total = FolioService(db_session).get_totals(
+        cancelled.folio_id,
+    )
+    assert grand_total == Decimal("10290.00")
+
+
+def test_issued_service_voucher_cannot_be_cancelled_after_payment(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    voucher = create_voucher(db_session, booking_test_data)
+    issued = ServiceVoucherService(db_session).issue_voucher(
+        voucher.id,
+        issued_by=1,
+    )
+
+    PaymentService(db_session).create_payment(
+        folio_id=issued.folio_id,
+        amount=Decimal("100.00"),
+        payment_method="cash",
+        received_by=1,
+        external_reference=None,
+        notes=None,
+    )
+
+    with pytest.raises(
+        ConflictError,
+        match="cannot be cancelled after payment",
+    ):
+        ServiceVoucherService(db_session).cancel_voucher(
+            issued.id,
+            cancelled_by=1,
+        )
+
+
+def test_service_voucher_issue_blocked_by_finalized_invoice(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    voucher = create_voucher(db_session, booking_test_data)
+
+    invoice = InvoiceService(db_session).create_draft(
+        folio_id=voucher.folio_id,
+        notes=None,
+    )
+    InvoiceService(db_session).finalize_invoice(
+        invoice.id,
+        finalized_by=1,
+    )
 
     with pytest.raises(
         StateError,
-        match="Only draft service vouchers can be cancelled.",
+        match="invoice is finalized",
+    ):
+        ServiceVoucherService(db_session).issue_voucher(
+            voucher.id,
+            issued_by=1,
+        )
+
+
+def test_issued_service_voucher_cannot_be_cancelled_with_finalized_invoice(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    voucher = create_voucher(db_session, booking_test_data)
+    issued = ServiceVoucherService(db_session).issue_voucher(
+        voucher.id,
+        issued_by=1,
+    )
+
+    invoice = InvoiceService(db_session).create_draft(
+        folio_id=issued.folio_id,
+        notes=None,
+    )
+    InvoiceService(db_session).finalize_invoice(
+        invoice.id,
+        finalized_by=1,
+    )
+
+    with pytest.raises(
+        StateError,
+        match="invoice is finalized",
     ):
         ServiceVoucherService(db_session).cancel_voucher(
-            voucher.id,
+            issued.id,
             cancelled_by=1,
         )
+
+
+def test_service_voucher_cannot_be_issued_twice(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    voucher = create_voucher(db_session, booking_test_data)
+    issued = ServiceVoucherService(db_session).issue_voucher(
+        voucher.id,
+        issued_by=1,
+    )
+
+    with pytest.raises(
+        StateError,
+        match="Only draft service vouchers can be issued.",
+    ):
+        ServiceVoucherService(db_session).issue_voucher(
+            issued.id,
+            issued_by=1,
+        )
+
+    service_items = [
+        item
+        for item in FolioService(db_session).list_items(issued.folio_id)
+        if item.item_type == "service"
+    ]
+    assert len(service_items) == 1

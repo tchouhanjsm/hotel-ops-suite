@@ -12,6 +12,7 @@ from app.models.guest import Guest
 from app.models.invoice import Invoice, InvoiceItem
 from app.models.room import Room
 from app.repositories.booking import BookingRepository
+from app.repositories.folio import FolioRepository
 from app.repositories.guest import GuestRepository
 from app.repositories.invoice import InvoiceRepository
 from app.repositories.room import RoomRepository
@@ -23,6 +24,7 @@ class InvoiceService:
         self.repository = InvoiceRepository(db)
         self.folio_service = FolioService(db)
         self.booking_repository = BookingRepository(db)
+        self.folio_repository = FolioRepository(db)
         self.guest_repository = GuestRepository(db)
         self.room_repository = RoomRepository(db)
 
@@ -36,9 +38,14 @@ class InvoiceService:
         self,
         folio_id: int,
         *,
+        lock_folio: bool = False,
         lock_booking: bool = False,
     ) -> tuple[Folio, Booking, Guest, Room]:
-        folio = self.folio_service.get_folio(folio_id)
+        folio = (
+            self.folio_repository.get_by_id_for_update(folio_id)
+            if lock_folio
+            else self.folio_service.get_folio(folio_id)
+        )
 
         if folio is None:
             raise NotFoundError("Folio not found.")
@@ -101,7 +108,7 @@ class InvoiceService:
     def _replace_items(self, invoice_id: int, folio_id: int) -> None:
         self.repository.delete_items(invoice_id)
 
-        for item in self.folio_service.list_items(folio_id):
+        for item in self.folio_service.list_active_items(folio_id):
             self.repository.create_item(
                 invoice_id=invoice_id,
                 folio_item_id=item.id,
@@ -189,6 +196,7 @@ class InvoiceService:
 
         folio, booking, guest, room = self._get_source_data(
             invoice.folio_id,
+            lock_folio=True,
             lock_booking=True,
         )
 
