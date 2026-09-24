@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowUpRight,
   BedDouble,
@@ -28,7 +28,21 @@ import Card from "../../components/ui/Card";
 import Loading from "../../components/ui/Loading";
 import StatCard from "../../components/ui/StatCard";
 
-type View = "arrivals" | "in-house" | "departures";
+type View = "arrivals" | "in-house" | "departures";\n\ntype DashboardData = {
+  rooms: Room[];
+  guests: Guest[];
+  bookings: Booking[];
+};
+
+const fetchDashboardData = async (): Promise<DashboardData> => {
+  const [rooms, guests, bookings] = await Promise.all([
+    getRooms(),
+    getGuests(),
+    getBookings(),
+  ]);
+
+  return { rooms, guests, bookings };
+};
 
 const todayKey = () => {
   const date = new Date();
@@ -72,49 +86,63 @@ export default function Dashboard() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [guests, setGuests] = useState<Guest[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [activeView, setActiveView] = useState<View>("arrivals");
 
-  const loadData = useCallback(
-    async (mode: "initial" | "refresh" = "initial") => {
-      setError("");
+  useEffect(() => {
+    let cancelled = false;
 
-      if (mode === "refresh") {
-        setRefreshing(true);
-      } else {
-        setLoading(true);
-      }
+    fetchDashboardData()
+      .then((data) => {
+        if (cancelled) return;
 
-      try {
-        const [roomData, guestData, bookingData] = await Promise.all([
-          getRooms(),
-          getGuests(),
-          getBookings(),
-        ]);
+        setRooms(data.rooms);
+        setGuests(data.guests);
+        setBookings(data.bookings);
+      })
+      .catch((err) => {
+        if (cancelled) return;
 
-        setRooms(roomData);
-        setGuests(guestData);
-        setBookings(bookingData);
-      } catch (err) {
         setError(
           err instanceof Error
             ? err.message
             : "Unable to load dashboard data.",
         );
-      } finally {
-        setLoading(false);
-        setRefreshing(false);
-      }
-    },
-    [],
-  );
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
 
-  useEffect(() => {
-    void loadData();
-  }, [loadData]);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
+  const handleRefresh = async () => {
+    setError("");
+    setRefreshing(true);
+
+    try {
+      const data = await fetchDashboardData();
+
+      setRooms(data.rooms);
+      setGuests(data.guests);
+      setBookings(data.bookings);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Unable to refresh dashboard data.",
+      );
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const today = todayKey();
   const now = new Date();
@@ -244,7 +272,7 @@ export default function Dashboard() {
 
               <button
                 type="button"
-                onClick={() => void loadData("refresh")}
+                onClick={() => void handleRefresh()}
                 disabled={refreshing}
                 className="inline-flex min-h-[42px] items-center justify-center gap-2 rounded-xl border border-white/80 bg-white/72 px-3.5 text-sm font-medium text-[var(--hos-text)] shadow-sm backdrop-blur transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
                 aria-label="Refresh dashboard"
