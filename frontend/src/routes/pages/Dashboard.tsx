@@ -28,7 +28,9 @@ import Card from "../../components/ui/Card";
 import Loading from "../../components/ui/Loading";
 import StatCard from "../../components/ui/StatCard";
 
-type View = "arrivals" | "in-house" | "departures";\n\ntype DashboardData = {
+type View = "arrivals" | "in-house" | "departures";
+
+type DashboardData = {
   rooms: Room[];
   guests: Guest[];
   bookings: Booking[];
@@ -83,9 +85,6 @@ const statusClass: Record<Booking["status"], string> = {
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  const [rooms, setRooms] = useState<Room[]>([]);
-  const [guests, setGuests] = useState<Guest[]>([]);
-  const [bookings, setBookings] = useState<Booking[]>([]);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
