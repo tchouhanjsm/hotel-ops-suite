@@ -244,7 +244,7 @@ export default function Dashboard() {
                 Garh Jaisal Haveli · Jaisalmer
               </div>
 
-              <h1 className="mt-3 text-4xl font-semibold tracking-[-0.055em] text-[var(--hos-ink)] sm:text-5xl">
+              <h1 data-testid="dashboard-heading" className="mt-3 text-4xl font-semibold tracking-[-0.055em] text-[var(--hos-ink)] sm:text-5xl">
                 {greetingLabel(now)}
                 <br />
                 Here is today's picture.

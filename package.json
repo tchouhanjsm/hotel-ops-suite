@@ -15,9 +15,10 @@
     "uat:staging": "bash scripts/run-staging-uat.sh",
     "frontend:lint": "cd frontend && npm run lint",
     "local:reset-admin": "bash scripts/reset-local-admin.sh",
-    "backend:dev": "bash scripts/dev/backend-python.sh -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000",
+    "backend:dev": "HOS_OUTBOX_WORKER_ENABLED=true bash scripts/dev/backend-python.sh -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000",
     "backend:bootstrap": "bash scripts/dev/bootstrap-backend.sh",
-    "backend:migrate": "bash scripts/dev/backend-python.sh -m alembic upgrade head"
+    "backend:migrate": "bash scripts/dev/backend-python.sh -m alembic upgrade head",
+    "calendar:rebuild": "bash scripts/dev/backend-python.sh -m app.scripts.rebuild_calendar_projection"
   },
   "repository": {
     "type": "git",

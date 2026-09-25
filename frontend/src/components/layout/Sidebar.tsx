@@ -1,6 +1,7 @@
 import {
   BedDouble,
   BookOpen,
+  CalendarDays,
   Building2,
   ChevronLeft,
   ChevronRight,
@@ -30,6 +31,7 @@ const groups = [
   {
     label: "Operations",
     items: [
+      { label: "Calendar", path: "/calendar", icon: CalendarDays },
       { label: "Bookings", path: "/bookings", icon: BookOpen },
       { label: "Guests", path: "/guests", icon: Users },
       { label: "Rooms", path: "/rooms", icon: BedDouble },
