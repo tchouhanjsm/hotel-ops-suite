@@ -62,6 +62,25 @@ function login() {
   establishUatSession();
 }
 
+function openNewBookingForm() {
+  cy.visit("/bookings");
+
+  cy.get('[data-testid="new-booking"]')
+    .should("be.visible")
+    .should("not.be.disabled")
+    .click();
+
+  cy.get('[data-testid="booking-guest"]')
+    .should("be.visible")
+    .find("option")
+    .should("have.length.greaterThan", 1);
+
+  cy.get('[data-testid="booking-room"]')
+    .should("be.visible")
+    .find("option")
+    .should("have.length.greaterThan", 1);
+}
+
 describe("Bookings UAT", () => {
   beforeEach(() => {
     login();
@@ -86,42 +105,33 @@ describe("Bookings UAT", () => {
   });
 
   it("opens the new booking form", () => {
-    cy.visit("/bookings");
-
-    cy.contains("button", "New Booking").click();
+    openNewBookingForm();
     cy.contains("h2", "New Booking").should("be.visible");
   });
 
   it("creates a booking", () => {
     prepareBooking(1).then((ctx) => {
-      cy.visit("/bookings");
-      cy.contains("button", "New Booking").click();
+      openNewBookingForm();
 
-      cy.get("select").filter(":visible").first().select(String(ctx.guestId));
+      cy.get('[data-testid="booking-guest"]').select(String(ctx.guestId));
 
-      cy.get("select").filter(":visible").eq(1).select(String(ctx.roomId));
+      cy.get('[data-testid="booking-room"]').select(String(ctx.roomId));
 
-      cy.get('input[type="date"]')
-        .filter(":visible")
-        .first()
+      cy.get('[data-testid="booking-check-in"]')
         .clear()
         .type(ctx.checkIn);
 
-      cy.get('input[type="date"]')
-        .filter(":visible")
-        .eq(1)
+      cy.get('[data-testid="booking-check-out"]')
         .clear()
         .type(ctx.checkOut);
 
-      cy.get('input[type="number"]')
-        .filter(":visible")
-        .first()
+      cy.get('[data-testid="booking-rate"]')
         .clear()
         .type("4900");
 
-      cy.get("select").filter(":visible").eq(2).select("direct");
+      cy.get('[data-testid="booking-source"]').select("direct");
 
-      cy.contains("button", "Create Booking").click();
+      cy.get('[data-testid="create-booking"]').click();
 
       cy.contains("created.").should("be.visible");
     });
@@ -139,9 +149,9 @@ describe("Bookings UAT", () => {
         cy.visit("/bookings");
         cy.contains("button", "New Booking").click();
 
-        cy.get("select").filter(":visible").first().select(String(ctx.guestId));
+        cy.get('[data-testid="booking-guest"]').select(String(ctx.guestId));
 
-        cy.get("select").filter(":visible").eq(1).select(String(ctx.roomId));
+        cy.get('[data-testid="booking-room"]').select(String(ctx.roomId));
 
         cy.get('input[type="date"]')
           .filter(":visible")
@@ -161,7 +171,7 @@ describe("Bookings UAT", () => {
           .clear()
           .type("4900");
 
-        cy.contains("button", "Create Booking").click();
+        cy.get('[data-testid="create-booking"]').click();
 
         cy.contains("Room is not available for the selected dates.").should(
           "be.visible",

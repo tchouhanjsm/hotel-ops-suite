@@ -4,10 +4,12 @@ from sqlalchemy.orm import Session
 
 from app.core.dates import validate_date_range
 from app.core.errors import ConflictError, NotFoundError, StateError
+from app.core.events import DomainEvent
 from app.core.identifiers import generate_reference
 from app.models.booking import Booking
 from app.repositories.booking import BookingRepository
 from app.repositories.guest import GuestRepository
+from app.repositories.outbox import OutboxRepository
 from app.repositories.room import RoomRepository
 
 
@@ -16,6 +18,7 @@ class BookingService:
         self.repository = BookingRepository(db)
         self.guest_repository = GuestRepository(db)
         self.room_repository = RoomRepository(db)
+        self.outbox_repository = OutboxRepository(db)
 
     def _generate_reference(self) -> str:
         while True:
@@ -85,7 +88,7 @@ class BookingService:
 
         nights = validate_date_range(check_in, check_out).nights
 
-        return self.repository.create(
+        booking = self.repository.create(
             booking_reference=self._generate_reference(),
             guest_id=guest_id,
             room_id=room_id,
@@ -96,6 +99,31 @@ class BookingService:
             source=source,
             notes=notes,
         )
+
+        self._enqueue_booking_event(booking, "BookingCreated")
+
+        return booking
+
+    def _enqueue_booking_event(
+        self,
+        booking: Booking,
+        event_type: str,
+    ) -> None:
+        event = DomainEvent(
+            event_type=event_type,
+            aggregate_type="Booking",
+            aggregate_id=str(booking.id),
+            payload={
+                "booking_id": booking.id,
+                "booking_reference": booking.booking_reference,
+                "guest_id": booking.guest_id,
+                "room_id": booking.room_id,
+                "check_in": booking.check_in.isoformat(),
+                "check_out": booking.check_out.isoformat(),
+                "status": booking.status,
+            },
+        )
+        self.outbox_repository.enqueue(event)
 
     def update_booking(
         self,
@@ -154,6 +182,7 @@ class BookingService:
         if notes is not None:
             booking.notes = notes
 
+        self._enqueue_booking_event(booking, "BookingUpdated")
         return booking
 
     def cancel_booking(self, booking_id: int) -> Booking | None:
@@ -166,6 +195,7 @@ class BookingService:
             raise StateError("Booking cannot be cancelled.")
 
         booking.status = "cancelled"
+        self._enqueue_booking_event(booking, "BookingCancelled")
         return booking
 
     def check_in(self, booking_id: int) -> Booking | None:
@@ -192,7 +222,9 @@ class BookingService:
         room.status = "occupied"
 
         self.room_repository.save(room)
-        return self.repository.save(booking)
+        booking = self.repository.save(booking)
+        self._enqueue_booking_event(booking, "BookingCheckedIn")
+        return booking
 
     def check_out(self, booking_id: int) -> Booking | None:
         booking = self.repository.get_by_id(booking_id)
@@ -211,4 +243,6 @@ class BookingService:
             room.status = "dirty"
             self.room_repository.save(room)
 
-        return self.repository.save(booking)
+        booking = self.repository.save(booking)
+        self._enqueue_booking_event(booking, "BookingCheckedOut")
+        return booking

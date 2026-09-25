@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { ArrowRight, LockKeyhole } from "lucide-react";
+import { ArrowRight, CalendarCheck2, KeyRound, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../auth/useAuth";
@@ -32,96 +32,180 @@ export default function Login() {
   }
 
   return (
-    <main className="hos-app-bg relative flex min-h-screen items-center justify-center overflow-hidden p-6">
+    <main className="relative min-h-screen overflow-hidden bg-[var(--hos-bg)]">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#f4e6d1]/70 blur-3xl" />
-        <div className="absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-[#e8edf9]/70 blur-3xl" />
+        <div className="absolute -left-20 -top-24 h-[34rem] w-[34rem] rounded-full bg-[#e8eeff]/75 blur-3xl" />
+        <div className="absolute right-[-8rem] top-[-7rem] h-[34rem] w-[34rem] rounded-full bg-[#fff0e4]/65 blur-3xl" />
+        <div className="absolute bottom-[-12rem] left-1/3 h-[30rem] w-[30rem] rounded-full bg-[#f2ecff]/70 blur-3xl" />
       </div>
 
-      <div className="relative grid w-full max-w-5xl overflow-hidden rounded-[28px] border border-white/70 bg-white/65 shadow-[0_24px_80px_rgba(20,32,51,0.10)] backdrop-blur-xl lg:grid-cols-[1.05fr_.95fr]">
-        <div className="hidden min-h-[620px] flex-col justify-between bg-gradient-to-br from-[#17212d] via-[#29443e] to-[#8f672f] p-10 text-white lg:flex">
-          <div>
-            <img
-              src="/hotel-fort-mark.svg"
-              alt="Hotel Ops Suite"
-              className="h-14 w-14"
-            />
+      <img
+        src="/jaisalmer-fort-landscape.svg"
+        alt=""
+        aria-hidden="true"
+        className="hos-fort-art pointer-events-none absolute bottom-0 left-0 h-64 w-[58%] -translate-x-8 object-contain object-left-bottom opacity-[0.34] sm:h-80 lg:h-[28rem] lg:w-[54%]"
+      />
 
-            <div className="mt-10 max-w-md">
-              <p className="text-sm font-medium text-white/65">
-                Hotel Operations Platform
-              </p>
-
-              <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-[-0.04em]">
-                Run the stay.
-                <br />
-                Shape the experience.
-              </h1>
-
-              <p className="mt-5 max-w-sm text-sm leading-6 text-white/70">
-                A calm workspace for bookings, rooms, guests, folios and
-                payments.
-              </p>
-            </div>
-          </div>
-
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur-sm">
-            <div className="text-xs uppercase tracking-[0.16em] text-white/50">
-              Garh Jaisal Haveli
-            </div>
-            <div className="mt-2 text-sm text-white/75">
-              Jaisalmer · Rajasthan
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center p-7 sm:p-10">
-          <Card
-            solid
-            className="w-full border-0 bg-white/80 p-7 shadow-none sm:p-9"
-          >
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--hos-brand-soft)] text-[var(--hos-brand-dark)]">
-              <LockKeyhole size={19} />
-            </div>
-
-            <h2 className="mt-7 text-2xl font-semibold tracking-tight text-[var(--hos-ink)]">
-              Welcome back
-            </h2>
-
-            <p className="mt-1 text-sm text-[var(--hos-muted)]">
-              Sign in to Hotel Ops Suite.
-            </p>
-
-            <form onSubmit={handleSubmit} className="mt-7 space-y-4">
-              <input
-                className="hos-search min-h-12 w-full rounded-xl px-4 text-sm outline-none"
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
-                placeholder="Username"
-                autoComplete="username"
-              />
-
-              <input
-                className="hos-search min-h-12 w-full rounded-xl px-4 text-sm outline-none"
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder="Password"
-                autoComplete="current-password"
-              />
-
-              {error && (
-                <div className="rounded-xl border border-[var(--hos-red)]/15 bg-[var(--hos-red-soft)] p-3 text-sm text-[var(--hos-red)]">
-                  {error}
+      <div className="relative mx-auto flex min-h-screen w-full max-w-7xl items-center px-4 py-6 sm:px-8 lg:px-12">
+        <div className="grid w-full overflow-hidden rounded-[32px] border border-white/80 bg-white/55 shadow-[0_30px_100px_rgba(37,46,77,0.10)] backdrop-blur-2xl lg:grid-cols-[1.15fr_.85fr]">
+          <section className="relative hidden min-h-[700px] flex-col justify-between p-10 lg:flex xl:p-14">
+            <div className="relative z-10">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#fff8eb] shadow-sm">
+                  <img
+                    src="/hotel-fort-mark.svg"
+                    alt="Hotel Ops Suite"
+                    className="h-10 w-10"
+                  />
                 </div>
-              )}
+                <div>
+                  <div className="text-sm font-semibold text-[var(--hos-ink)]">
+                    Hotel Ops Suite
+                  </div>
+                  <div className="text-xs text-[var(--hos-muted)]">
+                    Garh Jaisal Haveli · Jaisalmer
+                  </div>
+                </div>
+              </div>
 
-              <Button type="submit" className="mt-2 w-full" disabled={loading}>
-                {loading ? "Signing in..." : "Sign in"}
-                {!loading && <ArrowRight size={16} />}
-              </Button>
-            </form>
-          </Card>
+              <div className="mt-20 max-w-xl">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/68 px-3 py-1.5 text-xs font-medium text-[var(--hos-lilac)] shadow-sm backdrop-blur">
+                  <Sparkles size={14} />
+                  Calm hotel operations
+                </div>
+
+                <h1 className="mt-6 text-5xl font-semibold leading-[1.04] tracking-[-0.06em] text-[var(--hos-ink)] xl:text-6xl">
+                  Run the stay.
+                  <br />
+                  Shape the experience.
+                </h1>
+
+                <p className="mt-6 max-w-lg text-[15px] leading-7 text-[var(--hos-muted)]">
+                  Bookings, rooms, guests, folios and payments in one clear
+                  workspace, designed to keep the front desk moving.
+                </p>
+
+                <div className="mt-10 flex items-center gap-3">
+                  <div className="font-[cursive] text-2xl italic text-[var(--hos-brand-dark)]">
+                    Heritage hospitality, simplified.
+                  </div>
+                  <div className="hidden h-px w-16 bg-[var(--hos-brand)]/40 sm:block" />
+                </div>
+              </div>
+            </div>
+
+            <div className="relative z-10 grid max-w-2xl grid-cols-3 gap-3">
+              <div className="rounded-2xl border border-white/80 bg-white/66 p-4 shadow-sm backdrop-blur-xl">
+                <CalendarCheck2 size={18} className="text-[var(--hos-blue)]" />
+                <div className="mt-4 text-sm font-semibold text-[var(--hos-ink)]">
+                  Bookings
+                </div>
+                <div className="mt-1 text-xs leading-5 text-[var(--hos-muted)]">
+                  Arrivals and stays.
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/80 bg-white/66 p-4 shadow-sm backdrop-blur-xl">
+                <Sparkles size={18} className="text-[var(--hos-lilac)]" />
+                <div className="mt-4 text-sm font-semibold text-[var(--hos-ink)]">
+                  One workspace
+                </div>
+                <div className="mt-1 text-xs leading-5 text-[var(--hos-muted)]">
+                  Clear, connected workflows.
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/80 bg-white/66 p-4 shadow-sm backdrop-blur-xl">
+                <KeyRound size={18} className="text-[var(--hos-mint)]" />
+                <div className="mt-4 text-sm font-semibold text-[var(--hos-ink)]">
+                  Secure access
+                </div>
+                <div className="mt-1 text-xs leading-5 text-[var(--hos-muted)]">
+                  Role-aware operations.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="flex items-center bg-white/58 p-5 sm:p-9 lg:p-11">
+            <Card
+              solid
+              className="w-full border-white/90 bg-white/80 p-7 shadow-[0_20px_55px_rgba(37,46,77,0.08)] sm:p-9"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#f5f0ff] to-[#edf4ff] text-[var(--hos-lilac)]">
+                <KeyRound size={19} />
+              </div>
+
+              <h2 className="mt-7 text-2xl font-semibold tracking-[-0.035em] text-[var(--hos-ink)]">
+                Welcome back
+              </h2>
+
+              <p className="mt-1 text-sm text-[var(--hos-muted)]">
+                Sign in to your hotel workspace.
+              </p>
+
+              <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+                <label className="block">
+                  <span className="mb-1.5 block text-xs font-medium text-[var(--hos-text)]">
+                    Username
+                  </span>
+                  <input
+                    className="hos-search min-h-12 w-full rounded-xl px-4 text-sm outline-none"
+                    value={username}
+                    onChange={(event) => setUsername(event.target.value)}
+                    placeholder="Enter your username"
+                    autoComplete="username"
+                  />
+                </label>
+
+                <label className="block">
+                  <span className="mb-1.5 block text-xs font-medium text-[var(--hos-text)]">
+                    Password
+                  </span>
+                  <input
+                    className="hos-search min-h-12 w-full rounded-xl px-4 text-sm outline-none"
+                    type="password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    placeholder="Enter your password"
+                    autoComplete="current-password"
+                  />
+                </label>
+
+                {error && (
+                  <div
+                    role="alert"
+                    className="rounded-xl border border-[var(--hos-red)]/15 bg-[var(--hos-red-soft)] p-3 text-sm text-[var(--hos-red)]"
+                  >
+                    {error}
+                  </div>
+                )}
+
+                <Button type="submit" className="mt-2 w-full" disabled={loading}>
+                  {loading ? "Signing in..." : "Sign in"}
+                  {!loading && <ArrowRight size={16} />}
+                </Button>
+              </form>
+
+              <div className="mt-6 rounded-2xl border border-[#eeeafb] bg-gradient-to-br from-[#faf8ff] to-[#f6f9ff] p-4">
+                <div className="flex items-start gap-3">
+                  <Sparkles
+                    size={17}
+                    className="mt-0.5 shrink-0 text-[var(--hos-lilac)]"
+                  />
+                  <div>
+                    <div className="text-xs font-semibold text-[var(--hos-ink)]">
+                      Built for calm operations
+                    </div>
+                    <div className="mt-1 text-xs leading-5 text-[var(--hos-muted)]">
+                      Keep the front desk focused on the guest, not the
+                      software.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </section>
         </div>
       </div>
     </main>

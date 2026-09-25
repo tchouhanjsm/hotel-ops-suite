@@ -1,6 +1,7 @@
 import {
   BedDouble,
   BookOpen,
+  CalendarDays,
   Building2,
   ChevronLeft,
   ChevronRight,
@@ -30,9 +31,10 @@ const groups = [
   {
     label: "Operations",
     items: [
+      { label: "Calendar", path: "/calendar", icon: CalendarDays },
       { label: "Bookings", path: "/bookings", icon: BookOpen },
-      { label: "Rooms", path: "/rooms", icon: BedDouble },
       { label: "Guests", path: "/guests", icon: Users },
+      { label: "Rooms", path: "/rooms", icon: BedDouble },
     ],
   },
   {
@@ -66,32 +68,36 @@ export default function Sidebar({
           type="button"
           aria-label="Close navigation"
           onClick={onCloseMobile}
-          className="fixed inset-0 z-30 bg-black/30 md:hidden"
+          className="fixed inset-0 z-30 bg-slate-950/20 backdrop-blur-[2px] md:hidden"
         />
       )}
 
       <aside
         className={[
-          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r bg-white transition-transform duration-200 md:static md:translate-x-0",
+          "hos-sidebar fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r transition-transform duration-200 md:static md:translate-x-0",
           collapsed ? "md:w-20" : "md:w-64",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
         ].join(" ")}
       >
-        <div className="hos-sidebar-header flex h-16 items-center justify-between border-b px-4">
+        <div className="hos-sidebar-header flex h-[72px] items-center justify-between border-b px-4">
           <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <img
-                src="/hotel-fort-mark.svg"
-                alt="Hotel Ops Suite"
-                className="h-10 w-10 shrink-0 rounded-2xl"
-              />
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#fff8eb] shadow-sm">
+                <img
+                  src="/hotel-fort-mark.svg"
+                  alt="Hotel Ops Suite"
+                  className="h-9 w-9"
+                />
+              </div>
 
               {!collapsed && (
                 <div className="min-w-0">
-                  <div className="truncate text-sm font-semibold">
-                    Garh Jaisal OS
+                  <div className="truncate text-sm font-semibold text-[var(--hos-ink)]">
+                    Hotel Ops Suite
                   </div>
-                  <div className="text-xs text-gray-500">Hotel Operations</div>
+                  <div className="text-[11px] text-[var(--hos-muted)]">
+                    Jaisalmer · Rajasthan
+                  </div>
                 </div>
               )}
             </div>
@@ -101,7 +107,7 @@ export default function Sidebar({
             type="button"
             aria-label="Close navigation"
             onClick={onCloseMobile}
-            className="rounded p-2 text-gray-500 hover:bg-gray-100 md:hidden"
+            className="rounded-xl p-2 text-gray-500 transition hover:bg-white/80 md:hidden"
           >
             <X size={18} />
           </button>
@@ -128,7 +134,7 @@ export default function Sidebar({
                     title={collapsed ? label : undefined}
                     className={({ isActive }) =>
                       [
-                        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition",
+                        "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition",
                         collapsed ? "justify-center" : "",
                         isActive ? "hos-nav-active" : "hos-nav-link",
                       ].join(" ")
@@ -143,22 +149,47 @@ export default function Sidebar({
           ))}
         </nav>
 
-        <div className="hidden border-t p-3 md:block">
+        {!collapsed && (
+          <div className="relative hidden h-44 overflow-hidden border-t border-[var(--hos-border)] md:block">
+            <img
+              src="/jaisalmer-fort-landscape.svg"
+              alt=""
+              aria-hidden="true"
+              className="hos-fort-art absolute bottom-0 left-0 h-36 w-[145%] max-w-none object-cover object-left-bottom opacity-[0.30]"
+            />
+
+            <div className="absolute bottom-5 left-5 right-5">
+              <div className="font-[cursive] text-xl leading-tight italic text-[var(--hos-brand-dark)]">
+                Heritage
+                <br />
+                Hospitality
+                <br />
+                Simplified
+              </div>
+              <div className="mt-3 h-px w-12 bg-[var(--hos-brand)]/45" />
+              <div className="mt-3 text-[9px] font-medium uppercase tracking-[0.24em] text-[var(--hos-subtle)]">
+                Jaisalmer · India
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="hidden border-t border-[var(--hos-border)] p-3 md:block">
           <button
             type="button"
             onClick={onToggle}
-            className="flex w-full items-center justify-center rounded-lg p-2 text-gray-500 hover:bg-gray-100"
+            className="flex w-full items-center justify-center rounded-xl p-2 text-gray-500 transition hover:bg-white/80"
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
           </button>
         </div>
 
-        <div className="border-t p-3 md:hidden">
+        <div className="border-t border-[var(--hos-border)] p-3 md:hidden">
           <button
             type="button"
             onClick={onCloseMobile}
-            className="flex w-full items-center justify-center rounded-lg p-2 text-gray-500 hover:bg-gray-100"
+            className="flex w-full items-center justify-center rounded-xl p-2 text-gray-500 transition hover:bg-white/80"
           >
             <Menu size={18} />
             <span className="ml-2 text-sm">Close menu</span>

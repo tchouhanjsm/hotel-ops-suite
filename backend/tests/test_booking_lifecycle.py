@@ -1,9 +1,12 @@
 from datetime import date
 
 import pytest
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.errors import StateError
+from app.core.outbox_processor import process_pending
+from app.models.outbox_event import OutboxEvent
 from app.services.booking import BookingService
 
 
@@ -19,6 +22,29 @@ def create_confirmed_booking(db_session: Session, booking_test_data):
         source="direct",
         notes=None,
     )
+
+
+def test_booking_creation_enqueues_booking_created_event(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    booking = create_confirmed_booking(db_session, booking_test_data)
+
+    event = db_session.scalar(
+        select(OutboxEvent).where(
+            OutboxEvent.event_type == "BookingCreated",
+            OutboxEvent.aggregate_id == str(booking.id),
+        )
+    )
+
+    assert event is not None
+    assert event.event_id
+    assert event.aggregate_type == "Booking"
+    assert event.payload["booking_id"] == booking.id
+    assert event.payload["booking_reference"] == booking.booking_reference
+    assert event.payload["guest_id"] == booking.guest_id
+    assert event.payload["room_id"] == booking.room_id
+    assert event.payload["status"] == booking.status
 
 
 def test_check_in_moves_booking_and_room_to_occupied(
@@ -189,3 +215,48 @@ def test_out_of_order_room_cannot_check_in(
         match="Room is not available for check-in.",
     ):
         BookingService(db_session).check_in(booking.id)
+
+
+def test_booking_created_projects_to_calendar(
+    db_session: Session,
+    booking_test_data,
+) -> None:
+    from sqlalchemy import select
+
+    from app.models.booking_calendar_projection import BookingCalendarProjection
+    from app.models.outbox_event import OutboxEvent
+
+    booking = create_confirmed_booking(db_session, booking_test_data)
+
+    event = db_session.scalar(
+        select(OutboxEvent).where(
+            OutboxEvent.aggregate_id == str(booking.id),
+            OutboxEvent.event_type == "BookingCreated",
+        )
+    )
+
+    assert event is not None
+    assert event.published_at is None
+
+    assert process_pending(db_session) == 1
+
+    projection = db_session.scalar(
+        select(BookingCalendarProjection).where(
+            BookingCalendarProjection.booking_id == booking.id,
+        )
+    )
+
+    assert projection is not None
+    assert projection.booking_reference == booking.booking_reference
+    assert projection.guest_id == booking.guest_id
+    assert projection.room_id == booking.room_id
+    assert projection.check_in == booking.check_in
+    assert projection.check_out == booking.check_out
+
+    db_session.refresh(event)
+    assert event.published_at is not None
+
+    # Published events must not be processed again.
+    assert process_pending(db_session) == 0
+
+    assert process_pending(db_session) == 0
