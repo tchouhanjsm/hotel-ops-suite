@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import AppLayout from "../layouts/AppLayout";
 import AuditLog from "./pages/AuditLog";
 import Bookings from "./pages/Bookings";
+import Calendar from "./pages/Calendar";
 import Dashboard from "./pages/Dashboard";
 import Folio from "./pages/Folio";
 import Guests from "./pages/Guests";
@@ -25,6 +26,7 @@ export default function AppRoutes() {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/bookings" element={<Bookings />} />
+          <Route path="/calendar" element={<Calendar />} />
           <Route path="/rooms" element={<Rooms />} />
           <Route path="/guests" element={<Guests />} />
           <Route path="/folio" element={<Folio />} />

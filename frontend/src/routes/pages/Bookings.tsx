@@ -309,7 +309,8 @@ export default function Bookings() {
             type="button"
             data-testid="new-booking"
             onClick={openCreate}
-            className="inline-flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+            disabled={loading}
+            className="inline-flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Plus size={16} />
             New Booking

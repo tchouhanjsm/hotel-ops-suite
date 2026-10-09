@@ -37,12 +37,12 @@ describe("Authentication UAT", () => {
         cy.contains("button", "Sign in").click();
 
         cy.url().should("include", "/dashboard");
-        cy.contains("Hotel Operations").should("be.visible");
+        cy.get('[data-testid="dashboard-heading"]').should("be.visible");
 
         cy.reload();
 
         cy.url().should("include", "/dashboard");
-        cy.contains("Hotel Operations").should("be.visible");
+        cy.get('[data-testid="dashboard-heading"]').should("be.visible");
       },
     );
   });

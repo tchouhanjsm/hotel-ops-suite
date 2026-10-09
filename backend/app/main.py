@@ -1,3 +1,7 @@
+import asyncio
+import os
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -5,6 +9,7 @@ from app.api.error_handlers import domain_error_handler
 from app.api.routes.audit_logs import router as audit_logs_router
 from app.api.routes.auth import router as auth_router
 from app.api.routes.bookings import router as bookings_router
+from app.api.routes.calendar import router as calendar_router
 from app.api.routes.cash_vouchers import router as cash_vouchers_router
 from app.api.routes.folios import router as folios_router
 from app.api.routes.guests import router as guests_router
@@ -14,10 +19,36 @@ from app.api.routes.rooms import router as rooms_router
 from app.api.routes.service_vouchers import router as service_vouchers_router
 from app.api.routes.staff import router as staff_router
 from app.core.errors import DomainError
+from app.core.outbox_worker import run_outbox_worker
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    worker_task = None
+    stop_event = asyncio.Event()
+
+    enabled = os.getenv(
+        "HOS_OUTBOX_WORKER_ENABLED",
+        "false",
+    ).lower() == "true"
+
+    if enabled:
+        worker_task = asyncio.create_task(
+            run_outbox_worker(stop_event)
+        )
+
+    try:
+        yield
+    finally:
+        if worker_task is not None:
+            stop_event.set()
+            await worker_task
+
 
 app = FastAPI(
     title="Hotel Ops Suite API",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 app.add_exception_handler(DomainError, domain_error_handler)
@@ -36,6 +67,7 @@ app.include_router(staff_router)
 app.include_router(rooms_router)
 app.include_router(guests_router)
 app.include_router(bookings_router)
+app.include_router(calendar_router)
 app.include_router(folios_router)
 app.include_router(invoices_router)
 app.include_router(payments_router)

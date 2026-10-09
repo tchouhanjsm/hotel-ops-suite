@@ -11,8 +11,8 @@
 :root {
   color-scheme: light;
 
-  --hos-bg: #f7f8fb;
-  --hos-surface: rgb(255 255 255 / 88%);
+  --hos-bg: #f8f9fc;
+  --hos-surface: rgb(255 255 255 / 82%);
   --hos-surface-solid: #ffffff;
   --hos-surface-soft: #fbfaf7;
 
@@ -22,6 +22,7 @@
   --hos-subtle: #98a2b3;
 
   --hos-border: rgb(20 32 51 / 8%);
+  --hos-border-strong: rgb(20 32 51 / 12%);
 
   --hos-brand: #b48645;
   --hos-brand-dark: #8f672f;
@@ -30,8 +31,14 @@
   --hos-blue: #6d8fca;
   --hos-blue-soft: #edf4ff;
 
-  --hos-green: #5f9b7d;
-  --hos-green-soft: #edf8f2;
+  --hos-mint: #66a58b;
+  --hos-mint-soft: #eef9f4;
+
+  --hos-lilac: #8b83cf;
+  --hos-lilac-soft: #f3f0ff;
+
+  --hos-peach: #e5a27d;
+  --hos-peach-soft: #fff3ec;
 
   --hos-amber: #c99548;
   --hos-amber-soft: #fff7e8;
@@ -43,10 +50,12 @@
   --hos-radius-md: 14px;
   --hos-radius-lg: 18px;
   --hos-radius-xl: 22px;
+  --hos-radius-2xl: 28px;
 
   --hos-shadow-xs: 0 1px 2px rgb(16 24 40 / 4%);
-  --hos-shadow-sm: 0 6px 20px rgb(16 24 40 / 4%);
-  --hos-shadow-md: 0 14px 40px rgb(16 24 40 / 7%);
+  --hos-shadow-sm: 0 8px 26px rgb(16 24 40 / 5%);
+  --hos-shadow-md: 0 18px 48px rgb(16 24 40 / 8%);
+  --hos-shadow-glass: 0 20px 60px rgb(37 46 77 / 9%);
 }
 
 html,
@@ -71,19 +80,19 @@ body {
   color: var(--hos-ink);
   background:
     radial-gradient(
-      circle at 88% 0%,
-      rgb(245 234 220 / 68%),
-      transparent 25rem
-    ),
-    radial-gradient(
-      circle at 38% 6%,
-      rgb(232 236 249 / 72%),
+      circle at 12% -8%,
+      rgb(235 239 255 / 80%),
       transparent 30rem
     ),
     radial-gradient(
-      circle at 4% 44%,
-      rgb(230 242 236 / 42%),
-      transparent 24rem
+      circle at 92% 4%,
+      rgb(255 239 226 / 72%),
+      transparent 28rem
+    ),
+    radial-gradient(
+      circle at 48% 38%,
+      rgb(241 237 255 / 46%),
+      transparent 34rem
     ),
     var(--hos-bg);
   -webkit-font-smoothing: antialiased;
@@ -94,14 +103,14 @@ body {
   min-height: 100vh;
   background:
     radial-gradient(
-      circle at 88% 0%,
-      rgb(245 234 220 / 52%),
-      transparent 25rem
+      circle at 10% -10%,
+      rgb(235 239 255 / 76%),
+      transparent 28rem
     ),
     radial-gradient(
-      circle at 38% 6%,
-      rgb(232 236 249 / 58%),
-      transparent 30rem
+      circle at 95% 0%,
+      rgb(255 239 226 / 65%),
+      transparent 26rem
     ),
     var(--hos-bg);
 }
@@ -127,9 +136,9 @@ body {
 
 .hos-sidebar {
   border-color: var(--hos-border);
-  background: rgb(255 255 255 / 82%);
-  box-shadow: 6px 0 30px rgb(16 24 40 / 3%);
-  backdrop-filter: blur(22px);
+  background: rgb(255 255 255 / 78%);
+  box-shadow: 8px 0 34px rgb(16 24 40 / 4%);
+  backdrop-filter: blur(24px);
 }
 
 .hos-sidebar-header {
@@ -139,11 +148,11 @@ body {
 .hos-logo {
   background: linear-gradient(
     135deg,
-    #17212d 0%,
-    #314f46 58%,
+    #283f66 0%,
+    #766fc0 50%,
     var(--hos-brand) 100%
   );
-  box-shadow: 0 8px 20px rgb(23 33 45 / 14%);
+  box-shadow: 0 8px 22px rgb(91 88 153 / 20%);
 }
 
 .hos-nav-section {
@@ -156,59 +165,68 @@ body {
 
 .hos-nav-link:hover {
   color: var(--hos-ink);
-  background: rgb(247 248 250 / 88%);
+  background: rgb(247 248 250 / 90%);
 }
 
 .hos-nav-active {
-  color: #7b531f;
+  color: #5d57a4;
   background: linear-gradient(
-    90deg,
-    rgb(247 236 220 / 96%),
-    rgb(252 248 242 / 94%)
+    100deg,
+    rgb(243 240 255 / 96%),
+    rgb(247 244 255 / 90%)
   );
   box-shadow:
-    inset 3px 0 0 var(--hos-brand),
-    0 5px 15px rgb(180 134 69 / 7%);
+    inset 3px 0 0 var(--hos-lilac),
+    0 7px 18px rgb(139 131 207 / 8%);
 }
 
 .hos-topbar {
   border-color: var(--hos-border);
-  background: rgb(255 255 255 / 72%);
+  background: rgb(255 255 255 / 70%);
   box-shadow: 0 1px 0 rgb(16 24 40 / 3%);
-  backdrop-filter: blur(22px);
+  backdrop-filter: blur(24px);
 }
 
 .hos-search {
   border: 1px solid rgb(20 32 51 / 7%);
-  background: rgb(255 255 255 / 72%);
+  background: rgb(255 255 255 / 76%);
   box-shadow: inset 0 1px 1px rgb(16 24 40 / 2%);
 }
 
 .hos-search:focus-within {
-  border-color: rgb(180 134 69 / 28%);
+  border-color: rgb(139 131 207 / 28%);
   box-shadow:
-    0 0 0 4px rgb(180 134 69 / 8%),
+    0 0 0 4px rgb(139 131 207 / 10%),
     inset 0 1px 1px rgb(16 24 40 / 2%);
 }
 
 .hos-glass {
   border: 1px solid rgb(255 255 255 / 72%);
-  background: rgb(255 255 255 / 72%);
-  box-shadow: var(--hos-shadow-sm);
-  backdrop-filter: blur(18px);
+  background: rgb(255 255 255 / 70%);
+  box-shadow: var(--hos-shadow-glass);
+  backdrop-filter: blur(20px);
 }
 
 .hos-ai-entry {
-  border: 1px solid rgb(109 143 202 / 12%);
-  background: linear-gradient(
-    135deg,
-    rgb(237 244 255 / 92%),
-    rgb(246 239 253 / 88%)
-  );
+  border: 1px solid rgb(139 131 207 / 14%);
+  background:
+    linear-gradient(
+      135deg,
+      rgb(239 244 255 / 94%),
+      rgb(245 240 255 / 94%) 58%,
+      rgb(255 245 237 / 92%)
+    );
+  box-shadow: 0 8px 24px rgb(139 131 207 / 8%);
+}
+
+.hos-ai-icon {
+  background: linear-gradient(135deg, #edf3ff, #f2eeff);
+  color: var(--hos-lilac);
 }
 
 .hos-avatar {
-  background: linear-gradient(135deg, #9e7746, #685033);
+  background: linear-gradient(135deg, #536f9f, #7d73bf);
+  box-shadow: 0 8px 18px rgb(83 111 159 / 18%);
 }
 
 button,
@@ -328,12 +346,12 @@ textarea {
 
 .hos-btn-primary {
   color: white;
-  background: linear-gradient(135deg, #b48645, #9b7138);
-  box-shadow: 0 7px 18px rgb(180 134 69 / 18%);
+  background: linear-gradient(135deg, #b48645, #a4773f);
+  box-shadow: 0 8px 20px rgb(180 134 69 / 18%);
 }
 
 .hos-btn-primary:hover:not(:disabled) {
-  box-shadow: 0 9px 22px rgb(180 134 69 / 24%);
+  box-shadow: 0 10px 24px rgb(180 134 69 / 24%);
 }
 
 .hos-btn-secondary {
@@ -375,7 +393,7 @@ textarea {
 
 .hos-badge-success {
   color: #28704f;
-  background: var(--hos-green-soft);
+  background: var(--hos-mint-soft);
 }
 
 .hos-badge-info {

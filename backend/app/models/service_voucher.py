@@ -1,7 +1,7 @@
 from datetime import UTC, date, datetime
 from decimal import Decimal
 
-from sqlalchemy import Date, DateTime, ForeignKey, Numeric, String, Text
+from sqlalchemy import Date, DateTime, ForeignKey, Index, Numeric, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
@@ -9,6 +9,9 @@ from app.db.base import Base
 
 class ServiceVoucher(Base):
     __tablename__ = "service_vouchers"
+    __table_args__ = (
+        Index("uq_service_vouchers_folio_item_id", "folio_item_id", unique=True),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     voucher_number: Mapped[str] = mapped_column(
@@ -24,8 +27,6 @@ class ServiceVoucher(Base):
     folio_item_id: Mapped[int | None] = mapped_column(
         ForeignKey("folio_items.id"),
         nullable=True,
-        unique=True,
-        index=True,
     )
     service_category: Mapped[str] = mapped_column(String(100))
     service_name: Mapped[str] = mapped_column(String(200))
@@ -37,7 +38,7 @@ class ServiceVoucher(Base):
     tax_amount: Mapped[Decimal] = mapped_column(Numeric(12, 2))
     total_amount: Mapped[Decimal] = mapped_column(Numeric(12, 2))
     currency: Mapped[str] = mapped_column(String(3), default="INR")
-    status: Mapped[str] = mapped_column(String(20), default="draft")
+    status: Mapped[str] = mapped_column(String(20), default="draft", index=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_by: Mapped[int] = mapped_column(ForeignKey("staff.id"))
     issued_by: Mapped[int | None] = mapped_column(
